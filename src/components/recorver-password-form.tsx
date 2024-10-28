@@ -19,11 +19,11 @@ export function RecoverPasswordForm() {
     const router = useRouter()
 
     const handleBackClick = () => {
-        router.back()
+        router.push("/login")
     }
 
     return (
-        <Card className="w-[320px] md:mt-5">
+        <Card className="w-[320px] mt-1 md:mt-5">
             <CardHeader>
                 <CardTitle className="text-center">Recuperar contraseña</CardTitle>
                 <CardDescription className="text-center">Ingrese los datos solicitados para recuperar su contraseña</CardDescription>

@@ -1,4 +1,7 @@
+"use client"
+
 import ActivitiesStatsTable from "@/components/activities-stats";
+import FiltersDataGeneral from "@/components/filters-for-data-general";
 import MonthlyStatisticsTable from "@/components/monthly-stats";
 import ExpandableStateTable from "@/components/states-stats";
 import {
@@ -30,15 +33,13 @@ export default function Page() {
   ]
 
   return (
-    <div className="w-full">
-      <h1 className="text-center text-4xl">Visualización de logros</h1>
-      <Accordion type="single" collapsible className="w-full">
-        {/* <AccordionItem value="item-1">
-          <AccordionTrigger>Ver Actividades</AccordionTrigger>
-            <AccordionContent>
-              <ActivitiesStatsTable />
-            </AccordionContent>
-        </AccordionItem> */}
+    <>
+      <div className="flex flex-col justify-center items-center">
+        <h1 className="text-3xl font-bold text-center mb-2">Datos generales enero-noviembre 2024</h1>
+        <FiltersDataGeneral />
+      </div>
+
+      <Accordion type="single" collapsible>
         {items.map((item) => (
           <AccordionItem key={item.id} value={`item-${item.id}`}>
             <AccordionTrigger>{item.title}</AccordionTrigger>
@@ -46,6 +47,7 @@ export default function Page() {
           </AccordionItem>
         ))}
       </Accordion>
-    </div >
+
+    </>
   );
 }

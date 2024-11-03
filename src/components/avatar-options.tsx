@@ -23,7 +23,7 @@ export const AvatarOptions = () => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>
-                <Settings className="w-6 h-6 md:w-10 md:h-10 text-gray-500" />
+                <Settings className="w-6 h-6 md:w-10 md:h-10 text-white" />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="mr-4">
                 <DropdownMenuLabel>Opciones</DropdownMenuLabel>

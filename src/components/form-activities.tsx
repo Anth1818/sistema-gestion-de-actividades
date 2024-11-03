@@ -1,20 +1,5 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-
-import { Button } from "@/components/ui/button"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-
 import {
   Select,
   SelectContent,
@@ -23,241 +8,91 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-const formSchema = z.object({
-  actions: z.string({
-    required_error: "Por favor selecciona una acción.",
-  }),
-  gerencia: z.string({
-    required_error: "Por favor selecciona una gerencia.",
-  }),
-  activityType: z.string({
-    required_error: "Por favor selecciona un tipo de actividad.",
-  }),
-  state: z.string({
-    required_error: "Por favor selecciona un estado.",
-  }),
-  municipality: z.string({
-    required_error: "Por favor selecciona un municipio.",
-  }),
-  parish: z.string({
-    required_error: "Por favor selecciona una parroquia.",
-  }),
-  place: z.string({
-    required_error: "Por favor selecciona un lugar.",
-  }),
-  specify: z.string().min(1,{
-    message: "Por favor escribe algo.",
-  }).max(100, "Máximo 100 caracteres."),
-})
+import { useState } from "react"
+import ActivitiesCommonsForm from "./form-activities-commons"
+import { Separator } from "@radix-ui/react-select"
+import VictimsForm from "./victims-form"
+import MurderFemaleForm from "./form-murder-famale"
+import Form0800 from "./form-0800"
+
 
 export default function FormActivities() {
+  const [activitieType, setActivitieType] = useState("")
+  const [actions, setActions] = useState("")
+  const [gerencia, setGerencia] = useState("")
 
-  // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-  })
-
-  // 2. Define a submit handler.
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log(data)
-    alert("Submitted data: " + JSON.stringify(data, null, 2))
-  }
+  const renderFormCommons = activitieType !== "" && activitieType !== "victimOfTrafficking" && activitieType !== "murderFemale" && activitieType !== "service0800"
+  const renderFormVictims = activitieType === "victimOfTrafficking"
+  const renderFormMurderFemale = activitieType === "murderFemale"
+  const renderForm0800 = activitieType === "service0800"
 
   return (
     <>
-    <h1 className="text-3xl font-bold text-center mb-8">Registro de actividad</h1>
+      <div className="flex flex-col lg:flex-row gap-4 w-full">
+        {/* -----Gerencia----- */}
+        <div className="flex flex-col flex-1">
+          <label htmlFor="gerencia-select" className="mb-2 text-sm font-semibold">Gerencia</label>
+          <Select value={gerencia} onValueChange={(value) => setGerencia(value)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Seleccione" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="gerencia 1">gerencia 1</SelectItem>
+              <SelectItem value="gerencia 2">gerencia 2</SelectItem>
+              <SelectItem value="gerencia 3">gerencia 3</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        {/* -----Actions----- */}
+        <div className="flex flex-col flex-1">
+          <label htmlFor="actions-select" className="mb-2 text-sm font-semibold">Acciones</label>
+          <Select value={actions} onValueChange={(value) => setActions(value)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Seleccione" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="action 1">Atención jurídica</SelectItem>
+              <SelectItem value="action 2">Prevención</SelectItem>
+              <SelectItem value="action 3">Capacitación</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-y-2 gap-x-4 lg:grid-cols-4  ">
+        {/* -----Actividades----- */}
+        <div className="flex flex-col flex-1">
+          <label htmlFor="activitie-select" className="mb-2 text-sm font-semibold">Actividades</label>
+          <Select value={activitieType} onValueChange={(value) => setActivitieType(value)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Seleccione" />
+            </SelectTrigger>
 
-        {/* <div className="col-span-12 lg:col-span-4 space-y-2"> */}
-          {/* ------Acciones------- */}
-          <FormField
-            control={form.control}
-            name="actions"
-            render={({ field }) => (
-              <FormItem className="col-span-12 lg:col-span-1 ">
-                <FormLabel>Acciones</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccione" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="action 1">Atención jurídica</SelectItem>
-                    <SelectItem value="action 2">Prevención</SelectItem>
-                    <SelectItem value="action 3">Capacitación</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <SelectContent>
+              <SelectItem value="activitie 1">actividad 1</SelectItem>
+              <SelectItem value="activitie 2">actividad 2</SelectItem>
+              <SelectItem value="activitie 3">actividad 3</SelectItem>
+              <SelectItem value="victimOfTrafficking">Victima de trata</SelectItem>
+              <SelectItem value="murderFemale">Femicidio</SelectItem>
+              <SelectItem value="service0800">Atención telefónica 0800</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
 
-          {/* ------Gerencia------- */}
-          <FormField
-            control={form.control}
-            name="gerencia"
-            render={({ field }) => (
-              <FormItem className="col-span-12 lg:col-span-1 ">
-                <FormLabel>Gerencia</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccione" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Gerencia 1">Gerencia 1</SelectItem>
-                    <SelectItem value="Gerencia 2">Gerencia 2</SelectItem>
-                    <SelectItem value="Gerencia 3">Gerencia 3</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+      {renderFormCommons && <Separator className="my-4 border" />}
 
-          {/* ------Tipo de Actividad------- */}
-          <FormField
-            control={form.control}
-            name="activityType"
-            render={({ field }) => (
-              <FormItem className="col-span-12 lg:col-span-1 ">
-                <FormLabel>Actividad</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccione" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="activitie 1">Actividad 1</SelectItem>
-                    <SelectItem value="activitie 2">Actividad 2</SelectItem>
-                    <SelectItem value="activitie 3">Actividad 3</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+      {renderFormCommons ? <ActivitiesCommonsForm gerencia={gerencia} actions={actions} activitieType={activitieType} /> : null}
 
-          {/* ------Estado------- */}
-          <FormField
-            control={form.control}
-            name="state"
-            render={({ field }) => (
-              <FormItem className="col-span-12 lg:col-span-1 ">
-                <FormLabel>Estado</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccione" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="state 1">Estado 1</SelectItem>
-                    <SelectItem value="state 2">Estado 2</SelectItem>
-                    <SelectItem value="state 3">Estado 3</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+      {renderFormVictims && <Separator className="my-4 border" />}
 
-          {/* ------Municipio------- */}
-          <FormField
-            control={form.control}
-            name="municipality"
-            render={({ field }) => (
-              <FormItem className="col-span-12 lg:col-span-1 ">
-                <FormLabel>Municipio</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccione" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="municipality 1">Municipio 1</SelectItem>
-                    <SelectItem value="municipality 2">Municipio 2</SelectItem>
-                    <SelectItem value="municipality 3">Municipio 3</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+      {renderFormVictims ? <VictimsForm gerencia={gerencia} actions={actions} activitieType={activitieType}/> : null}
 
-          {/* ------Parroquia------- */}
-          <FormField
-            control={form.control}
-            name="parish"
-            render={({ field }) => (
-              <FormItem className="col-span-12 lg:col-span-1 ">
-                <FormLabel>Parroquia</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccione" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="parish 1">Parroquia 1</SelectItem>
-                    <SelectItem value="parish 2">Parroquia 2</SelectItem>
-                    <SelectItem value="parish 3">Parroquia 3</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+      {renderFormMurderFemale && <Separator className="my-4 border" />}
 
-          {/* ------Lugar------- */}
-          <FormField
-            control={form.control}
-            name="place"
-            render={({ field }) => (
-              <FormItem className="col-span-12 lg:col-span-1 ">
-                <FormLabel>Lugar</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccione" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="place 1">Lugar 1</SelectItem>
-                    <SelectItem value="place 2">Lugar 2</SelectItem>
-                    <SelectItem value="place 3">Lugar 3</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+      {renderFormMurderFemale ? <MurderFemaleForm gerencia={gerencia} actions={actions} activitieType={activitieType}/> : null}
 
-          {/* ------Especifique------- */}
-          <FormField
-            control={form.control}
-            name="specify"
-            render={({ field }) => (
-              <FormItem className="col-span-12 lg:col-span-1 ">
-                <FormLabel>Especifique</FormLabel>
-                <FormControl>
-                  <Input placeholder="..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+      {renderForm0800 && <Separator className="my-4 border" />}
 
-          <Button type="submit" className="col-span-12 lg:col-span-4 justify-self-center w-full lg:w-2/4 mt-2">Enviar</Button>
-        {/* </div> */}
-      </form>
-    </Form>
+      {renderForm0800 ? <Form0800 gerencia={gerencia} actions={actions} activitieType={activitieType}/> : null}
     </>
   )
 }

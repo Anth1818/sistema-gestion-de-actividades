@@ -24,7 +24,7 @@ export default function DashboardLayout({
 
   return (
     <>
-      <nav className="fixed bg-pink-100 border-b border-gray-200 z-30 w-full">
+      <nav className="fixed bg-primary border-b border-gray-200 z-30 w-full lg:h-20">
         <div className="px-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start">
@@ -62,8 +62,8 @@ export default function DashboardLayout({
                 </svg>
               </button>
               {/* Logo */}
-              <div className="hidden lg:flex">
-                <Image src={Logo} alt="Logo" width={80} height={80} />
+              <div className="hidden lg:flex items-center justify-center mt-1">
+                <Image src={Logo} alt="Logo" width={70} height={70} className="bg-white rounded-sm" />
               </div>
             </div>
             <div className="flex items-end gap-2">
@@ -89,9 +89,9 @@ export default function DashboardLayout({
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-base capitalize text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-300 group"
+                        className="text-base capitalize text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-primary hover:text-white group"
                       >
-                        <link.icon className="w-6 h-6 text-pink-500 group-hover:text-gray-900" />
+                        <link.icon className="w-6 h-6 text-primary group-hover:text-white" />
                         <span className="ml-3">{link.name}</span>
                       </Link>
                     </li>
@@ -107,24 +107,17 @@ export default function DashboardLayout({
         ></div>
         <div
           id="main-content"
-          className="h-full w-full bg-gray-50 relative overflow-y-auto lg:ml-64"
+          className="h-full w-full bg-gray-50 relative lg:overflow-y-auto lg:ml-64"
         > 
           <main className="">
             <div className="pt-5 px-4 md:pt-10" >
               <div className="w-full min-h-[calc(100vh-230px)]">
-                <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 overflow-auto h-fit max-h-96">
+                <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 overflow-x-auto h-fit max-h-[70vh] lg:max-h-[75vh]">
                   {children}
                 </div>
               </div>
             </div>
           </main>
-          {/* <p className="text-center text-sm text-gray-500 ">
-            &copy; {new Date().getFullYear()}{" "}
-            <a href="#" className="hover:underline" target="_blank">
-              Instituto Nacional De La Mujer
-            </a>
-            . Todos los derechos reservados.
-          </p> */}
         </div>
       </div>
     </>

@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Cintillo } from "@/components/cintillo";
+import Footer from "@/components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,15 +25,17 @@ export default function RootLayout({
           type="image/x-icon"
           sizes="any"
         />
-      <body className={inter.className}>
-        <Cintillo />
+      <body className={`${inter.className}`}>
+       
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
           enableSystem
           disableTransitionOnChange
-        >
+        > 
+          <Cintillo />
           {children}
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

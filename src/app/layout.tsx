@@ -25,11 +25,11 @@ export default function RootLayout({
           type="image/x-icon"
           sizes="any"
         />
-      <body className={`${inter.className}`}>
+      <body className={`${inter.className} dark:bg-dark`}>
        
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
+          defaultTheme="black"
           enableSystem
           disableTransitionOnChange
         > 

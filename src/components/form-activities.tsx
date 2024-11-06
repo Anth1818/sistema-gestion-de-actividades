@@ -28,7 +28,7 @@ export default function FormActivities() {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row gap-4 w-full">
+      <div className="flex flex-col lg:flex-row gap-4 w-full ">
         {/* -----Gerencia----- */}
         <div className="flex flex-col flex-1">
           <label htmlFor="gerencia-select" className="mb-2 text-sm font-semibold">Gerencia</label>
@@ -78,21 +78,32 @@ export default function FormActivities() {
         </div>
       </div>
 
-      {renderFormCommons && <Separator className="my-4 border" />}
 
-      {renderFormCommons ? <ActivitiesCommonsForm gerencia={gerencia} actions={actions} activitieType={activitieType} /> : null}
+      {renderFormCommons &&
 
-      {renderFormVictims && <Separator className="my-4 border" />}
+        <div className="lg:h-[400px]">
+          <Separator className="my-4 border" />
+          <ActivitiesCommonsForm gerencia={gerencia} actions={actions} activitieType={activitieType} />
+        </div>}
 
-      {renderFormVictims ? <VictimsForm gerencia={gerencia} actions={actions} activitieType={activitieType}/> : null}
+      {renderFormVictims &&
+      <div className="lg:h-[300px]">
+        <Separator className="my-4 border" />
+        <VictimsForm gerencia={gerencia} actions={actions} activitieType={activitieType} />
+      </div>}
 
-      {renderFormMurderFemale && <Separator className="my-4 border" />}
+      {renderFormMurderFemale &&
+      <div className="lg:h-[300px]">
+        <Separator className="my-4 border" />
+        <MurderFemaleForm gerencia={gerencia} actions={actions} activitieType={activitieType} />
+      </div>}
 
-      {renderFormMurderFemale ? <MurderFemaleForm gerencia={gerencia} actions={actions} activitieType={activitieType}/> : null}
+      {renderForm0800 &&
+      <div className="lg:h-[300px]">
+        <Separator className="my-4 border" />
+        <Form0800 gerencia={gerencia} actions={actions} activitieType={activitieType} />
+      </div>}
 
-      {renderForm0800 && <Separator className="my-4 border" />}
-
-      {renderForm0800 ? <Form0800 gerencia={gerencia} actions={actions} activitieType={activitieType}/> : null}
     </>
   )
 }

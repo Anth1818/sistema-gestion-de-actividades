@@ -65,21 +65,21 @@ export default function MonthlyStatisticsTable() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="bg-pink-200 text-black" rowSpan={2}>Acciones</TableHead>
-            <TableHead className="bg-pink-200 text-black" rowSpan={2}>Actividades</TableHead>
-            <TableHead className="bg-pink-200 text-black" colSpan={12}>Logros acumulados por Mes</TableHead>
-            <TableHead className="bg-pink-200 text-black" rowSpan={2}>Acumulado Enero a Diciembre</TableHead>
-            <TableHead className="bg-pink-200 text-black" rowSpan={2}>Variación</TableHead>
+            <TableHead className="bg-primary text-white font-bold" rowSpan={2}>Acciones</TableHead>
+            <TableHead className="bg-primary text-white font-bold" rowSpan={2}>Actividades</TableHead>
+            <TableHead className="bg-primary text-white font-bold" colSpan={12}>Logros acumulados por Mes</TableHead>
+            <TableHead className="bg-primary text-white font-bold" rowSpan={2}>Acumulado Enero a Diciembre</TableHead>
+            <TableHead className="bg-primary text-white font-bold" rowSpan={2}>Variación</TableHead>
           </TableRow>
           <TableRow>
             {['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'].map((month) => (
-              <TableHead key={month} className="bg-pink-200 text-black">{month}</TableHead>
+              <TableHead key={month} className="bg-primary text-white font-bold">{month}</TableHead>
             ))}
           </TableRow>
         </TableHeader>
         <TableBody>
           {monthlyData.map((row, index) => (
-            <TableRow key={row.id} className={index % 2 === 0 ? "bg-pink-50" : "bg-white"}>
+            <TableRow key={row.id} className={index % 2 === 0 ? "bg-pink-50 dark:bg-dark" : "bg-white dark:bg-dark"}>
               <TableCell>{row.category}</TableCell>
               <TableCell>{row.subCategory}</TableCell>
               <TableCell>{row.jan}</TableCell>
@@ -102,7 +102,7 @@ export default function MonthlyStatisticsTable() {
             const subtotal = calculateSubtotal(monthlyData, category);
             const percentage = ((subtotal.total / 108682) * 100).toFixed(1) + "%";
             return (
-              <TableRow key={`${category}-subtotal`} className="bg-pink-200 font-bold">
+              <TableRow key={`${category}-subtotal`} className="bg-pink-200 font-bold dark:bg-dark">
                 <TableCell colSpan={2}>Subtotal {category}</TableCell>
                 <TableCell>{subtotal.jan}</TableCell>
                 <TableCell>{subtotal.feb}</TableCell>
@@ -121,7 +121,7 @@ export default function MonthlyStatisticsTable() {
               </TableRow>
             );
           })}
-          <TableRow className="bg-pink-300 font-bold">
+          <TableRow className="bg-pink-300 font-bold dark:bg-dark">
             <TableCell colSpan={2}>Total General</TableCell>
             <TableCell>1,481</TableCell>
             <TableCell>3,638</TableCell>

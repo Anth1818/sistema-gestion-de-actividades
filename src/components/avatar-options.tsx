@@ -10,7 +10,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { useRouter} from "next/navigation"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
 
 export const AvatarOptions = () => {
 
@@ -22,8 +23,10 @@ export const AvatarOptions = () => {
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger>
-                <Settings className="w-6 h-6 md:w-10 md:h-10 text-white" />
+            <DropdownMenuTrigger asChild>
+                <Button className="border-[1px] lg:border-2">
+                    <Settings className=" h-[1.2rem] w-[1.2rem] transition-all dark:rotate-0 dark:scale-100 hover:border-white " />
+                </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="mr-4">
                 <DropdownMenuLabel>Opciones</DropdownMenuLabel>

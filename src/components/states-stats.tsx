@@ -4,6 +4,7 @@ import { useState } from "react"
 import { ChevronDown, ChevronUp } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
+import { motion, AnimatePresence } from "framer-motion"
 
 const stateData = [
   {
@@ -155,17 +156,17 @@ export default function ExpandableStateTable() {
     <div className="container mx-auto p-4">
       <Table>
         <TableHeader>
-          <TableRow className="bg-pink-200 text-black font-bold">
-            <TableHead className="w-[100px]">Estados</TableHead>
-            <TableHead>Total acumulado</TableHead>
-            <TableHead>%</TableHead>
-            <TableHead className="w-[100px]"></TableHead>
+          <TableRow >
+            <TableHead className="w-[100px] bg-primary text-white font-bold">Estados</TableHead>
+            <TableHead className="bg-primary text-white font-bold">Total acumulado</TableHead>
+            <TableHead className="bg-primary text-white font-bold">%</TableHead>
+            <TableHead className="w-[100px] bg-primary text-white font-bold"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {stateData.map((state) => (
             <>
-              <TableRow key={state.id} className={`bg-pink-100 text-black transition-max-height duration-500 ease-in-out overflow-hidden ${expandedRows.includes(state.id) ? 'max-h-96' : 'max-h-0'}`} onClick={() => toggleRow(state.id)}>
+              <TableRow key={state.id} className={`bg-pink-100 dark:bg-dark dark:text-dark-foreground text-black transition-max-height duration-500 ease-in-out overflow-hidden ${expandedRows.includes(state.id) ? 'max-h-96' : 'max-h-0'}`} onClick={() => toggleRow(state.id)}>
                 <TableCell>{state.name}</TableCell>
                 <TableCell>{state.total}</TableCell>
                 <TableCell>{state.percentage}</TableCell>
@@ -184,25 +185,38 @@ export default function ExpandableStateTable() {
                   </Button>
                 </TableCell>
               </TableRow>
-              {expandedRows.includes(state.id) && (
-                <TableRow>
-                  <TableCell colSpan={4}>
-                    <div className="p-4">
-                      <h4 className="font-bold mb-2 text-black">Actividades:</h4>
-                      <ul className="list-disc list-inside text-black">
-                        {state.activities.map((activity, index) => (
-                          <li key={index}>
-                            {activity.name}: {activity.total}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )}
+              <AnimatePresence>
+                {expandedRows.includes(state.id) && (
+                  <TableRow>
+                    <TableCell colSpan={4}>
+                      <motion.div
+                        initial="collapsed"
+                        animate="open"
+                        exit="collapsed"
+                        variants={{
+                          open: { opacity: 1, height: "auto" },
+                          collapsed: { opacity: 0, height: 0 }
+                        }}
+                        transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
+                      >
+                        <div className="p-4">
+                          <h4 className="font-bold mb-2 text-black dark:text-white">Actividades:</h4>
+                          <ul className="list-disc list-inside text-black dark:text-white">
+                            {state.activities.map((activity, index) => (
+                              <li key={index}>
+                                {activity.name}: {activity.total}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </motion.div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </AnimatePresence>
             </>
           ))}
-          <TableRow className="bg-pink-100 text-black font-bold">
+          <TableRow className="bg-pink-100 text-black font-bold dark:bg-dark dark:text-dark-foreground">
             <TableCell>Total</TableCell>
             <TableCell>{totalSum}</TableCell>
             <TableCell>100%</TableCell>

@@ -1,7 +1,6 @@
 "use client"
 
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { EyeIcon, EyeOff, User2 } from "lucide-react"
 import { useState } from "react"
@@ -76,7 +75,7 @@ export default function LoginForm({ children }: { children: React.ReactNode }) {
                                     <FormControl>
                                         <div className="relative">
                                             <Input id="user" placeholder="Mariaperez123" {...field} />
-                                            <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">
+                                            <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 dark:text-white">
                                                 <User2 />
                                             </div>
                                         </div>
@@ -104,7 +103,7 @@ export default function LoginForm({ children }: { children: React.ReactNode }) {
                                             <button
                                                 type="button"
                                                 onClick={togglePasswordVisibility}
-                                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+                                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 dark:text-white"
                                             >
                                                 {showPassword ? <EyeIcon /> : <EyeOff />}
                                             </button>

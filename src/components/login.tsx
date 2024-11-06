@@ -34,8 +34,8 @@ export function LoginContainer() {
       <CardFooter className="flex flex-col gap-4 justify-center">
         <div className="w-full">
           <p className="text-center">¿Olvidaste tu contraseña?</p>
-          <a onClick={handleGoToRecoverPassword} className="block text-center text-blue-600 cursor-pointer">
-            <span className="hover:bg-gray-300 p-1 rounded">¡Clic aquí!</span>
+          <a onClick={handleGoToRecoverPassword} className="block text-center text-blue-600 dark:text-white dark:hover:text-black cursor-pointer">
+            <span className="hover:bg-gray-300 dark:hover:bg-white p-1 rounded">¡Clic aquí!</span>
           </a>
         </div>
       </CardFooter>

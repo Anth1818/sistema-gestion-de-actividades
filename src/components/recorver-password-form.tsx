@@ -35,7 +35,7 @@ export function RecoverPasswordForm() {
                             <Label htmlFor="number-id">Cédula</Label>
                             <div className="relative">
                                 <Input id="number-id" type="number" placeholder="01234567" />
-                                <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">
+                                <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 dark:text-dark-foreground">
                                     <IdCard />
                                 </div>
                             </div>
@@ -46,7 +46,7 @@ export function RecoverPasswordForm() {
                                     type="number"
                                     placeholder="04120001122"
                                 />
-                                <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">
+                                <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 dark:text-dark-foreground">
                                     <Smartphone />
                                 </div>
                             </div>
@@ -58,7 +58,7 @@ export function RecoverPasswordForm() {
                                     type="email"
                                     placeholder="name@example.com"
                                 />
-                                <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">
+                                <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 dark:text-dark-foreground">
                                     <MailIcon />
                                 </div>
                             </div>
@@ -69,8 +69,8 @@ export function RecoverPasswordForm() {
             <CardFooter className="flex flex-col gap-4 justify-center">
                 <Button>Aceptar</Button>
                 <div className="w-full">
-                    <a onClick={handleBackClick} className="text-center text-blue-600 items-center cursor-pointer">
-                        <span className="hover:bg-gray-300 p-1 rounded inline-flex">
+                    <a onClick={handleBackClick} className="text-center text-blue-600 dark:text-dark-foreground dark:hover:text-black items-center cursor-pointer">
+                        <span className="hover:bg-gray-300 dark:hover:bg-white p-1 rounded inline-flex">
                             <ChevronLeft className="mr-2" />
                             Volver atrás
                         </span>

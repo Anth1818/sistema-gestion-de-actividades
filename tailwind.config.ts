@@ -42,6 +42,14 @@ const config: Config = {
   				DEFAULT: 'var(--success)',
   				foreground: 'var(--success-foreground)'
   			},
+			dark: {
+				DEFAULT: 'var(--dark)',
+				foreground: 'var(--dark-foreground)'
+			},
+			cebra: {
+				DEFAULT: 'var(--cebra)',
+				foreground: 'var(--cebra-foreground)'
+			},
   			muted: {
   				DEFAULT: 'hsl(var(--muted))',
   				foreground: 'hsl(var(--muted-foreground))'

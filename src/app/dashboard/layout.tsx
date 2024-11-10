@@ -6,12 +6,14 @@ import Logo from "../../../public/ina.png"
 import Image from "next/image";
 import { ToggleDarkMode } from "@/components/toggle-dark-mode";
 import { AvatarOptions } from "@/components/avatar-options";
-import { Award, ChartColumn, FilePlus, UsersRound} from "lucide-react"
+import { Award, ChartColumn, FilePlus, UsersRound, CalendarCheck, LucideNotebookText} from "lucide-react"
 
 const links = [
-  { name: "Registrar Actividad", href: "/dashboard/register-activities", icon: FilePlus },
-  { name: "Logros", href: "/dashboard/achievements", icon: Award },
-  { name: "Gráficas", href: "/dashboard/statistics", icon: ChartColumn },
+  { name: "Dashboard", href: "/dashboard", icon: ChartColumn },
+  { name: "Agendar actividad", href: "/dashboard/register-schedule-activities", icon: CalendarCheck },
+  { name: "Ver agenda", href: "/dashboard/schedule", icon: LucideNotebookText },
+  { name: "Registrar logro", href: "/dashboard/register-achievements", icon: FilePlus },
+  { name: "Ver logros", href: "/dashboard/achievements", icon: Award },
   { name: "Usuarios", href: "/dashboard/users", icon: UsersRound},
 ];
 

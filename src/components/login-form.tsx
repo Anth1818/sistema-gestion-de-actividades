@@ -57,7 +57,7 @@ export default function LoginForm({ children }: { children: React.ReactNode }) {
     function onSubmit(data: z.infer<typeof formLoginSchema>) {
         console.log(data)
         // alert("Submitted data: " + JSON.stringify(data, null, 2))
-        router.push("/dashboard/register-activities")
+        router.push("/dashboard")
     }
 
     return (

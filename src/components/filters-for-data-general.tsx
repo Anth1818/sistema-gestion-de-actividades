@@ -1,3 +1,4 @@
+"use client";
 import {
     Select,
     SelectContent,
@@ -8,8 +9,8 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { DatePickerWithRange } from "./date-picker"
-import { useState } from "react"
 import { Button } from "./ui/button"
+import { useState } from "react";
 
 export default function FiltersDataGeneral() {
     const [date, setDate] = useState<string | undefined>(undefined)

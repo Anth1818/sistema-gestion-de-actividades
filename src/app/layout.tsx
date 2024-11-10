@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Cintillo } from "@/components/cintillo";
 import Footer from "@/components/footer";
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,6 +37,7 @@ export default function RootLayout({
           <Cintillo />
           {children}
           <Footer />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

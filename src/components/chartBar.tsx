@@ -21,15 +21,15 @@ import {
 export const description = "A multiple bar chart"
 
 interface ChartData {
-    chartData: {
+  chartData: {
 
-        month: string,
+    month: string,
 
-        desktop: number,
+    completado: number,
 
-        mobile: number
+    no_completado: number
 
-    }[]
+  }[]
 }
 
 const chartConfig = {
@@ -43,9 +43,43 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function Statistics({ chartData }: ChartData) {  
+export function StatisticsFull({ chartData }: ChartData) {
   return (
-    <Card>
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>Estadística de barra</CardTitle>
+        <CardDescription>Enero - Diciembre 2024</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer config={chartConfig} className="h-[200px] w-full">
+          <BarChart accessibilityLayer data={chartData}>
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) => value.slice(0, 3)}
+            />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent indicator="dashed"
+              />}
+            />
+            <Bar dataKey="completado" fill="var(--success)" radius={4} />
+            <Bar dataKey="no_completado" fill="var(--warning)" radius={4} />
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+      <CardFooter className="flex-col items-start gap-2 text-sm">
+      </CardFooter>
+    </Card>
+  )
+}
+
+export function Statistics({ chartData }: ChartData) {
+  return (
+    <Card className="w-full md:w-[350px] ">
       <CardHeader>
         <CardTitle>Bar Chart - Multiple</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
@@ -65,15 +99,12 @@ export function Statistics({ chartData }: ChartData) {
               cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}
             />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+            <Bar dataKey="completado" fill="var(--color-desktop)" radius={4} />
+            <Bar dataKey="no_completado" fill="var(--color-mobile)" radius={4} />
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
       </CardFooter>
     </Card>
   )

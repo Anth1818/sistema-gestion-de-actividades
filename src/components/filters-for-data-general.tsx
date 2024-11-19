@@ -21,9 +21,9 @@ export default function FiltersDataGeneral() {
     console.log(date)
 
     return (
-        <div className="flex flex-col lg:flex-row justify-center gap-4 w-full"> 
+        <div className="flex flex-col md:flex-row justify-center gap-4 w-full"> 
         <Select onValueChange={handleDateChange}>
-            <SelectTrigger className="lg:w-[200px]">
+            <SelectTrigger className="md:w-[200px]">
                 <SelectValue placeholder="Seleccione una fecha" />
             </SelectTrigger>
             <SelectContent>

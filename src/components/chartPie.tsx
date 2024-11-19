@@ -61,7 +61,7 @@ const chartConfig = {
 
 export function ChartDataPie({ chartDataPie }: ChartDataPie) {
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col w-full md:w-[480px] ">
       <CardHeader className="items-center pb-0">
         <CardTitle>Pie Chart - Label</CardTitle>
         <CardDescription>January - June 2024</CardDescription>

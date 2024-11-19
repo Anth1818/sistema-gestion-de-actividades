@@ -3,11 +3,21 @@ import ScheduleTable from "@/components/schedule-table";
 
 
 export default function SchedulePage() {
+    const userLogged = true;
+    const adminLogged = false;
     return (
         <div>
             <h1 className="text-3xl font-bold text-center mb-8">Agenda de actividades</h1>
             <FiltersDataGeneral />
-            <ScheduleTable  />
+            {adminLogged && <div>
+                <p>Tabla para admin</p>
+                <ScheduleTable />
+            </div>}
+
+            {userLogged && <div className="mt-8">
+                <p>Tabla para usuario</p>
+                <ScheduleTable viewUser />
+            </div>}
         </div>
     );
 }

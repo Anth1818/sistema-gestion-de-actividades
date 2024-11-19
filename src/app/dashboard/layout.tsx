@@ -1,5 +1,4 @@
-// https://tailwindcomponents.com/component/tailwind-css-admin-dashboard-layout
-// https://gist.github.com/Klerith/3949f1c8b884d7101e378dfb668f0f3a
+"use client";
 
 import Link from "next/link";
 import Logo from "../../../public/ina.png"
@@ -7,6 +6,8 @@ import Image from "next/image";
 import { ToggleDarkMode } from "@/components/toggle-dark-mode";
 import { AvatarOptions } from "@/components/avatar-options";
 import { Award, ChartColumn, FilePlus, UsersRound, CalendarCheck, LucideNotebookText} from "lucide-react"
+import { useParams } from "next/navigation";
+import Footer from "@/components/footer";
 
 const links = [
   { name: "Dashboard", href: "/dashboard", icon: ChartColumn },
@@ -23,6 +24,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
 
+  const urlParams = useParams();
+
+  console.log(urlParams);
 
   return (
     <>
@@ -114,7 +118,7 @@ export default function DashboardLayout({
           <main className="dark:bg-dark">
             <div className="pt-5 px-4 md:pt-5 dark:bg-dark" >
               <div className="w-full min-h-[calc(100vh-230px)]">
-                <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 overflow-x-auto h-fit max-h-[70vh] lg:max-h-[75vh] dark:bg-dark">
+                <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 overflow-x-auto max-h-[70vh] lg:max-h-[75vh] dark:bg-dark">
                   {children}
                 </div>
               </div>

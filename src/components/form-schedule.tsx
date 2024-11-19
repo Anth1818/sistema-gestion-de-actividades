@@ -67,6 +67,7 @@ export default function ScheduleForm() {
         toast({
             title: "Notificación",
             description: message,
+            variant: "success",
             action: (
                 <ToastAction altText="Cerrar">Cerrar</ToastAction>
             ),
@@ -95,8 +96,17 @@ export default function ScheduleForm() {
         // Guarda el array actualizado en localStorage
         localStorage.setItem('schedule', JSON.stringify(dataLocal))
 
-        notification("Actividad agendada exitosamente.")
 
+        const tempo = setTimeout(() => {
+
+            notification("La actividad fue agendada correctamente.")
+
+            clearTimeout(tempo)
+
+        }, 1000)
+
+
+        // form.reset(defaultValues)
 
     }
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { ChevronDown, ChevronUp, ArrowUpDown, ChevronRight, ChevronLeft } from "lucide-react"
@@ -35,18 +35,21 @@ const FilaExpandible = ({ actividad, expandida, onToggle, viewUser }: {
     viewUser?: boolean
     // onActivar: () => void
 }) => {
-    const colorStatus = actividad.status === 'Por completar' ? 'text-orange-600' : actividad.status === 'No completada' ? 'text-danger' : 'text-success'
+    // const status = actividad.date < new Date().toISOString() && actividad.status === 'Por completar' ? 'No completada' : actividad.status
+    const colorStatus = actividad.status === 'Por completar' ? 'text-orange-600' : actividad.status === 'No completada' ? 'text-red-700' : 'text-success'
+    const disabled = actividad.status === 'No completada' ? true : false
+    const cursorPointer = disabled ? 'cursor-not-allowed' : 'cursor-pointer'    
     return (
         <>
-            <TableRow className="cursor-pointer" onClick={onToggle}>
+            <TableRow onClick={onToggle}>
                 <TableCell>{actividad.id}</TableCell>
                 <TableCell>{actividad.user}</TableCell>
                 <TableCell>{actividad.activitie}</TableCell>
                 <TableCell>{actividad.dateFormatted}</TableCell>
                 <TableCell className={colorStatus}>{actividad.status}</TableCell>
                 {viewUser && <TableCell>
-                    <Button size="sm" onClick={(e) => { e.stopPropagation(); }}>
-                        {actividad.status === 'Por completar' ? 'Completar' : actividad.status === 'No completada' ? 'No completado' : 'Completado'}
+                    <Button size="sm" className={cursorPointer} disabled={disabled} onClick={(e) => { e.stopPropagation(); }}>
+                        {actividad.status === 'Por completar' ? 'Completar' : actividad.status === 'No completada' ? 'No completada' : 'Completado'}
                     </Button>
                 </TableCell>}
                 <TableCell>
@@ -69,15 +72,15 @@ const FilaExpandible = ({ actividad, expandida, onToggle, viewUser }: {
                             >
                                 <div className="p-4 bg-muted">
                                     <h3 className="font-semibold mb-2">Información adicional:</h3>
-                                        <div className='flex flex-col md:flex-row gap-4'>
-                                            <p><b>Tipo de acción:</b> {actividad.action}</p>
-                                            <p><b>Tipo de actividad:</b> {actividad.gerency}</p>
-                                            <p><b>Estado:</b> {actividad.state}</p>
-                                            <p><b>Municipio:</b> {actividad.municipality}</p>
-                                            <p><b>Parroquia:</b> {actividad.parish}</p>
-                                            <p><b>Responsable:</b> {actividad.responsible}</p>
-                                            <p><b>Lugar:</b> {actividad.place}</p>
-                                        </div>
+                                    <div className='flex flex-col md:flex-row gap-4'>
+                                        <p><b>Tipo de acción:</b> {actividad.action}</p>
+                                        <p><b>Tipo de actividad:</b> {actividad.gerency}</p>
+                                        <p><b>Estado:</b> {actividad.state}</p>
+                                        <p><b>Municipio:</b> {actividad.municipality}</p>
+                                        <p><b>Parroquia:</b> {actividad.parish}</p>
+                                        <p><b>Responsable:</b> {actividad.responsible}</p>
+                                        <p><b>Lugar:</b> {actividad.place}</p>
+                                    </div>
                                 </div>
                             </motion.div>
                         </TableCell>
@@ -136,6 +139,9 @@ export default function ScheduleTable({ viewUser }: { viewUser?: boolean }) {
         setOrdenActual({ columna, direccion: nuevaDireccion })
 
         const actividadesOrdenados = [...actividad].sort((a, b) => {
+            if(columna === 'id') {
+                return nuevaDireccion === 'asc' ? a.id - b.id : b.id - a.id
+            }
             let valorA: string, valorB: string
 
 

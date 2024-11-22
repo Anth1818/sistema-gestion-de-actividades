@@ -1,3 +1,4 @@
+"use client";
 import FiltersDataGeneral from "@/components/filters-for-data-general";
 import ScheduleTable from "@/components/schedule-table";
 

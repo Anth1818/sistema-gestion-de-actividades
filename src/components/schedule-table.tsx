@@ -92,9 +92,15 @@ const FilaExpandible = ({ actividad, expandida, onToggle, viewUser }: {
 }
 
 export default function ScheduleTable({ viewUser }: { viewUser?: boolean }) {
-    const dataFromLocalStorage = localStorage.getItem('schedule')
-    const [actividad, setActividad] = useState<Agenda[]>(dataFromLocalStorage ? JSON.parse(dataFromLocalStorage) : [])
+    const [actividad, setActividad] = useState<Agenda[]>([]);
 
+    useEffect(() => {
+        const dataFromLocalStorage = localStorage?.getItem('schedule');
+        if (dataFromLocalStorage) {
+            setActividad(JSON.parse(dataFromLocalStorage));
+        }
+    }, []);
+    
     const columnas = [{
         label: 'ID',
         campo: 'id'

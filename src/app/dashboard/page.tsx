@@ -51,7 +51,7 @@ export default function Page() {
   const today = new Date().toLocaleDateString('es-ES');
 
   return (
-    <div className="lg:h-[400px]">
+    <div>
       <h2 className="mb-4">Datos del {firstDayOfMonth} al {today}</h2>
       <FiltersDataGeneral />
       <div className="flex flex-col gap-4 md:flex-row justify-around mt-2 ">

@@ -1,13 +1,4 @@
 "use client";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import { DatePickerWithRange } from "./date-picker"
 import { Button } from "./ui/button"
 import { useState } from "react";
@@ -21,23 +12,9 @@ export default function FiltersDataGeneral() {
     console.log(date)
 
     return (
-        <div className="flex flex-col md:flex-row justify-center gap-4 w-full"> 
-        <Select onValueChange={handleDateChange}>
-            <SelectTrigger className="md:w-[200px]">
-                <SelectValue placeholder="Seleccione una fecha" />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectGroup>
-                    <SelectItem value="semanal">1 Semana</SelectItem>
-                    <SelectItem value="quincenal">15 Días</SelectItem>
-                    <SelectItem value="mensual">1 Mes</SelectItem>
-                    <SelectItem value="anual">1 Año</SelectItem>
-                    <SelectItem value="custom">Personalizado</SelectItem>
-                </SelectGroup>
-            </SelectContent>
-        </Select>
-        {date === "custom" && <DatePickerWithRange />}
-        <Button className="mb-4 lg:w-[200px]">Buscar</Button>
+        <div className="flex flex-col md:flex-row justify-center gap-4 w-full">
+            <DatePickerWithRange />
+            <Button className="mb-4 lg:w-[200px]">Buscar</Button>
         </div>
     )
 }

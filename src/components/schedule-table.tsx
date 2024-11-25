@@ -21,6 +21,7 @@ type Agenda = {
     parish: string
     responsible: string
     place: string
+    obs: string
 }
 
 type OrdenColumna = {
@@ -72,7 +73,7 @@ const FilaExpandible = ({ actividad, expandida, onToggle, viewUser }: {
                             >
                                 <div className="p-4 bg-muted">
                                     <h3 className="font-semibold mb-2">Información adicional:</h3>
-                                    <div className='flex flex-col md:flex-row gap-4'>
+                                    <div className={`flex flex-col md:flex-row gap-4 justify-between`}>
                                         <p><b>Tipo de acción:</b> {actividad.action}</p>
                                         <p><b>Tipo de actividad:</b> {actividad.gerency}</p>
                                         <p><b>Estado:</b> {actividad.state}</p>
@@ -81,6 +82,7 @@ const FilaExpandible = ({ actividad, expandida, onToggle, viewUser }: {
                                         <p><b>Responsable:</b> {actividad.responsible}</p>
                                         <p><b>Lugar:</b> {actividad.place}</p>
                                     </div>
+                                    <p className="break-words whitespace-pre-wrap lg:max-w-screen-lg xl:max-w-screen-2xl mt-4"><b>Observaciones:</b>{actividad.obs}</p>
                                 </div>
                             </motion.div>
                         </TableCell>

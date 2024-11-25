@@ -5,18 +5,20 @@ import Logo from "../../../public/ina.png"
 import Image from "next/image";
 import { ToggleDarkMode } from "@/components/toggle-dark-mode";
 import { AvatarOptions } from "@/components/avatar-options";
-import { Award, ChartColumn, FilePlus, UsersRound, CalendarCheck, LucideNotebookText} from "lucide-react"
+import { Award, ChartColumn, FilePlus, UsersRound, CalendarCheck, LucideNotebookText, Ambulance} from "lucide-react"
 import { useParams } from "next/navigation";
+import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 
-const links = [
-  { name: "Dashboard", href: "/dashboard", icon: ChartColumn },
-  { name: "Agendar actividad", href: "/dashboard/register-schedule-activities", icon: CalendarCheck },
-  { name: "Ver agenda", href: "/dashboard/schedule", icon: LucideNotebookText },
-  { name: "Registrar logro", href: "/dashboard/register-achievements", icon: FilePlus },
-  { name: "Ver logros", href: "/dashboard/achievements", icon: Award },
-  { name: "Usuarios", href: "/dashboard/users", icon: UsersRound},
-];
+// const links = [
+//   { name: "Dashboard", href: "/dashboard", icon: ChartColumn },
+//   { name: "Agendar actividad", href: "/dashboard/register-schedule-activities", icon: CalendarCheck },
+//   { name: "Ver agenda", href: "/dashboard/schedule", icon: LucideNotebookText },
+//   { name: "Registrar logro", href: "/dashboard/register-achievements", icon: FilePlus },
+//   { name: "Ver logros", href: "/dashboard/achievements", icon: Award },
+//   { name: "Usuarios", href: "/dashboard/users", icon: UsersRound},
+//   { name: "Agenda unidades móviles", href: "/dashboard/register-schedule-mobile-units", icon: Ambulance },
+// ];
 
 export default function DashboardLayout({
   children,
@@ -91,7 +93,8 @@ export default function DashboardLayout({
             <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto dark:bg-dark">
               <div className="flex-1 px-3 bg-white divide-y space-y-1 dark:bg-dark">
                 <ul className="space-y-2 pb-2 dark:bg-dark">
-                  {links.map((link) => (
+                  <Navigation />
+                  {/* {links.map((link) => (
                     <li key={link.href}>
                       <Link
                         href={link.href}
@@ -101,7 +104,7 @@ export default function DashboardLayout({
                         <span className="ml-3">{link.name}</span>
                       </Link>
                     </li>
-                  ))}
+                  ))} */}
                 </ul>
               </div>
             </div>

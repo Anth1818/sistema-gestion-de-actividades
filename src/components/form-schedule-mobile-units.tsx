@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { date, z } from "zod"
+import { z } from "zod"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -22,33 +22,28 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
+import { Calendar } from "./ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
-import { Calendar } from "./ui/calendar"
+import { Textarea } from "./ui/textarea"
+import { da } from "date-fns/locale"
 
-interface ActivitiesCommonsFormProps {
-    gerencia: string,
-    actions: string,
-    activitieType: string
-}
 
 // Esquema base
 const Schema = z.object({
-    specify: z.string().min(1, { message: "Por favor escribe algo." }).max(100, "Máximo 100 caracteres."),
+    cantMobileUnitsRequired: z.coerce.number().min(1, { message: "Indique cantidad" }),
+    cantUltrasoundRequired: z.coerce.number().min(1, { message: "Indique cantidad" }),
+    logisticalSupport: z.string().min(1, { message: "Seleccione una actividad." }),
     state: z.string().min(1, { message: "Seleccione un estado." }),
     municipality: z.string().min(1, { message: "Seleccione un municipio." }),
     parish: z.string().min(1, { message: "Seleccione una parroquia." }),
     place: z.string().min(1, { message: "Seleccione un lugar." }),
-    quantityWomen: z.coerce.number().int().positive("Ingrese una cantidad válida").min(1, "Ingrese una cantidad válida"),
-    quantityMen: z.coerce.number().int().positive("Ingrese una cantidad válida").min(1, "Ingrese una cantidad válida"),
     responsible: z.string({ required_error: "Por favor indique un responsable." }).min(1, { message: "Este campo no puede estar vacío." }).max(30, "Máximo 30 caracteres."),
-    phone: z.string().regex(/^(0414|0424|0416|0426|0412|0212)\d{7}$/, "Por favor ingrese un número de teléfono válido."),
-    obs: z.string().max(1000, "Máximo 1000 caracteres."),
+    obs: z.string().max(300, "Máximo 300 caracteres."),
     date: z.date({
         required_error: "Ingrese una fecha para agendar.",
     }),
@@ -56,19 +51,35 @@ const Schema = z.object({
 
 
 const defaultValues = {
+    cantMobileUnitsRequired: 0,
+    cantUltrasoundRequired: 0,
+    logisticalSupport: "",
     state: "",
     municipality: "",
     parish: "",
     place: "",
-    specify: "",
-    quantityWomen: 0,
-    quantityMen: 0,
     responsible: "",
-    phone: "",
     obs: "",
+
 }
 
-export default function ActivitiesCommonsForm({ gerencia, actions, activitieType }: ActivitiesCommonsFormProps) {
+export default function ScheduleMobileUnitsForm() {
+
+    const { toast } = useToast()
+
+    const notification = (message: string) => {
+        toast({
+            title: "Notificación",
+            description: message,
+            variant: "success",
+            action: (
+                <ToastAction altText="Cerrar">Cerrar</ToastAction>
+            ),
+        })
+    }
+
+    const users = ["ARuiz", "NZapata", "JSalazar", "JGonzalez", "JGarcia", "JLopez",]
+    const userRandom = Math.floor(Math.random() * users.length)
 
     const form = useForm<z.infer<typeof Schema>>({
         resolver: zodResolver(Schema),
@@ -76,14 +87,94 @@ export default function ActivitiesCommonsForm({ gerencia, actions, activitieType
     })
 
     function onSubmit(data: z.infer<typeof Schema>) {
-        form.reset(defaultValues)
-        alert("Submitted data: " + JSON.stringify({ ...data, gerencia, actions, activitieType, dateFormatted: format(data.date, "dd/MM/yyyy"), }, null, 2))
+        // form.reset(defaultValues)
+        // alert("Submitted data: " + JSON.stringify({ id: Math.floor(Math.random() * 100), user: "ARuiz", ...data }, null, 2))
+
+        // Verifica si hay datos existentes en localStorage
+        const existingData = localStorage.getItem('scheduleMobileUnits')
+        let dataLocal = existingData ? JSON.parse(existingData) : []
+
+        // Añade el nuevo dato al array
+        dataLocal.push({ id: Math.floor(Math.random() * 100), user: users[userRandom], status: "Por completar", dateFormatted: format(data.date, "dd/MM/yyyy"), ...data })
+
+        // Guarda el array actualizado en localStorage
+        localStorage.setItem('scheduleMobileUnits', JSON.stringify(dataLocal))
+
+
+        const tempo = setTimeout(() => {
+
+            notification("La actividad fue agendada correctamente.")
+
+            clearTimeout(tempo)
+
+        }, 500)
+
+
+        // form.reset(defaultValues)
+
     }
 
 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2 lg:grid-cols-4 lg:gap-4">
+
+                {/* ------Unidades moviles solicitadas------ */}
+                <FormField
+                    control={form.control}
+                    name="cantMobileUnitsRequired"
+                    render={({ field }) => (
+                        <FormItem className="col-span-12 md:col-span-1 ">
+                            <FormLabel>Cantidad de unidades móviles solicitadas</FormLabel>
+                            <FormControl>
+                                <Input placeholder="..." type="number" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                {/* ------Cantidad ecografos solicitados------- */}
+                <FormField
+                    control={form.control}
+                    name="cantUltrasoundRequired"
+                    render={({ field }) => (
+                        <FormItem className="col-span-12 md:col-span-1 ">
+                            <FormLabel>Cantidad de ecografos solicitados</FormLabel>
+                            <FormControl>
+                                <Input placeholder="..." type="number" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                {/* ------Apoyo logistico------- */}
+                <FormField
+                    control={form.control}
+                    name="logisticalSupport"
+                    render={({ field }) => (
+                        <FormItem className="col-span-12 md:col-span-1 ">
+                            <FormLabel>Apoyo logistico del estado o municipio</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Seleccione" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectItem value="Viáticos">Viáticos</SelectItem>
+                                    <SelectItem value="Combustible">Combustible</SelectItem>
+                                    <SelectItem value="Hospedaje">Hospedaje</SelectItem>
+                                    <SelectItem value="Alimentación del chofer asignado">Alimentación del chofer asignado</SelectItem>
+                                    <SelectItem value="Traslado de la unidad">Traslado de la unidad</SelectItem>
+                                    <SelectItem value="Todas las anteriores">Todas las anteriores</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
                 {/* ------Estado------- */}
                 <FormField
                     control={form.control}
@@ -109,7 +200,6 @@ export default function ActivitiesCommonsForm({ gerencia, actions, activitieType
                 />
 
                 {/* ------Municipio------- */}
-
                 <FormField
                     control={form.control}
                     name="municipality"
@@ -134,7 +224,6 @@ export default function ActivitiesCommonsForm({ gerencia, actions, activitieType
                 />
 
                 {/* ------Parroquia------- */}
-
                 <FormField
                     control={form.control}
                     name="parish"
@@ -182,51 +271,6 @@ export default function ActivitiesCommonsForm({ gerencia, actions, activitieType
                     )}
                 />
 
-                {/* ------Especifique------- */}
-                <FormField
-                    control={form.control}
-                    name="specify"
-                    render={({ field }) => (
-                        <FormItem className="col-span-12 md:col-span-1 ">
-                            <FormLabel>Especifique</FormLabel>
-                            <FormControl>
-                                <Input placeholder="..." {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                {/* ------N° de mujeres------- */}
-                <FormField
-                    control={form.control}
-                    name="quantityWomen"
-                    render={({ field }) => (
-                        <FormItem className="col-span-12 md:col-span-1 ">
-                            <FormLabel>Número de mujeres</FormLabel>
-                            <FormControl>
-                                <Input placeholder="..." type="number" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                {/* ------------N° de hombres------- */}
-                <FormField
-                    control={form.control}
-                    name="quantityMen"
-                    render={({ field }) => (
-                        <FormItem className="col-span-12 md:col-span-1 ">
-                            <FormLabel>Número de hombres</FormLabel>
-                            <FormControl>
-                                <Input placeholder="..." type="number" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
                 {/* --------Responsable------- */}
                 <FormField
                     control={form.control}
@@ -242,28 +286,13 @@ export default function ActivitiesCommonsForm({ gerencia, actions, activitieType
                     )}
                 />
 
-                {/* -------Telefono------- */}
-                <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                        <FormItem className="col-span-12 md:col-span-1 ">
-                            <FormLabel>Teléfono</FormLabel>
-                            <FormControl>
-                                <Input placeholder="..." {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-    
-                    {/* -------Fecha------- */} 
+                {/* --------Fecha------- */}
                 <FormField
                     control={form.control}
                     name="date"
                     render={({ field }) => (
                         <FormItem className="col-span-12 md:col-span-1 ">
-                            <FormLabel>Fecha de ejecución</FormLabel>
+                            <FormLabel>Fecha a agendar</FormLabel>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <FormControl>
@@ -284,17 +313,17 @@ export default function ActivitiesCommonsForm({ gerencia, actions, activitieType
                                         </Button>
                                     </FormControl>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
+                                <PopoverContent className="" align="start">
                                     <Calendar
                                         mode="single"
                                         selected={field.value}
                                         onSelect={field.onChange}
                                         disabled={(date) => {
                                             const today = new Date();
-                                            const sevenDaysBefore = new Date(today);
-                                            sevenDaysBefore.setDate(today.getDate() - 7); // Solo 7 días antes de la fecha actual
-                                            return date < sevenDaysBefore || date > today;
-                                          }}
+                                            const endOfYear = new Date(today.getFullYear(), 11, 31); // 31 de diciembre del año actual
+                                            return date < today || date > endOfYear;
+                                          }
+                                        }
                                     />
                                 </PopoverContent>
                             </Popover>
@@ -303,18 +332,15 @@ export default function ActivitiesCommonsForm({ gerencia, actions, activitieType
                     )}
                 />
 
+                {/* --------Observaciones------- */}
                 <FormField
                     control={form.control}
                     name="obs"
                     render={({ field }) => (
-                        <FormItem className="col-span-12 md:col-span-2 ">
+                        <FormItem className="col-span-12 md:col-span-3 ">
                             <FormLabel>Observaciones</FormLabel>
                             <FormControl>
-                                <Textarea
-                                    placeholder="Escriba sus observaciones aquí..."
-                                    className="resize w-full h-24"
-                                    {...field}
-                                />
+                                <Textarea placeholder="..." {...field} className="h-40" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -326,4 +352,4 @@ export default function ActivitiesCommonsForm({ gerencia, actions, activitieType
             </form>
         </Form>
     )
-}
+}  

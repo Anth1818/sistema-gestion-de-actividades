@@ -29,6 +29,7 @@ import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
+import { Textarea } from "./ui/textarea"
 
 
 // Esquema base
@@ -41,6 +42,7 @@ const Schema = z.object({
     parish: z.string().min(1, { message: "Seleccione una parroquia." }),
     place: z.string().min(1, { message: "Seleccione un lugar." }),
     responsible: z.string({ required_error: "Por favor indique un responsable." }).min(1, { message: "Este campo no puede estar vacío." }).max(30, "Máximo 30 caracteres."),
+    obs: z.string().max(1000, "Máximo 1000 caracteres."),
     date: z.date({
         required_error: "Ingrese una fecha para agendar.",
     }),
@@ -56,6 +58,7 @@ const defaultValues = {
     parish: "",
     place: "",
     responsible: "",
+    obs: "",
 
 }
 
@@ -83,7 +86,7 @@ export default function ScheduleForm() {
     })
 
     function onSubmit(data: z.infer<typeof Schema>) {
-        // form.reset(defaultValues)
+        form.reset(defaultValues)
         // alert("Submitted data: " + JSON.stringify({ id: Math.floor(Math.random() * 100), user: "ARuiz", ...data }, null, 2))
 
         // Verifica si hay datos existentes en localStorage
@@ -103,7 +106,7 @@ export default function ScheduleForm() {
 
             clearTimeout(tempo)
 
-        }, 1000)
+        }, 500)
 
 
         // form.reset(defaultValues)
@@ -311,7 +314,7 @@ export default function ScheduleForm() {
                                         <Button
                                             variant={"outline"}
                                             className={cn(
-                                                "w-[240px] pl-3 text-left font-normal",
+                                                "w-full pl-3 text-left font-normal",
                                                 !field.value &&
                                                 "text-black dark:text-dark-foreground dark:border-dark-foreground",
                                             )}
@@ -332,14 +335,28 @@ export default function ScheduleForm() {
                                         onSelect={field.onChange}
                                         disabled={(date) => {
                                             const today = new Date();
-                                            const fifteenDaysFromNow = new Date();
-                                            fifteenDaysFromNow.setDate(today.getDate() + 14);
-                                            return date < today || date.getDay() === 0 || date.getDay() === 6 || date > fifteenDaysFromNow;
+                                            const endOfYear = new Date(today.getFullYear(), 11, 31); // 31 de diciembre del año actual
+                                            return date < today || date > endOfYear;
                                         }
                                         }
                                     />
                                 </PopoverContent>
                             </Popover>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                {/* --------Observaciones------- */}
+                <FormField
+                    control={form.control}
+                    name="obs"
+                    render={({ field }) => (
+                        <FormItem className="col-span-12 md:col-span-3 ">
+                            <FormLabel>Observaciones</FormLabel>
+                            <FormControl>
+                                <Textarea placeholder="..." {...field} className="h-40" />
+                            </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}

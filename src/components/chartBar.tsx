@@ -47,7 +47,7 @@ export function StatisticsFull({ chartData }: ChartData) {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Estadística de barra</CardTitle>
+        <CardTitle>Estadística de barra - Logros por meses</CardTitle>
         <CardDescription>Enero - Diciembre 2024</CardDescription>
       </CardHeader>
       <CardContent>

@@ -1,0 +1,108 @@
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { ChartColumn, CalendarCheck, LucideNotebookText, FilePlus, Award, UsersRound, Ambulance } from 'lucide-react';
+import { set } from 'date-fns';
+
+const links = [
+  {
+    name: "Dashboard",
+    href: "/dashboard",
+    icon: ChartColumn,
+  },
+  {
+    name: "Actividades",
+    icon: CalendarCheck,
+    sublinks: [
+      { name: "Agendar actividad", href: "/dashboard/register-schedule-activities", icon: CalendarCheck },
+      { name: "Ver agenda", href: "/dashboard/schedule", icon: LucideNotebookText },
+    ],
+  },
+  {
+    name: "Logros",
+    icon: FilePlus,
+    sublinks: [
+      { name: "Registrar logro", href: "/dashboard/register-achievements", icon: FilePlus },
+      { name: "Ver logros", href: "/dashboard/achievements", icon: Award },
+    ],
+  },
+  {
+    name: "Unidades móviles",
+    icon: Ambulance,
+    sublinks: [
+      { name: "Agendar", href: "/dashboard/register-schedule-mobile-units", icon: CalendarCheck },
+      { name: "Ver agenda", href: "/dashboard/schedule-mobile-units", icon: LucideNotebookText },
+    ],
+  },
+  {
+    name: "Usuarios",
+    href: "/dashboard/users",
+    icon: UsersRound,
+  },
+];
+
+const Navigation = () => {
+  const [openSubmenus, setOpenSubmenus] = useState<{ [key: string]: boolean }>({});
+
+  const toggleSubmenu = (name: string) => {
+    setOpenSubmenus((prev) => {
+      const newSubmenus = Object.keys(prev).reduce((acc, key) => {
+        acc[key] = false;
+        return acc;
+      }, {} as { [key: string]: boolean });
+      return {
+        ...newSubmenus,
+        [name]: !prev[name],
+      };
+    });
+  };
+
+  return (
+    <nav>
+      <ul className="space-y-4">
+
+          {links.map((link) => (
+            <li key={link.name}>
+              {link.href ? (
+                <Link
+                  href={link.href}
+                  className="text-base capitalize dark:text-dark-foreground dark:hover:bg-dark-foreground dark:hover:text-dark text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-primary hover:text-white group transition duration-300"
+                >
+                  <link.icon className="w-6 h-6 text-primary dark:group-hover:text-dark group-hover:text-dark-foreground" />
+                  <span className="ml-3">{link.name}</span>
+                </Link>
+              ) : (
+                <div
+                  onClick={() => toggleSubmenu(link.name)}
+                  className="cursor-pointer text-base capitalize dark:text-dark-foreground dark:hover:bg-dark-foreground dark:hover:text-dark text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-primary hover:text-white group transition duration-300"
+                >
+                  <link.icon className="w-6 h-6 text-primary dark:group-hover:text-dark group-hover:text-dark-foreground" />
+                  <span className="ml-3">{link.name}</span>
+                </div>
+              )}
+              {link.sublinks && (
+              <ul
+                className={`ml-4 mt-2 space-y-2 transition-all duration-10 ease-out overflow-hidden ${
+                  openSubmenus[link.name] ? 'max-h-screen' : 'max-h-0'
+                }`}
+              >
+                {link.sublinks.map((sublink) => (
+                  <li key={sublink.name}>
+                    <Link
+                      href={sublink.href}
+                      className="text-base capitalize dark:text-dark-foreground dark:hover:bg-dark-foreground dark:hover:text-dark text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-primary hover:text-white group transition duration-300"
+                    >
+                      <sublink.icon className="w-6 h-6 text-primary dark:group-hover:text-dark group-hover:text-dark-foreground" />
+                      <span className="ml-3">{sublink.name}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+            </li>
+          ))}
+      </ul>
+    </nav >
+  );
+};
+
+export default Navigation;

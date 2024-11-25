@@ -1,13 +1,14 @@
 "use client"
 
 import * as React from "react"
-import { addDays, format } from "date-fns"
+import { format} from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { DateRange } from "react-day-picker"
-
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
+import { es } from 'date-fns/locale';
+
 import {
   Popover,
   PopoverContent,
@@ -18,8 +19,8 @@ export function DatePickerWithRange({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) {
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
+    from: new Date(new Date().getFullYear(), 0, 1),
+    to: new Date(),
   })
 
   return (
@@ -30,33 +31,39 @@ export function DatePickerWithRange({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[300px] justify-start text-left font-normal",
+              "w-auto justify-start text-left font-normal",
               !date && "text-muted-foreground"
             )}
           >
             <CalendarIcon />
             {date?.from ? (
-              date.to ? (
-                <>
-                  {format(date.from, "LLL dd, y")} -{" "}
-                  {format(date.to, "LLL dd, y")}
-                </>
-              ) : (
-                format(date.from, "LLL dd, y")
-              )
-            ) : (
-              <span>Pick a date</span>
-            )}
+  date.to ? (
+    <>
+      {format(date.from, "dd 'de' MMMM 'de' yyyy", { locale: es })} -{" "}
+      {format(date.to, "dd 'de' MMMM 'de' yyyy", { locale: es })}
+    </>
+  ) : (
+    format(date.from, "dd 'de' MMMM 'de' yyyy", { locale: es })
+  )
+) : (
+  <span>Selecciona una fecha</span>
+)}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar
             initialFocus
             mode="range"
+            // lang="es"
             defaultMonth={date?.from}
             selected={date}
             onSelect={setDate}
             numberOfMonths={2}
+            disabled={(date)=>{
+              const today = new Date()
+              const endOfYear = new Date(today.getFullYear(), 11, 31)
+              return date > endOfYear
+            }}
           />
         </PopoverContent>
       </Popover>

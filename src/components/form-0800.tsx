@@ -33,14 +33,7 @@ const Schema = z.object({
     state: z.string().min(1, "Seleccione un estado"),
     careProvided: z.string().min(1, "Seleccione un tipo de atención"),
     gmvw: z.string().min(1, "especifique"),
-    obs: z
-    .string()
-    .min(10, {
-        message: "Observaciones debe tener minimo 10 caracteres.",
-    })
-    .max(500, {
-        message: "Observaciones no debe tener más de 10 caracteres.",
-    }),
+    obs: z.string().max(1000, "Máximo 1000 caracteres."),
 })
 
 const defaultValues = {

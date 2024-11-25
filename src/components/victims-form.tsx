@@ -35,14 +35,7 @@ const Schema = z.object({
     methodOfRecruitment: z.string().min(1, "Seleccione un método de captación"),
     receivedBy: z.string().min(1, "Seleccione un recibidor"),
     age: z.coerce.number().int().positive("Ingrese una edad válida").min(1, "Ingrese una edad válida").max(120, "Ingrese una edad válida"),
-    obs: z
-    .string()
-    .min(10, {
-        message: "Observaciones debe tener minimo 10 caracteres.",
-    })
-    .max(500, {
-        message: "Observaciones no debe tener más de 10 caracteres.",
-    }),
+    obs: z.string().max(1000, "Máximo 1000 caracteres."),
 })
 
 const defaultValues = {

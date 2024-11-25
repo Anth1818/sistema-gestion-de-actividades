@@ -15,7 +15,7 @@
     --primary: #a855f7;
     --primary-hover: #6b21a8;
     --primary-foreground: 0 0% 10%;
-    --secondary: 0 0% 96.1%;
+    --secondary: rgb(0 0% 96.1%);
     --secondary-foreground: 0 0% 9%;
     --success: #22c55e;
     --success-foreground: #047857;

@@ -1,7 +1,7 @@
 import { Statistics, StatisticsFull } from "@/components/chartBar";
 import { ChartDataPie } from "@/components/chartPie";
 import CardDashboard from "@/components/card-dashboard";
-import { Award, CalendarCheck, Users } from "lucide-react"
+import { Award, CalendarCheck, Ambulance } from "lucide-react"
 import FiltersDataGeneral from "@/components/filters-for-data-general";
 
 export default function Page() {
@@ -40,11 +40,10 @@ export default function Page() {
   ]
 
   const chartDataPie = [
-    { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-    { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-    { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-    { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-    { browser: "other", visitors: 90, fill: "var(--color-other¿)" },
+    { activitie: "activitie1", done: 275, fill: "hsl(var(--chart-1))" },
+    { activitie: "activitie2", done: 90, fill: "hsl(var(--chart-2))" },
+    { activitie: "activitie3", done: 187, fill: "hsl(var(--chart-3))" },
+    { activitie: "activitie4", done: 173, fill: "hsl(var(--chart-4))" },
   ]
 
   const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toLocaleDateString('es-ES');
@@ -52,12 +51,12 @@ export default function Page() {
 
   return (
     <div>
-      <h2 className="mb-4">Datos del {firstDayOfMonth} al {today}</h2>
-      <FiltersDataGeneral />
+      {/* <h2 className="mb-4">Datos del {firstDayOfMonth} al {today}</h2> */}
+
       <div className="flex flex-col gap-4 md:flex-row justify-around mt-2 ">
         <CardDashboard title="Logros completados" content="+250" footer="+45% más que el mes pasado" Icon={Award} />
         <CardDashboard title="Actividades agendadas" content="+124" footer="+36% más que el mes pasado" Icon={CalendarCheck} />
-        <CardDashboard title="Usuarios registrados" content="+10" footer="Total de usuarios 60" Icon={Users} />
+        <CardDashboard title="Unidades móviles agendadas" content="+50" footer="+43% más que el mes pasado" Icon={Ambulance} />
       </div>
       <div className="flex flex-col gap-4 md:flex-row justify-around mt-4 h-[380px]">
         <div className="hidden md:block w-full h-[50px]">

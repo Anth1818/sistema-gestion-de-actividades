@@ -34,14 +34,7 @@ const Schema = z.object({
     kindOFWeapon: z.string().min(1, "Seleccione un tipo de arma"),
     kindOfMurder: z.string().min(1, "Seleccione un tipo de femicidio"),
     status: z.string().min(1, "Seleccione un estatus"),
-    obs: z
-    .string()
-    .min(10, {
-        message: "Observaciones debe tener minimo 10 caracteres.",
-    })
-    .max(500, {
-        message: "Observaciones no debe tener más de 10 caracteres.",
-    }),
+    obs: z.string().max(1000, "Máximo 1000 caracteres."),
 })
 
 const defaultValues = {

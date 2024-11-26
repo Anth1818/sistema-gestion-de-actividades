@@ -12,13 +12,16 @@ import {
 
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { useAuth } from "@/context/auth-context"
+import { log } from "console"
 
 export const AvatarOptions = () => {
+    const {logout} = useAuth()
 
-    const router = useRouter()
+    // const router = useRouter()
 
     const handleLogOut = () => {
-        router.push("/login")
+        logout()
     }
 
     return (

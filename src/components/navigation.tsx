@@ -13,7 +13,7 @@ const links = [
     name: "Actividades",
     icon: CalendarCheck,
     sublinks: [
-      { name: "Agendar actividad", href: "/dashboard/register-schedule-activities", icon: CalendarCheck },
+      { name: "Agendar", href: "/dashboard/register-schedule-activities", icon: CalendarCheck },
       { name: "Ver agenda", href: "/dashboard/schedule", icon: LucideNotebookText },
     ],
   },
@@ -21,7 +21,8 @@ const links = [
     name: "Logros",
     icon: FilePlus,
     sublinks: [
-      { name: "Registrar logro", href: "/dashboard/register-achievements", icon: FilePlus },
+      { name: "Registrar actividad", href: "/dashboard/register-achievements", icon: FilePlus },
+      // { name: "Registrar unidad móvil", href: "/dashboard/register-achievements", icon: FilePlus },
       { name: "Ver logros", href: "/dashboard/achievements", icon: Award },
     ],
   },

@@ -3,6 +3,7 @@ import { ChartDataPie } from "@/components/chartPie";
 import CardDashboard from "@/components/card-dashboard";
 import { Award, CalendarCheck, Ambulance } from "lucide-react"
 import FiltersDataGeneral from "@/components/filters-for-data-general";
+import ProtectedRoute from '../../components/protected-route';
 
 export default function Page() {
 
@@ -50,25 +51,27 @@ export default function Page() {
   const today = new Date().toLocaleDateString('es-ES');
 
   return (
-    <div>
-      {/* <h2 className="mb-4">Datos del {firstDayOfMonth} al {today}</h2> */}
+    <ProtectedRoute>
+      <div>
+        {/* <h2 className="mb-4">Datos del {firstDayOfMonth} al {today}</h2> */}
 
-      <div className="flex flex-col gap-4 md:flex-row justify-around mt-2 ">
-        <CardDashboard title="Logros completados" content="+250" footer="+45% más que el mes pasado" Icon={Award} />
-        <CardDashboard title="Actividades agendadas" content="+124" footer="+36% más que el mes pasado" Icon={CalendarCheck} />
-        <CardDashboard title="Unidades móviles agendadas" content="+50" footer="+43% más que el mes pasado" Icon={Ambulance} />
-      </div>
-      <div className="flex flex-col gap-4 md:flex-row justify-around mt-4 h-[380px]">
-        <div className="hidden md:block w-full h-[50px]">
-          <StatisticsFull chartData={chartDataFullMonths} />
+        <div className="flex flex-col gap-4 md:flex-row justify-around mt-2 ">
+          <CardDashboard title="Logros completados" content="+250" footer="+45% más que el mes pasado" Icon={Award} />
+          <CardDashboard title="Actividades agendadas" content="+124" footer="+36% más que el mes pasado" Icon={CalendarCheck} />
+          <CardDashboard title="Unidades móviles agendadas" content="+50" footer="+43% más que el mes pasado" Icon={Ambulance} />
         </div>
-        <div className="block md:hidden">
-          <Statistics chartData={chartData1} />
-          <Statistics chartData={chartData2} />
+        <div className="flex flex-col gap-4 md:flex-row justify-around mt-4 h-[380px]">
+          <div className="hidden md:block w-full h-[50px]">
+            <StatisticsFull chartData={chartDataFullMonths} />
+          </div>
+          <div className="block md:hidden">
+            <Statistics chartData={chartData1} />
+            <Statistics chartData={chartData2} />
+          </div>
+          <ChartDataPie chartDataPie={chartDataPie} />
         </div>
-        <ChartDataPie chartDataPie={chartDataPie} />
-      </div>
-      <div />
-    </div>
+        <div />
+      </div >
+    </ProtectedRoute >
   );
 }

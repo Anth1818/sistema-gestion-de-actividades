@@ -15,14 +15,18 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
+import { AlertDestructive } from "./alert"
 
 import React from "react";
 
 import { useRouter } from "next/navigation"
+import { useAuth } from "@/context/auth-context"
 
 export default function LoginForm({ children }: { children: React.ReactNode }) {
 
-    const router = useRouter()
+    // const router = useRouter()
+
+    const { login, wrongCredentials } = useAuth()
 
     const [showPassword, setShowPassword] = useState(false)
 
@@ -34,8 +38,8 @@ export default function LoginForm({ children }: { children: React.ReactNode }) {
         username: z.string({
             required_error: "Por favor ingrese su usuario.",
         }).min(1, {
-                message: "Este campo no puede estar vacío."
-             }).max(30, "Máximo 30 caracteres."),
+            message: "Este campo no puede estar vacío."
+        }).max(30, "Máximo 30 caracteres."),
 
         password: z.string({
             required_error: "Por favor ingrese su contraseña.",
@@ -56,8 +60,8 @@ export default function LoginForm({ children }: { children: React.ReactNode }) {
     // 2. Define a submit handler.
     function onSubmit(data: z.infer<typeof formLoginSchema>) {
         console.log(data)
-        // alert("Submitted data: " + JSON.stringify(data, null, 2))
-        router.push("/dashboard")
+        login(data.username, data.password)
+        // alert("Submitted data: " + JSON.stringify(data, null, 2)
     }
 
     return (
@@ -115,7 +119,8 @@ export default function LoginForm({ children }: { children: React.ReactNode }) {
                         />
                     </div>
                 </div>
-                <div className="flex justify-center mt-4">
+                <div className="flex flex-col justify-center mt-4 gap-4">
+                    {wrongCredentials && <AlertDestructive>Credenciales incorrectas</AlertDestructive>}
                     {children}
                 </div>
             </form>

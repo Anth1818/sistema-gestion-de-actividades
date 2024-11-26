@@ -1,6 +1,7 @@
 "use client"
 
 import ScheduleForm from "@/components/form-schedule";
+import ProtectedRoute from "@/components/protected-route";
 
 export default function SchedulePage() {
 
@@ -11,6 +12,7 @@ export default function SchedulePage() {
     const habilitado = true
 
     return (
+        <ProtectedRoute>
         <div>
             <h1 className="text-3xl font-bold text-center mb-8">Agenda de actividades</h1>
             <p className="mb-4">Fecha: {day} {date} </p>
@@ -23,5 +25,6 @@ export default function SchedulePage() {
 
             {habilitado && <ScheduleForm />}
         </div>
+        </ProtectedRoute> 
     );
 }

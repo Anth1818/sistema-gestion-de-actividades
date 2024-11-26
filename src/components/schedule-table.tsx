@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button"
 import { ChevronDown, ChevronUp, ArrowUpDown, ChevronRight, ChevronLeft } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { motion, AnimatePresence } from "framer-motion"
+import CompleteActivitieSchedule from './complete-activitie-schedule'
+import { AlertDialog, AlertDialogContent, AlertDialogTrigger, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction, AlertDialogOverlay } from "./ui/alert-dialog";
+import { useUpdateActivitie } from '@/context/updateActivitie'
 
 type Agenda = {
     id: number
@@ -22,6 +25,10 @@ type Agenda = {
     responsible: string
     place: string
     obs: string
+    quantityWomen: number
+    quantityMen: number
+    obs2: string
+    dateFinished: string
 }
 
 type OrdenColumna = {
@@ -34,75 +41,104 @@ const FilaExpandible = ({ actividad, expandida, onToggle, viewUser }: {
     expandida: boolean
     onToggle: () => void
     viewUser?: boolean
-    // onActivar: () => void
+    // onComplete: () => void
 }) => {
     // const status = actividad.date < new Date().toISOString() && actividad.status === 'Por completar' ? 'No completada' : actividad.status
     const colorStatus = actividad.status === 'Por completar' ? 'text-orange-600' : actividad.status === 'No completada' ? 'text-red-700' : 'text-success'
-    const disabled = actividad.status === 'No completada' ? true : false
-    const cursorPointer = disabled ? 'cursor-not-allowed' : 'cursor-pointer'    
-    return (
-        <>
-            <TableRow onClick={onToggle}>
-                <TableCell>{actividad.id}</TableCell>
-                <TableCell>{actividad.user}</TableCell>
-                <TableCell>{actividad.activitie}</TableCell>
-                <TableCell>{actividad.dateFormatted}</TableCell>
-                <TableCell className={colorStatus}>{actividad.status}</TableCell>
-                {viewUser && <TableCell>
-                    <Button size="sm" className={cursorPointer} disabled={disabled} onClick={(e) => { e.stopPropagation(); }}>
-                        {actividad.status === 'Por completar' ? 'Completar' : actividad.status === 'No completada' ? 'No completada' : 'Completado'}
-                    </Button>
-                </TableCell>}
-                <TableCell>
-                    {expandida ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                </TableCell>
-            </TableRow>
-            <AnimatePresence initial={false}>
-                {expandida && (
-                    <TableRow>
-                        <TableCell colSpan={7} className="p-0">
-                            <motion.div
-                                initial="collapsed"
-                                animate="open"
-                                exit="collapsed"
-                                variants={{
-                                    open: { opacity: 1, height: "auto" },
-                                    collapsed: { opacity: 0, height: 0 }
-                                }}
-                                transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
-                            >
-                                <div className="p-4 bg-muted">
-                                    <h3 className="font-semibold mb-2">Información adicional:</h3>
-                                    <div className={`flex flex-col md:flex-row gap-4 justify-between`}>
-                                        <p><b>Tipo de acción:</b> {actividad.action}</p>
-                                        <p><b>Tipo de actividad:</b> {actividad.gerency}</p>
-                                        <p><b>Estado:</b> {actividad.state}</p>
-                                        <p><b>Municipio:</b> {actividad.municipality}</p>
-                                        <p><b>Parroquia:</b> {actividad.parish}</p>
-                                        <p><b>Responsable:</b> {actividad.responsible}</p>
-                                        <p><b>Lugar:</b> {actividad.place}</p>
+    const disabled = actividad.status === 'Completada' || actividad.status === 'No completada'
+    const cursorPointer = disabled ? 'cursor-not-allowed' : 'cursor-pointer'
+    const { isUpdated, setIsUpdated } = useUpdateActivitie()
+    // const [isOpen, setIsOpen] = useState(false)
+
+    // const closeModal = () => {
+    //     if (isUpdated) {
+    //         setIsOpen(false)
+    //     }
+    // }
+        return (
+            <>
+                <TableRow onClick={onToggle}>
+                    <TableCell>{actividad.id}</TableCell>
+                    <TableCell>{actividad.user}</TableCell>
+                    <TableCell>{actividad.activitie}</TableCell>
+                    <TableCell>{actividad.dateFormatted}</TableCell>
+                    <TableCell className={colorStatus}>{actividad.status}</TableCell>
+                    {viewUser && <TableCell>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button size="sm" className={cursorPointer} disabled={disabled} onClick={(e) => { e.stopPropagation()}}>
+                                    {actividad.status === 'Por completar' ? 'Completar' : actividad.status === 'No completada' ? 'No completada' : 'Completado'}
+                                </Button>
+                            </AlertDialogTrigger>
+                            {/* <AlertDialogOverlay onClick={(e) => e.stopPropagation()}></AlertDialogOverlay> */}
+                            <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle className='text-2xl text-center'>Completar actividad agendada</AlertDialogTitle>
+                                    <AlertDialogDescription >
+                                        <CompleteActivitieSchedule id={actividad.id} />
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel onClick={() => { setIsUpdated(false) }}>Cerrar</AlertDialogCancel>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    </TableCell>}
+                    <TableCell>
+                        {expandida ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                    </TableCell>
+                </TableRow>
+                <AnimatePresence initial={false}>
+                    {expandida && (
+                        <TableRow>
+                            <TableCell colSpan={7} className="p-0">
+                                <motion.div
+                                    initial="collapsed"
+                                    animate="open"
+                                    exit="collapsed"
+                                    variants={{
+                                        open: { opacity: 1, height: "auto" },
+                                        collapsed: { opacity: 0, height: 0 }
+                                    }}
+                                    transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
+                                >
+                                    <div className="p-4 bg-muted">
+                                        <h3 className="font-semibold mb-2">Información adicional:</h3>
+                                        <div className={`flex flex-col md:flex-row gap-4 justify-between`}>
+                                            <p><b>Tipo de acción:</b> {actividad.action}</p>
+                                            <p><b>Tipo de actividad:</b> {actividad.gerency}</p>
+                                            <p><b>Estado:</b> {actividad.state}</p>
+                                            <p><b>Municipio:</b> {actividad.municipality}</p>
+                                            <p><b>Parroquia:</b> {actividad.parish}</p>
+                                            <p><b>Responsable:</b> {actividad.responsible}</p>
+                                            <p><b>Lugar:</b> {actividad.place}</p>
+                                            <p><b>N° de mujeres:</b> {actividad.quantityWomen}</p>
+                                            <p><b>N° de hombres:</b> {actividad.quantityMen}</p>
+                                            <p><b>Fecha de ejecución:</b> {actividad.dateFinished}</p>
+                                        </div>
+                                        <p className="break-words whitespace-pre-wrap lg:max-w-screen-lg xl:max-w-screen-2xl mt-4"><b>Observaciones de agenda: </b>{actividad.obs}</p>
+                                        <p className="break-words whitespace-pre-wrap lg:max-w-screen-lg xl:max-w-screen-2xl mt-4"><b>Observaciones de ejecución: </b>{actividad.obs2}</p>
                                     </div>
-                                    <p className="break-words whitespace-pre-wrap lg:max-w-screen-lg xl:max-w-screen-2xl mt-4"><b>Observaciones:</b>{actividad.obs}</p>
-                                </div>
-                            </motion.div>
-                        </TableCell>
-                    </TableRow>
-                )}
-            </AnimatePresence>
-        </>
-    )
-}
+                                </motion.div>
+                            </TableCell>
+                        </TableRow>
+                    )}
+                </AnimatePresence>
+            </>
+        )
+    }
 
 export default function ScheduleTable({ viewUser }: { viewUser?: boolean }) {
     const [actividad, setActividad] = useState<Agenda[]>([]);
+    const { isUpdated } = useUpdateActivitie()
 
     useEffect(() => {
         const dataFromLocalStorage = localStorage?.getItem('schedule');
         if (dataFromLocalStorage) {
             setActividad(JSON.parse(dataFromLocalStorage));
         }
-    }, []);
-    
+    }, [isUpdated]);
+
     const columnas = [{
         label: 'ID',
         campo: 'id'
@@ -133,21 +169,12 @@ export default function ScheduleTable({ viewUser }: { viewUser?: boolean }) {
     const toggleExpansion = (id: number) => {
         setExpandido(expandido === id ? null : id)
     }
-
-    // const toggleEstatus = (id: number) => {
-    //     setUsuarios(actividad.map(usuario =>
-    //         usuario.id === id
-    //             ? { ...usuario, estatus: usuario.estatus === 'Activo' ? 'Inactivo' : 'Activo' }
-    //             : usuario
-    //     ))
-    // }
-
     const ordenarActividades = (columna: keyof Agenda | 'id') => {
         const nuevaDireccion = ordenActual?.columna === columna && ordenActual.direccion === 'asc' ? 'desc' : 'asc'
         setOrdenActual({ columna, direccion: nuevaDireccion })
 
         const actividadesOrdenados = [...actividad].sort((a, b) => {
-            if(columna === 'id') {
+            if (columna === 'id') {
                 return nuevaDireccion === 'asc' ? a.id - b.id : b.id - a.id
             }
             let valorA: string, valorB: string
@@ -208,7 +235,7 @@ export default function ScheduleTable({ viewUser }: { viewUser?: boolean }) {
                             expandida={expandido === actividad.id}
                             onToggle={() => toggleExpansion(actividad.id)}
                             viewUser={viewUser}
-                        // onActivar={() => toggleEstatus(usuario.id)}
+                        // onComplete={() => completeSchedule(actividad.id)}
                         />
                     ))}
                     {actividad.length === 0 && (

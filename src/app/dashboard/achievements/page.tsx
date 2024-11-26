@@ -3,6 +3,7 @@
 import ActivitiesStatsTable from "@/components/activities-stats";
 import FiltersDataGeneral from "@/components/filters-for-data-general";
 import MonthlyStatisticsTable from "@/components/monthly-stats";
+import ProtectedRoute from "@/components/protected-route";
 import ExpandableStateTable from "@/components/states-stats";
 import {
   Accordion,
@@ -33,21 +34,22 @@ export default function Page() {
   ]
 
   return (
-    <>
-      <div className="flex flex-col justify-center items-center">
-        <h1 className="text-3xl font-bold text-center mb-2">Datos generales enero-noviembre 2024</h1>
-        <FiltersDataGeneral />
-      </div>
+    <ProtectedRoute>
+      <>
+        <div className="flex flex-col justify-center items-center">
+          <h1 className="text-3xl font-bold text-center mb-2">Datos generales enero-noviembre 2024</h1>
+          <FiltersDataGeneral />
+        </div>
 
-      <Accordion type="single" collapsible>
-        {items.map((item) => (
-          <AccordionItem key={item.id} value={`item-${item.id}`}>
-            <AccordionTrigger>{item.title}</AccordionTrigger>
-            <AccordionContent>{item.content}</AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
-
-    </>
+        <Accordion type="single" collapsible>
+          {items.map((item) => (
+            <AccordionItem key={item.id} value={`item-${item.id}`}>
+              <AccordionTrigger>{item.title}</AccordionTrigger>
+              <AccordionContent>{item.content}</AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </>
+    </ProtectedRoute>
   );
 }

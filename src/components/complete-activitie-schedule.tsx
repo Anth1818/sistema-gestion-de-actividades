@@ -77,7 +77,8 @@ export default function CompleteActivitieSchedule({ id}: completeScheduleModalPr
                 return {
                     ...item,
                     ...data,
-                    dateUpdated: new Date(),
+                    dateUpdated: format(new Date(), "dd/MM/yyyy"),
+                    dateFinished: format(data.dateFinished, "dd/MM/yyyy"),
                     status: "Completada",
                 }
             }

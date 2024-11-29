@@ -2,34 +2,36 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/auth-context';
 import { useRouter } from 'next/navigation';
+import PageDenied from '@/app/denied/page';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useAuth();
-  const [isClient, setIsClient] = useState(false);
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    if (isClient) {
+    const checkAuth = () => {
       const isAuthenticatedStorage = localStorage.getItem('isAuthenticated');
       if (!isAuthenticatedStorage || isAuthenticatedStorage !== 'true') {
-        router.push('/login');
-      } 
-    }
-  }, [isClient, router]);
+        router.replace('/denied');
+      } else {
+        setIsAuthenticated(true);
+      }
+      setLoading(false);
+    };
 
-//   if (!isClient) {
-//     return null; // O un spinner de carga
-//   }
+    checkAuth();
+  }, [router, setIsAuthenticated]);
 
-//   if (!isAuthenticated || !isAuthenticatedStorage) {
-//     return null; // O un spinner de carga
-//   }
+  // if (loading) {
+  //   return <div>Loading...</div>; // O un spinner de carga
+  // }
 
-  return <>{children}</>;
+  if (!isAuthenticated) {
+    return null; // O un spinner de carga
+  }
+
+  return <>{ children }</>;
 };
 
 export default ProtectedRoute;

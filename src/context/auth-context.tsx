@@ -8,6 +8,7 @@ interface AuthContextType {
   wrongCredentials: boolean;
   login: (username: string, password: string) => void;
   logout: () => void;
+  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,7 +26,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Verifica si las credenciales coinciden con alguno de los usuarios
     const user = users.find((user) => user.username === username && user.password === password);
     if (user) {
-      setIsAuthenticated(true);
       setWrongCredentials(false);
       localStorage.setItem('isAuthenticated', 'true');
       router.push('/dashboard');
@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, wrongCredentials}}>
+    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, login, logout, wrongCredentials}}>
       {children}
     </AuthContext.Provider>
   );

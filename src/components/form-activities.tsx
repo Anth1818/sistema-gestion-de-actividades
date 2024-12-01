@@ -14,17 +14,27 @@ import { Separator } from "@radix-ui/react-select"
 import VictimsForm from "./victims-form"
 import MurderFemaleForm from "./form-murder-famale"
 import Form0800 from "./form-0800"
+import { gerency, actionsOptions} from "@/lib/utils"
+import useActivitieOptions from "@/hooks/useActivitieOptions"
+
+type Activity = {
+  id: number;
+  name: string;
+  label: string;
+};
 
 
 export default function FormActivities() {
-  const [activitieType, setActivitieType] = useState("")
+  const [activitieType, setActivitieType] = useState<Activity[] | string>("");
   const [actions, setActions] = useState("")
   const [gerencia, setGerencia] = useState("")
 
-  const renderFormCommons = activitieType !== "" && activitieType !== "victimOfTrafficking" && activitieType !== "murderFemale" && activitieType !== "service0800"
+  const {activitieOption} = useActivitieOptions(actions)
+
+  const renderFormCommons = activitieType !== "" && activitieType !== "victimOfTrafficking" && activitieType !== "femicide" && activitieType !== "telephone service"
   const renderFormVictims = activitieType === "victimOfTrafficking"
-  const renderFormMurderFemale = activitieType === "murderFemale"
-  const renderForm0800 = activitieType === "service0800"
+  const renderFormMurderFemale = activitieType === "femicide"
+  const renderForm0800 = activitieType === "telephone service"
 
   return (
     <>
@@ -37,9 +47,9 @@ export default function FormActivities() {
               <SelectValue placeholder="Seleccione" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="gerencia 1">gerencia 1</SelectItem>
-              <SelectItem value="gerencia 2">gerencia 2</SelectItem>
-              <SelectItem value="gerencia 3">gerencia 3</SelectItem>
+              {gerency.map((gerencia) => (
+                <SelectItem key={gerencia.id} value={gerencia.name}>{gerencia.label}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -51,9 +61,9 @@ export default function FormActivities() {
               <SelectValue placeholder="Seleccione" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="action 1">Atención jurídica</SelectItem>
-              <SelectItem value="action 2">Prevención</SelectItem>
-              <SelectItem value="action 3">Capacitación</SelectItem>
+              {actionsOptions.map((action) => (
+                <SelectItem key={action.id} value={action.name}>{action.label}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -61,18 +71,15 @@ export default function FormActivities() {
         {/* -----Actividades----- */}
         <div className="flex flex-col flex-1">
           <label htmlFor="activitie-select" className="mb-2 text-sm font-semibold">Actividades</label>
-          <Select value={activitieType} onValueChange={(value) => setActivitieType(value)}>
+          <Select value={typeof activitieType === 'string' ? activitieType : undefined} onValueChange={(value) => setActivitieType(value)}>
             <SelectTrigger>
               <SelectValue placeholder="Seleccione" />
             </SelectTrigger>
 
             <SelectContent>
-              <SelectItem value="activitie 1">actividad 1</SelectItem>
-              <SelectItem value="activitie 2">actividad 2</SelectItem>
-              <SelectItem value="activitie 3">actividad 3</SelectItem>
-              <SelectItem value="victimOfTrafficking">Victima de trata</SelectItem>
-              <SelectItem value="murderFemale">Femicidio</SelectItem>
-              <SelectItem value="service0800">Atención telefónica 0800</SelectItem>
+              {activitieOption?.map((activity: Activity) => (
+                <SelectItem key={activity.id} value={activity.name}>{activity.label}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -83,26 +90,26 @@ export default function FormActivities() {
 
         <div className="lg:h-[400px]">
           <Separator className="my-4 border" />
-          <ActivitiesCommonsForm gerencia={gerencia} actions={actions} activitieType={activitieType} />
+          <ActivitiesCommonsForm gerencia={gerencia} actions={actions} activitieType={typeof activitieType === 'string' ? activitieType : ''} />
         </div>}
 
       {renderFormVictims &&
-      <div className="lg:h-[300px]">
-        <Separator className="my-4 border" />
-        <VictimsForm gerencia={gerencia} actions={actions} activitieType={activitieType} />
-      </div>}
+        <div className="lg:h-[300px]">
+          <Separator className="my-4 border" />
+          <VictimsForm gerencia={gerencia} actions={actions} activitieType={activitieType} />
+        </div>}
 
       {renderFormMurderFemale &&
-      <div className="lg:h-[300px]">
-        <Separator className="my-4 border" />
-        <MurderFemaleForm gerencia={gerencia} actions={actions} activitieType={activitieType} />
-      </div>}
+        <div className="lg:h-[300px]">
+          <Separator className="my-4 border" />
+          <MurderFemaleForm gerencia={gerencia} actions={actions} activitieType={activitieType} />
+        </div>}
 
       {renderForm0800 &&
-      <div className="lg:h-[300px]">
-        <Separator className="my-4 border" />
-        <Form0800 gerencia={gerencia} actions={actions} activitieType={activitieType} />
-      </div>}
+        <div className="lg:h-[300px]">
+          <Separator className="my-4 border" />
+          <Form0800 gerencia={gerencia} actions={actions} activitieType={activitieType} />
+        </div>}
 
     </>
   )

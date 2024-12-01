@@ -30,6 +30,9 @@ import { CalendarIcon } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
 import { Textarea } from "./ui/textarea"
+import { gerency, actionsOptions} from "@/lib/utils"
+import useActivitieOptions from "@/hooks/useActivitieOptions"
+import { places } from "@/lib/utils"
 
 
 // Esquema base
@@ -63,6 +66,7 @@ const defaultValues = {
 }
 
 export default function ScheduleForm() {
+   
 
     const { toast } = useToast()
 
@@ -84,6 +88,8 @@ export default function ScheduleForm() {
         resolver: zodResolver(Schema),
         defaultValues
     })
+
+    const {activitieOption} = useActivitieOptions(form.watch('action'))
 
     function onSubmit(data: z.infer<typeof Schema>) {
         form.reset(defaultValues)
@@ -132,9 +138,9 @@ export default function ScheduleForm() {
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                    <SelectItem value="gerency 1">Gerencia 1</SelectItem>
-                                    <SelectItem value="gerency 2">Gerencia 2</SelectItem>
-                                    <SelectItem value="gerency 3">Gerencia 3</SelectItem>
+                                    {gerency.map((gerencia) => (
+                                        <SelectItem key={gerencia.id} value={gerencia.name}>{gerencia.label}</SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                             <FormMessage />
@@ -156,9 +162,9 @@ export default function ScheduleForm() {
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                    <SelectItem value="action 1">Acción 1</SelectItem>
-                                    <SelectItem value="action 2">Acción 2</SelectItem>
-                                    <SelectItem value="action 3">Acción 3</SelectItem>
+                                  {actionsOptions.map((action) => (
+                                    <SelectItem key={action.id} value={action.name}>{action.label}</SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                             <FormMessage />
@@ -180,9 +186,9 @@ export default function ScheduleForm() {
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                    <SelectItem value="activitie 1">Actividad 1</SelectItem>
-                                    <SelectItem value="activitie 2">Actividad 2</SelectItem>
-                                    <SelectItem value="activitie 3">Actividad 3</SelectItem>
+                                    {activitieOption?.map((activity) => (
+                                        <SelectItem key={activity.id} value={activity.name}>{activity.label}</SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                             <FormMessage />
@@ -276,9 +282,9 @@ export default function ScheduleForm() {
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                    <SelectItem value="place 1">Lugar 1</SelectItem>
-                                    <SelectItem value="place 2">Lugar 2</SelectItem>
-                                    <SelectItem value="place 3">Lugar 3</SelectItem>
+                                    {places.map((place) => (
+                                        <SelectItem key={place.id} value={place.name}>{place.label}</SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                             <FormMessage />

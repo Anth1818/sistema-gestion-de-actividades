@@ -27,9 +27,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
-import { ToastAction } from "./ui/toast"
 import { Calendar } from "./ui/calendar"
+import {places} from "@/lib/utils"
 
 interface ActivitiesCommonsFormProps {
     gerencia: string,
@@ -172,9 +171,9 @@ export default function ActivitiesCommonsForm({ gerencia, actions, activitieType
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                    <SelectItem value="place 1">Lugar 1</SelectItem>
-                                    <SelectItem value="place 2">Lugar 2</SelectItem>
-                                    <SelectItem value="place 3">Lugar 3</SelectItem>
+                                    {places.map((place) => (
+                                        <SelectItem key={place.id} value={place.name}>{place.label}</SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                             <FormMessage />

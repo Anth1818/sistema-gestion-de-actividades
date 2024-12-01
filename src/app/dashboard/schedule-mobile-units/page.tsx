@@ -1,7 +1,7 @@
 "use client";
 import FiltersDataGeneral from "@/components/filters-for-data-general";
 import ProtectedRoute from "@/components/protected-route";
-import ScheduleTable from "@/components/schedule-table";
+// import ScheduleTable from "@/components/schedule-table";
 
 
 export default function ScheduleMobileUnitsPage() {

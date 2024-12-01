@@ -23,9 +23,9 @@ import {
 import { Textarea } from "./ui/textarea"
 
 interface VictimsFormProps {
-    gerencia: string,
-    actions: string,
-    activitieType: string
+    gerency: string,
+    action: string,
+    activitie: string
 }
 
 
@@ -47,7 +47,7 @@ const defaultValues = {
     obs: "",
 }
 
-export default function VictimsForm({ gerencia, actions, activitieType }: VictimsFormProps) {
+export default function VictimsForm({ gerency, action, activitie }: VictimsFormProps) {
 
     const form = useForm({
         resolver: zodResolver(Schema),
@@ -56,7 +56,7 @@ export default function VictimsForm({ gerencia, actions, activitieType }: Victim
 
     function onSubmit(data: z.infer<typeof Schema>) {
         form.reset(defaultValues)
-        alert("Submitted data: " + JSON.stringify({ ...data, gerencia, actions, activitieType }, null, 2))
+        alert("Submitted data: " + JSON.stringify({ ...data, gerency, action, activitie }, null, 2))
     }
     return (
         <>

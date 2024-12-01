@@ -12,7 +12,7 @@ export default function ScheduleMobileUnitsPage() {
             <div>
                 <h1 className="text-3xl font-bold text-center mb-8">Agenda de actividades móviles</h1>
                 <FiltersDataGeneral />
-                {adminLogged && <div>
+                {/* {adminLogged && <div>
                     <p>Tabla para admin</p>
                     <ScheduleTable />
                 </div>}
@@ -20,7 +20,7 @@ export default function ScheduleMobileUnitsPage() {
                 {userLogged && <div className="mt-8">
                     <p>Tabla para usuario</p>
                     <ScheduleTable viewUser />
-                </div>}
+                </div>} */}
             </div>
         </ProtectedRoute>
     );

@@ -4,6 +4,7 @@ import ActivitiesStatsTable from "@/components/activities-stats";
 import FiltersDataGeneral from "@/components/filters-for-data-general";
 import MonthlyStatisticsTable from "@/components/monthly-stats";
 import ProtectedRoute from "@/components/protected-route";
+import { TableUI as AchievementsTable } from "@/components/schedule-table";
 import ExpandableStateTable from "@/components/states-stats";
 import {
   Accordion,
@@ -33,6 +34,28 @@ export default function Page() {
 
   ]
 
+  const columnas = [{
+    label: 'ID',
+    campo: 'id'
+  },
+  {
+    label: 'Usuario',
+    campo: 'user'
+  },
+  {
+    label: 'Actividad',
+    campo: 'activitie'
+  },
+  {
+    label: 'Fecha',
+    campo: 'date'
+  },
+  {
+    label: 'Estatus',
+    campo: 'status'
+}
+  ]
+
   return (
     <ProtectedRoute>
       <>
@@ -41,14 +64,16 @@ export default function Page() {
           <FiltersDataGeneral />
         </div>
 
-        <Accordion type="single" collapsible>
+        <AchievementsTable columnas={columnas} achievements />
+
+        {/* <Accordion type="single" collapsible>
           {items.map((item) => (
             <AccordionItem key={item.id} value={`item-${item.id}`}>
               <AccordionTrigger>{item.title}</AccordionTrigger>
               <AccordionContent>{item.content}</AccordionContent>
             </AccordionItem>
           ))}
-        </Accordion>
+        </Accordion> */}
       </>
     </ProtectedRoute>
   );

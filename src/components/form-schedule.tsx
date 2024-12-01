@@ -139,7 +139,7 @@ export default function ScheduleForm() {
                                 </FormControl>
                                 <SelectContent>
                                     {gerency.map((gerencia) => (
-                                        <SelectItem key={gerencia.id} value={gerencia.name}>{gerencia.label}</SelectItem>
+                                        <SelectItem key={gerencia.id} value={gerencia.label}>{gerencia.label}</SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
@@ -163,7 +163,7 @@ export default function ScheduleForm() {
                                 </FormControl>
                                 <SelectContent>
                                   {actionsOptions.map((action) => (
-                                    <SelectItem key={action.id} value={action.name}>{action.label}</SelectItem>
+                                    <SelectItem key={action.id} value={action.label}>{action.label}</SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
@@ -187,7 +187,7 @@ export default function ScheduleForm() {
                                 </FormControl>
                                 <SelectContent>
                                     {activitieOption?.map((activity) => (
-                                        <SelectItem key={activity.id} value={activity.name}>{activity.label}</SelectItem>
+                                        <SelectItem key={activity.id} value={activity.label}>{activity.label}</SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
@@ -283,7 +283,7 @@ export default function ScheduleForm() {
                                 </FormControl>
                                 <SelectContent>
                                     {places.map((place) => (
-                                        <SelectItem key={place.id} value={place.name}>{place.label}</SelectItem>
+                                        <SelectItem key={place.id} value={place.label}>{place.label}</SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>

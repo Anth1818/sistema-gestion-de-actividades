@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import CompleteActivitieSchedule from './complete-activitie-schedule'
 import { AlertDialog, AlertDialogContent, AlertDialogTrigger, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction, AlertDialogOverlay } from "./ui/alert-dialog";
 import { useUpdateActivitie } from '@/context/updateActivitie'
+import { set } from 'date-fns'
 
 type Agenda = {
     id: number
@@ -36,11 +37,12 @@ type OrdenColumna = {
     direccion: 'asc' | 'desc'
 } | null
 
-const FilaExpandible = ({ actividad, expandida, onToggle, viewUser }: {
+const FilaExpandible = ({ actividad, expandida, onToggle, viewUser, achievements }: {
     actividad: Agenda
     expandida: boolean
     onToggle: () => void
     viewUser?: boolean
+    achievements?: boolean
     // onComplete: () => void
 }) => {
     // const status = actividad.date < new Date().toISOString() && actividad.status === 'Por completar' ? 'No completada' : actividad.status
@@ -48,13 +50,7 @@ const FilaExpandible = ({ actividad, expandida, onToggle, viewUser }: {
     const disabled = actividad.status === 'Completada' || actividad.status === 'No completada'
     const cursorPointer = disabled ? 'cursor-not-allowed' : 'cursor-pointer'
     const { isUpdated, setIsUpdated } = useUpdateActivitie()
-    // const [isOpen, setIsOpen] = useState(false)
-
-    // const closeModal = () => {
-    //     if (isUpdated) {
-    //         setIsOpen(false)
-    //     }
-    // }
+ 
         return (
             <>
                 <TableRow onClick={onToggle}>
@@ -62,7 +58,7 @@ const FilaExpandible = ({ actividad, expandida, onToggle, viewUser }: {
                     <TableCell>{actividad.user}</TableCell>
                     <TableCell>{actividad.activitie}</TableCell>
                     <TableCell>{actividad.dateFormatted}</TableCell>
-                    <TableCell className={colorStatus}>{actividad.status}</TableCell>
+                   {<TableCell className={colorStatus}>{actividad.status}</TableCell>}
                     {viewUser && <TableCell>
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
@@ -105,8 +101,8 @@ const FilaExpandible = ({ actividad, expandida, onToggle, viewUser }: {
                                     <div className="p-4 bg-muted">
                                         <h3 className="font-semibold mb-2">Información adicional:</h3>
                                         <div className={`flex flex-col md:flex-row gap-4 justify-between`}>
+                                            <p><b>Gerencia:</b> {actividad.gerency}</p>
                                             <p><b>Tipo de acción:</b> {actividad.action}</p>
-                                            <p><b>Tipo de actividad:</b> {actividad.gerency}</p>
                                             <p><b>Estado:</b> {actividad.state}</p>
                                             <p><b>Municipio:</b> {actividad.municipality}</p>
                                             <p><b>Parroquia:</b> {actividad.parish}</p>
@@ -116,7 +112,7 @@ const FilaExpandible = ({ actividad, expandida, onToggle, viewUser }: {
                                             <p><b>N° de hombres:</b> {actividad.quantityMen}</p>
                                             <p><b>Fecha de ejecución:</b> {actividad.dateFinished}</p>
                                         </div>
-                                        <p className="break-words whitespace-pre-wrap lg:max-w-screen-lg xl:max-w-screen-2xl mt-4"><b>Observaciones de agenda: </b>{actividad.obs}</p>
+                                        {!achievements && <p className="break-words whitespace-pre-wrap lg:max-w-screen-lg xl:max-w-screen-2xl mt-4"><b>Observaciones de agenda: </b>{actividad.obs}</p>}
                                         <p className="break-words whitespace-pre-wrap lg:max-w-screen-lg xl:max-w-screen-2xl mt-4"><b>Observaciones de ejecución: </b>{actividad.obs2}</p>
                                     </div>
                                 </motion.div>
@@ -128,37 +124,31 @@ const FilaExpandible = ({ actividad, expandida, onToggle, viewUser }: {
         )
     }
 
-export default function ScheduleTable({ viewUser }: { viewUser?: boolean }) {
+
+    interface TableProps {
+        viewUser?: boolean
+        achievements?: boolean
+        columnas: { campo: string, label: string }[]
+    }
+
+export function TableUI({ viewUser, columnas, achievements }: TableProps) {
     const [actividad, setActividad] = useState<Agenda[]>([]);
     const { isUpdated } = useUpdateActivitie()
 
     useEffect(() => {
         const dataFromLocalStorage = localStorage?.getItem('schedule');
+        const dataFromLocalStorageCompleted = localStorage?.getItem('achievements');
+
         if (dataFromLocalStorage) {
-            setActividad(JSON.parse(dataFromLocalStorage));
+            const parsedData = JSON.parse(dataFromLocalStorage);
+            setActividad(parsedData);
+            if(dataFromLocalStorageCompleted && achievements){
+                const completedData = JSON.parse(dataFromLocalStorageCompleted);
+                setActividad(parsedData.filter((actividad: Agenda) => actividad.status === 'Completada'));
+                setActividad((prev) => [...prev, ...completedData]);
+            }
         }
     }, [isUpdated]);
-
-    const columnas = [{
-        label: 'ID',
-        campo: 'id'
-    },
-    {
-        label: 'Usuario',
-        campo: 'user'
-    },
-    {
-        label: 'Actividad agendada',
-        campo: 'activitie'
-    },
-    {
-        label: 'Fecha agendada',
-        campo: 'date'
-    },
-    {
-        label: 'Estatus',
-        campo: 'status'
-    }]
 
 
     const [expandido, setExpandido] = useState<number | null>(null)
@@ -235,6 +225,7 @@ export default function ScheduleTable({ viewUser }: { viewUser?: boolean }) {
                             expandida={expandido === actividad.id}
                             onToggle={() => toggleExpansion(actividad.id)}
                             viewUser={viewUser}
+                            achievements={achievements}
                         // onComplete={() => completeSchedule(actividad.id)}
                         />
                     ))}

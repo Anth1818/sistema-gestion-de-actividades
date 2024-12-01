@@ -22,9 +22,9 @@ import {
 import { Textarea } from "./ui/textarea"
 
 interface MurderFemaleProps {
-    gerencia: string,
-    actions: string,
-    activitieType: string
+    gerency: string,
+    action: string,
+    activitie: string
 }
 
 
@@ -46,7 +46,7 @@ const defaultValues = {
     obs: "",
 }
 
-export default function MurderFemaleForm({ gerencia, actions, activitieType }: MurderFemaleProps) {
+export default function MurderFemaleForm({ gerency, action, activitie }: MurderFemaleProps) {
 
     const form = useForm({
         resolver: zodResolver(Schema),
@@ -55,7 +55,7 @@ export default function MurderFemaleForm({ gerencia, actions, activitieType }: M
 
     function onSubmit(data: z.infer<typeof Schema>) {
         form.reset(defaultValues)
-        alert("Submitted data: " + JSON.stringify({ ...data, gerencia, actions, activitieType }, null, 2))
+        alert("Submitted data: " + JSON.stringify({ ...data, gerency, action, activitie }, null, 2))
     }
     return (
         <>

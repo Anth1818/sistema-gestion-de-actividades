@@ -49,7 +49,7 @@ export const actionsOptions = [
 
 export const activities = [
   {
-    legalAttention: [
+    "Atención jurídica": [
       {
         id: 1,
         name: "legal advice",
@@ -86,7 +86,7 @@ export const activities = [
         label: "Victima de trata",
       },
     ],
-    prevention: [
+    "Prevención": [
       {
         id: 1,
         name: "psicolocial attention",
@@ -133,7 +133,7 @@ export const activities = [
         label: "Toma de espacio",
       }
     ],
-    training: [
+    "Capacitación": [
       {
         id: 1,
         name: "community defenders",

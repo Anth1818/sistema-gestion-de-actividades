@@ -10,13 +10,14 @@ type Activity = {
 const useActivitieOptions = (actions: string) => {
   const [activitieOption, setActivitieOption] = useState<Activity[]>([]);
 
+
   useEffect(() => {
-    if (actions === "legalAttention") {
-      setActivitieOption(activities[0].legalAttention || []);
-    } else if (actions === "prevention") {
-      setActivitieOption(activities[0].prevention || []);
-    } else if (actions === "training") {
-      setActivitieOption(activities[0].training || []);
+    if (actions === "Atención jurídica") {
+      setActivitieOption(activities[0]["Atención jurídica"] || []);
+    } else if (actions === "Prevención") {
+      setActivitieOption(activities[0]["Prevención"] || []);
+    } else if (actions === "Capacitación") {
+      setActivitieOption(activities[0]["Capacitación"]|| []);
     } else {
       setActivitieOption([]);
     }

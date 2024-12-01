@@ -145,7 +145,7 @@ export default function CompleteActivitieSchedule({ id}: completeScheduleModalPr
                                             )}
                                         >
                                             {field.value ? (
-                                                format(field.value, "PPP")
+                                                format(field.value, "dd/MM/yyyy")
                                             ) : (
                                                 <span>Seleccion una fecha</span>
                                             )}

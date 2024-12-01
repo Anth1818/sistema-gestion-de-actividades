@@ -23,9 +23,9 @@ import { Textarea } from "./ui/textarea"
 import { Input } from "./ui/input"
 
 interface form0800Props {
-    gerencia: string,
-    actions: string,
-    activitieType: string
+    gerency: string,
+    action: string,
+    activitie: string
 }
 
 
@@ -43,7 +43,7 @@ const defaultValues = {
     obs: "",
 }
 
-export default function Form0800({ gerencia, actions, activitieType }: form0800Props) {
+export default function Form0800({ gerency, action, activitie }: form0800Props) {
 
     const form = useForm({
         resolver: zodResolver(Schema),
@@ -52,7 +52,7 @@ export default function Form0800({ gerencia, actions, activitieType }: form0800P
 
     function onSubmit(data: z.infer<typeof Schema>) {
         form.reset(defaultValues)
-        alert("Submitted data: " + JSON.stringify({ ...data, gerencia, actions, activitieType }, null, 2))
+        alert("Submitted data: " + JSON.stringify({ ...data, gerency, action, activitie }, null, 2))
     }
     return (
         <>

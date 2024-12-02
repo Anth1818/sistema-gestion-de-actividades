@@ -95,7 +95,7 @@ export default function ScheduleMobileUnitsForm() {
         let dataLocal = existingData ? JSON.parse(existingData) : []
 
         // Añade el nuevo dato al array
-        dataLocal.push({ id: Math.floor(Math.random() * 100), user: users[userRandom], status: "Por completar", dateFormatted: format(data.date, "dd/MM/yyyy"), ...data })
+        dataLocal.push({ id: Math.floor(Math.random() * 100), user: users[userRandom], status: "Por completar", dateFormatted: format(data.date, "dd/MM/yyyy"), activitie: "Unidad móvil", ...data })
 
         // Guarda el array actualizado en localStorage
         localStorage.setItem('scheduleMobileUnits', JSON.stringify(dataLocal))
@@ -305,7 +305,7 @@ export default function ScheduleMobileUnitsForm() {
                                             )}
                                         >
                                             {field.value ? (
-                                                format(field.value, "PPP")
+                                                format(field.value, "dd/MM/yyyy")
                                             ) : (
                                                 <span>Seleccion una fecha</span>
                                             )}

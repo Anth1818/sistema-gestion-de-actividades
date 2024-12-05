@@ -22,7 +22,6 @@ export interface AgeRangeData {
   }
   
   export interface FormData {
-    population: string
     attentionTypes: AttentionTypeData[]
   }
   

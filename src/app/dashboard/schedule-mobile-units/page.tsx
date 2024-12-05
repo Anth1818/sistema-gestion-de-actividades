@@ -33,7 +33,7 @@ export default function ScheduleMobileUnitsPage() {
     return (
         <ProtectedRoute>
             <div>
-                <h1 className="text-3xl font-bold text-center mb-8">Agenda de actividades móviles</h1>
+                <h1 className="text-3xl font-bold text-center mb-8">Agenda de unidades móviles</h1>
                 <FiltersDataGeneral />
                 {adminLogged && <div>
                     <p>Tabla para admin</p>

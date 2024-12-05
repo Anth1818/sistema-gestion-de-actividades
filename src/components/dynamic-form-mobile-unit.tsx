@@ -1,7 +1,6 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
   Select,
@@ -12,7 +11,7 @@ import {
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Plus, Trash2 } from 'lucide-react'
-import type { AgeRangeData, DisabilityData, EthnicityData, AttentionTypeData, FormData } from "../lib/type"
+import type { FormData } from "../lib/type"
 
 const AGE_RANGES = [
   "1-7 años",
@@ -42,11 +41,12 @@ const ETHNICITIES = [
   "Blanco",
 ]
 
-export default function DynamicForm() {
-  const [formData, setFormData] = useState<FormData>({
-    population: "",
-    attentionTypes: [],
-  })
+interface DynamicFormProps {
+  formData: FormData
+  setFormData: (data: FormData) => void
+}
+
+export default function DynamicForm({ formData, setFormData }: DynamicFormProps) {
 
   const addAttentionType = () => {
     setFormData({
@@ -112,33 +112,14 @@ export default function DynamicForm() {
   }
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
-      <CardHeader>
-        <CardTitle>Completar unidad móvil agendada</CardTitle>
-      </CardHeader>
+    <Card className="w-full max-w-4xl mx-auto p-4">
       <CardContent className="space-y-6">
-        {/* Población */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Población aprox a ser atendida</label>
-          <Select
-            value={formData.population}
-            onValueChange={(value) => setFormData({ ...formData, population: value })}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Seleccione" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="rural">Rural</SelectItem>
-              <SelectItem value="urbana">Urbana</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
 
         {/* Tipos de Atención */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <label className="text-sm font-medium">Tipos de atención</label>
-            <Button onClick={addAttentionType} variant="outline" size="sm">
+            <Button onClick={(e) => { e.preventDefault(); addAttentionType() }} variant="outline" size="sm">
               <Plus className="h-4 w-4 mr-2" />
               Agregar tipo de atención
             </Button>
@@ -168,72 +149,85 @@ export default function DynamicForm() {
                 <Button
                   variant="destructive"
                   size="icon"
-                  onClick={() => removeAttentionType(attentionIndex)}
+                  onClick={(e) => { e.preventDefault(); removeAttentionType(attentionIndex) }}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
 
               {/* Rangos de edad para el tipo de atención */}
-              <div className="space-y-2 flex flex-col">
-                <label className="text-sm font-medium">Rangos de edad</label>
+              <div className="space-y-2">
                 {attentionType.ageRanges.map((ageRange, ageIndex) => (
                   <div key={ageIndex} className="grid grid-cols-4 gap-4 items-center">
-                    <Select
-                      value={ageRange.range}
-                      onValueChange={(value) => {
-                        const newAttentionTypes = [...formData.attentionTypes]
-                        newAttentionTypes[attentionIndex].ageRanges[ageIndex].range = value
-                        setFormData({ ...formData, attentionTypes: newAttentionTypes })
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Rango de edad" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {AGE_RANGES.map((range) => (
-                          <SelectItem key={range} value={range}>
-                            {range}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Input
-                      type="number"
-                      placeholder="Mujeres"
-                      value={ageRange.women}
-                      onChange={(e) => {
-                        const newAttentionTypes = [...formData.attentionTypes]
-                        newAttentionTypes[attentionIndex].ageRanges[ageIndex].women = parseInt(e.target.value)
-                        setFormData({ ...formData, attentionTypes: newAttentionTypes })
-                      }}
-                    />
-                    <Input
-                      type="number"
-                      placeholder="Hombres"
-                      value={ageRange.men}
-                      onChange={(e) => {
-                        const newAttentionTypes = [...formData.attentionTypes]
-                        newAttentionTypes[attentionIndex].ageRanges[ageIndex].men = parseInt(e.target.value)
-                        setFormData({ ...formData, attentionTypes: newAttentionTypes })
-                      }}
-                    />
+                    <div className="flex flex-col gap-1">
+                      <label className="text-sm font-medium">Rangos de edad</label>
+                      <Select
+                        value={ageRange.range}
+                        onValueChange={(value) => {
+                          const newAttentionTypes = [...formData.attentionTypes]
+                          newAttentionTypes[attentionIndex].ageRanges[ageIndex].range = value
+                          setFormData({ ...formData, attentionTypes: newAttentionTypes })
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Rangos" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {AGE_RANGES.map((range) => (
+                            <SelectItem key={range} value={range}>
+                              {range}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-sm font-medium">Mujeres</label>
+                      <Input
+                        type="number"
+                        placeholder="Mujeres"
+                        value={ageRange.women}
+                        onChange={(e) => {
+                          const newAttentionTypes = [...formData.attentionTypes]
+                          newAttentionTypes[attentionIndex].ageRanges[ageIndex].women = parseInt(e.target.value)
+                          setFormData({ ...formData, attentionTypes: newAttentionTypes })
+                        }}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                      <label className="text-sm font-medium">Hombres</label>
+                      <Input
+                        type="number"
+                        placeholder="Hombres"
+                        value={ageRange.men}
+                        onChange={(e) => {
+                          const newAttentionTypes = [...formData.attentionTypes]
+                          newAttentionTypes[attentionIndex].ageRanges[ageIndex].men = parseInt(e.target.value)
+                          setFormData({ ...formData, attentionTypes: newAttentionTypes })
+                        }}
+                      />
+                    </div>
+
                     <Button
                       variant="destructive"
+                      className="mt-6"
                       size="icon"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.preventDefault();
                         const newAttentionTypes = [...formData.attentionTypes]
                         newAttentionTypes[attentionIndex].ageRanges = newAttentionTypes[attentionIndex].ageRanges.filter((_, i) => i !== ageIndex)
                         setFormData({ ...formData, attentionTypes: newAttentionTypes })
                       }}
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-4 w-4 " />
                     </Button>
+
                   </div>
                 ))}
                 {attentionType.ageRanges.length < 4 && (
                   <Button
-                    onClick={() => addAttentionAgeRange(attentionIndex)}
+                    onClick={(e) => { e.preventDefault(); addAttentionAgeRange(attentionIndex) }}
                     variant="outline"
                     size="sm"
                   >
@@ -247,7 +241,7 @@ export default function DynamicForm() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium">Discapacidad</label>
-                  <Button onClick={() => addDisability(attentionIndex)} variant="outline" size="sm">
+                  <Button onClick={(e) => { e.preventDefault(); addDisability(attentionIndex) }} variant="outline" size="sm">
                     <Plus className="h-4 w-4 mr-2" />
                     Agregar discapacidad
                   </Button>
@@ -277,7 +271,7 @@ export default function DynamicForm() {
                       <Button
                         variant="destructive"
                         size="icon"
-                        onClick={() => removeDisability(attentionIndex, dIndex)}
+                        onClick={(e) => { e.preventDefault(); removeDisability(attentionIndex, dIndex) }}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -285,49 +279,60 @@ export default function DynamicForm() {
 
                     {disability.ageRanges.map((ageRange, aIndex) => (
                       <div key={aIndex} className="grid grid-cols-4 gap-4 items-center">
-                        <Select
-                          value={ageRange.range}
-                          onValueChange={(value) => {
-                            const newAttentionTypes = [...formData.attentionTypes]
-                            newAttentionTypes[attentionIndex].disabilities[dIndex].ageRanges[aIndex].range = value
-                            setFormData({ ...formData, attentionTypes: newAttentionTypes })
-                          }}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Rango de edad" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {AGE_RANGES.map((range) => (
-                              <SelectItem key={range} value={range}>
-                                {range}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <Input
-                          type="number"
-                          placeholder="Mujeres"
-                          value={ageRange.women}
-                          onChange={(e) => {
-                            const newAttentionTypes = [...formData.attentionTypes]
-                            newAttentionTypes[attentionIndex].disabilities[dIndex].ageRanges[aIndex].women = parseInt(e.target.value)
-                            setFormData({ ...formData, attentionTypes: newAttentionTypes })
-                          }}
-                        />
-                        <Input
-                          type="number"
-                          placeholder="Hombres"
-                          value={ageRange.men}
-                          onChange={(e) => {
-                            const newAttentionTypes = [...formData.attentionTypes]
-                            newAttentionTypes[attentionIndex].disabilities[dIndex].ageRanges[aIndex].men = parseInt(e.target.value)
-                            setFormData({ ...formData, attentionTypes: newAttentionTypes })
-                          }}
-                        />
+                        <div className="flex flex-col gap-1">
+                          <label className="text-sm font-medium">Rangos de edad</label>
+                          <Select
+                            value={ageRange.range}
+                            onValueChange={(value) => {
+                              const newAttentionTypes = [...formData.attentionTypes]
+                              newAttentionTypes[attentionIndex].disabilities[dIndex].ageRanges[aIndex].range = value
+                              setFormData({ ...formData, attentionTypes: newAttentionTypes })
+                            }}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Rangos" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {AGE_RANGES.map((range) => (
+                                <SelectItem key={range} value={range}>
+                                  {range}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <label className="text-sm font-medium">Mujeres</label>
+                          <Input
+                            type="number"
+                            placeholder="Mujeres"
+                            value={ageRange.women}
+                            onChange={(e) => {
+                              const newAttentionTypes = [...formData.attentionTypes]
+                              newAttentionTypes[attentionIndex].disabilities[dIndex].ageRanges[aIndex].women = parseInt(e.target.value)
+                              setFormData({ ...formData, attentionTypes: newAttentionTypes })
+                            }}
+                          />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <label className="text-sm font-medium">Hombres</label>
+                          <Input
+                            type="number"
+                            placeholder="Hombres"
+                            value={ageRange.men}
+                            onChange={(e) => {
+                              const newAttentionTypes = [...formData.attentionTypes]
+                              newAttentionTypes[attentionIndex].disabilities[dIndex].ageRanges[aIndex].men = parseInt(e.target.value)
+                              setFormData({ ...formData, attentionTypes: newAttentionTypes })
+                            }}
+                          />
+                        </div>
                         <Button
                           variant="destructive"
+                          className="mt-6"
                           size="icon"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.preventDefault();
                             const newAttentionTypes = [...formData.attentionTypes]
                             newAttentionTypes[attentionIndex].disabilities[dIndex].ageRanges = newAttentionTypes[attentionIndex].disabilities[dIndex].ageRanges.filter((_, i) => i !== aIndex)
                             setFormData({ ...formData, attentionTypes: newAttentionTypes })
@@ -339,7 +344,7 @@ export default function DynamicForm() {
                     ))}
                     {disability.ageRanges.length < 4 && (
                       <Button
-                        onClick={() => addDisabilityAgeRange(attentionIndex, dIndex)}
+                        onClick={(e) => { e.preventDefault(); addDisabilityAgeRange(attentionIndex, dIndex) }}
                         variant="outline"
                         size="sm"
                       >
@@ -355,7 +360,7 @@ export default function DynamicForm() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium">Etnia</label>
-                  <Button onClick={() => addEthnicity(attentionIndex)} variant="outline" size="sm">
+                  <Button onClick={(e) => { e.preventDefault(); addEthnicity(attentionIndex) }} variant="outline" size="sm">
                     <Plus className="h-4 w-4 mr-2" />
                     Agregar etnia
                   </Button>
@@ -385,7 +390,7 @@ export default function DynamicForm() {
                       <Button
                         variant="destructive"
                         size="icon"
-                        onClick={() => removeEthnicity(attentionIndex, eIndex)}
+                        onClick={(e) => { e.preventDefault(); removeEthnicity(attentionIndex, eIndex) }}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -393,49 +398,60 @@ export default function DynamicForm() {
 
                     {ethnicity.ageRanges.map((ageRange, aIndex) => (
                       <div key={aIndex} className="grid grid-cols-4 gap-4 items-center">
-                        <Select
-                          value={ageRange.range}
-                          onValueChange={(value) => {
-                            const newAttentionTypes = [...formData.attentionTypes]
-                            newAttentionTypes[attentionIndex].ethnicities[eIndex].ageRanges[aIndex].range = value
-                            setFormData({ ...formData, attentionTypes: newAttentionTypes })
-                          }}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Rango de edad" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {AGE_RANGES.map((range) => (
-                              <SelectItem key={range} value={range}>
-                                {range}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <Input
-                          type="number"
-                          placeholder="Mujeres"
-                          value={ageRange.women}
-                          onChange={(e) => {
-                            const newAttentionTypes = [...formData.attentionTypes]
-                            newAttentionTypes[attentionIndex].ethnicities[eIndex].ageRanges[aIndex].women = parseInt(e.target.value)
-                            setFormData({ ...formData, attentionTypes: newAttentionTypes })
-                          }}
-                        />
-                        <Input
-                          type="number"
-                          placeholder="Hombres"
-                          value={ageRange.men}
-                          onChange={(e) => {
-                            const newAttentionTypes = [...formData.attentionTypes]
-                            newAttentionTypes[attentionIndex].ethnicities[eIndex].ageRanges[aIndex].men = parseInt(e.target.value)
-                            setFormData({ ...formData, attentionTypes: newAttentionTypes })
-                          }}
-                        />
+                        <div className="flex flex-col gap-1">
+                          <label className="text-sm font-medium">Rangos de edad</label>
+                          <Select
+                            value={ageRange.range}
+                            onValueChange={(value) => {
+                              const newAttentionTypes = [...formData.attentionTypes]
+                              newAttentionTypes[attentionIndex].ethnicities[eIndex].ageRanges[aIndex].range = value
+                              setFormData({ ...formData, attentionTypes: newAttentionTypes })
+                            }}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Rangos" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {AGE_RANGES.map((range) => (
+                                <SelectItem key={range} value={range}>
+                                  {range}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <label className="text-sm font-medium">Mujeres</label>
+                          <Input
+                            type="number"
+                            placeholder="Mujeres"
+                            value={ageRange.women}
+                            onChange={(e) => {
+                              const newAttentionTypes = [...formData.attentionTypes]
+                              newAttentionTypes[attentionIndex].ethnicities[eIndex].ageRanges[aIndex].women = parseInt(e.target.value)
+                              setFormData({ ...formData, attentionTypes: newAttentionTypes })
+                            }}
+                          />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <label className="text-sm font-medium">Hombres</label>
+                          <Input
+                            type="number"
+                            placeholder="Hombres"
+                            value={ageRange.men}
+                            onChange={(e) => {
+                              const newAttentionTypes = [...formData.attentionTypes]
+                              newAttentionTypes[attentionIndex].ethnicities[eIndex].ageRanges[aIndex].men = parseInt(e.target.value)
+                              setFormData({ ...formData, attentionTypes: newAttentionTypes })
+                            }}
+                          />
+                        </div>
                         <Button
                           variant="destructive"
                           size="icon"
-                          onClick={() => {
+                          className="mt-6"
+                          onClick={(e) => {
+                            e.preventDefault();
                             const newAttentionTypes = [...formData.attentionTypes]
                             newAttentionTypes[attentionIndex].ethnicities[eIndex].ageRanges = newAttentionTypes[attentionIndex].ethnicities[eIndex].ageRanges.filter((_, i) => i !== aIndex)
                             setFormData({ ...formData, attentionTypes: newAttentionTypes })
@@ -447,7 +463,7 @@ export default function DynamicForm() {
                     ))}
                     {ethnicity.ageRanges.length < 4 && (
                       <Button
-                        onClick={() => addEthnicityAgeRange(attentionIndex, eIndex)}
+                        onClick={(e) => { e.preventDefault(); addEthnicityAgeRange(attentionIndex, eIndex) }}
                         variant="outline"
                         size="sm"
                       >
@@ -462,9 +478,9 @@ export default function DynamicForm() {
           ))}
         </div>
 
-        <Button className="w-full" type="submit">
+        {/* <Button className="w-full" type="submit">
           Guardar
-        </Button>
+        </Button> */}
       </CardContent>
     </Card>
   )

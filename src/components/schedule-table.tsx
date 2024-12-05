@@ -89,8 +89,8 @@ const FilaExpandible = ({
     actividad.status === "Por completar"
       ? "text-orange-600"
       : actividad.status === "No completada"
-      ? "text-red-700"
-      : "text-success";
+        ? "text-red-700"
+        : "text-success";
   const disabled =
     actividad.status === "Completada" || actividad.status === "No completada";
   const cursorPointer = disabled ? "cursor-not-allowed" : "cursor-pointer";
@@ -119,8 +119,8 @@ const FilaExpandible = ({
                   {actividad.status === "Por completar"
                     ? "Completar"
                     : actividad.status === "No completada"
-                    ? "No completada"
-                    : "Completado"}
+                      ? "No completada"
+                      : "Completado"}
                 </Button>
               </AlertDialogTrigger>
               {/* <AlertDialogOverlay onClick={(e) => e.stopPropagation()}></AlertDialogOverlay> */}
@@ -131,14 +131,19 @@ const FilaExpandible = ({
                       ? "Completar unidad móvil agendada"
                       : "Completar actividad agendada"}
                   </AlertDialogTitle>
-                  <AlertDialogDescription className="h-[400px] md:h-[550px] w-full overflow-y-auto">
+                  <AlertDialogDescription>
+                    Llene los campos correspondientes para completar la unidad móvil agendada
+                    </AlertDialogDescription>
+                  <div  className="h-[400px] md:h-[550px] w-full overflow-y-auto">
                     {mobileUnits && (
                       <CompleteMobileUnitSchedule id={actividad.id} />
                     )}
                     {!mobileUnits && (
                       <CompleteActivitieSchedule id={actividad.id} />
                     )}
-                  </AlertDialogDescription>
+                  </div>
+
+                  {/* </AlertDialogDescription> */}
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel
@@ -363,7 +368,7 @@ export function TableUI({
               viewUser={viewUser}
               achievements={achievements}
               mobileUnits={mobileUnits}
-              // onComplete={() => completeSchedule(actividad.id)}
+            // onComplete={() => completeSchedule(actividad.id)}
             />
           ))}
           {actividad.length === 0 && (

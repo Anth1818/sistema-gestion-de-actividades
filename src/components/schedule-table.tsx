@@ -27,6 +27,8 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import CompleteActivitieSchedule from "./complete-activitie-schedule";
 import CompleteMobileUnitSchedule from "./complete-mobile-unit-schedule";
+import ContentOfActivities from "./ContentOfActivities";
+import ContentOfMobileUnit from "./ContentOfMobileUnit";
 
 import {
   AlertDialog,
@@ -41,6 +43,7 @@ import {
   AlertDialogOverlay,
 } from "./ui/alert-dialog";
 import { useUpdateActivitie } from "@/context/updateActivitie";
+import { MobileUnit } from "@/lib/types";
 
 type Agenda = {
   id: number;
@@ -176,53 +179,18 @@ const FilaExpandible = ({
                 }}
                 transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
               >
-                <div className="p-4 bg-muted">
-                  <h3 className="font-semibold mb-2">Información adicional:</h3>
-                  <div
-                    className={`flex flex-col md:flex-row gap-4 justify-between`}
-                  >
-                    <p>
-                      <b>Gerencia:</b> {actividad.gerency}
-                    </p>
-                    <p>
-                      <b>Tipo de acción:</b> {actividad.action}
-                    </p>
-                    <p>
-                      <b>Estado:</b> {actividad.state}
-                    </p>
-                    <p>
-                      <b>Municipio:</b> {actividad.municipality}
-                    </p>
-                    <p>
-                      <b>Parroquia:</b> {actividad.parish}
-                    </p>
-                    <p>
-                      <b>Responsable:</b> {actividad.responsible}
-                    </p>
-                    <p>
-                      <b>Lugar:</b> {actividad.place}
-                    </p>
-                    <p>
-                      <b>N° de mujeres:</b> {actividad.quantityWomen}
-                    </p>
-                    <p>
-                      <b>N° de hombres:</b> {actividad.quantityMen}
-                    </p>
-                    <p>
-                      <b>Fecha de ejecución:</b> {actividad.dateFinished}
-                    </p>
-                  </div>
-                  {!achievements && (
-                    <p className="break-words whitespace-pre-wrap lg:max-w-screen-lg xl:max-w-screen-2xl mt-4">
-                      <b>Observaciones de agenda: </b>
-                      {actividad.obs}
-                    </p>
-                  )}
-                  <p className="break-words whitespace-pre-wrap lg:max-w-screen-lg xl:max-w-screen-2xl mt-4">
-                    <b>Observaciones de ejecución: </b>
-                    {actividad.obs2}
-                  </p>
-                </div>
+               {mobileUnits ? (
+                  <ContentOfMobileUnit
+                    actividad={actividad as unknown as MobileUnit}
+                    achievements={achievements}
+                  />
+                ) : (
+                  <ContentOfActivities
+                    actividad={actividad}
+                    achievements={achievements}
+                  />
+                )}
+               
               </motion.div>
             </TableCell>
           </TableRow>

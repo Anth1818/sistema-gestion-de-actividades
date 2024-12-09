@@ -157,7 +157,7 @@ export const places = [
   {
     id: 1,
     name: "MINMUJER headquarters",
-    label: "Sede MiNMUJER",
+    label: "Sede MINMUJER",
   },
   {
     id: 2,

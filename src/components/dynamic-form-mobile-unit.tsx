@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Plus, Trash2 } from 'lucide-react'
-import type { FormData } from "../lib/type"
+import type { FormData } from "@/lib/types"
 
 const AGE_RANGES = [
   "1-7 años",

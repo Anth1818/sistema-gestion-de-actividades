@@ -32,7 +32,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import type { FormData } from "../lib/type"
+import type { FormData } from "../lib/types"
 import { useState } from "react";
 
 interface completeScheduleModalProps {

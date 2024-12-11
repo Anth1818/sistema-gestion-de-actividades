@@ -6,12 +6,12 @@ import { useRouter } from 'next/navigation';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const {userState} = useAuth();
-  const isAuthenticatedStorage = localStorage?.getItem('user');
+  // const isAuthenticatedStorage = localStorage?.getItem('user');
   const router = useRouter();
 
   useEffect(() => {
     const checkAuth = () => {  
-      if (!isAuthenticatedStorage && !userState) {
+      if (!userState) {
         router.replace('/denied');
       } 
     };
@@ -23,7 +23,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   //   return <div>Loading...</div>; // O un spinner de carga
   // }
 
-  if (!isAuthenticatedStorage && !userState) {
+  if (!userState) {
     return null; // O un spinner de carga
   }
 

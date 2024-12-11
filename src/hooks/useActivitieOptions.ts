@@ -16,8 +16,8 @@ const useActivitieOptions = (actions: string) => {
       setActivitieOption(activities[0]["Atención jurídica"] || []);
     } else if (actions === "Prevención") {
       setActivitieOption(activities[0]["Prevención"] || []);
-    } else if (actions === "Capacitación") {
-      setActivitieOption(activities[0]["Capacitación"]|| []);
+    } else if (actions === "Formación") {
+      setActivitieOption(activities[0]["Formación"]|| []);
     } else {
       setActivitieOption([]);
     }

@@ -44,7 +44,7 @@ interface ActivitiesCommonsFormProps {
 
 // Esquema base
 const Schema = z.object({
-    specify: z.string().min(1, { message: "Por favor escribe algo." }).max(100, "Máximo 100 caracteres."),
+    specify: z.string().max(100, "Máximo 100 caracteres."),
     state_id: z.coerce.number().int().min(1, "Seleccione un estado."),
     municipality_id: z.coerce.number().int().min(1, "Seleccione un municipio."),
     parish_id: z.coerce.number().int().min(1, "Seleccione una parroquia."),
@@ -54,7 +54,7 @@ const Schema = z.object({
     responsible: z.string({ required_error: "Por favor indique un responsable." }).min(1, { message: "Este campo no puede estar vacío." }).max(30, "Máximo 30 caracteres."),
     phone_number: z.string().regex(/^(0414|0424|0416|0426|0412|0212)\d{7}$/, "Por favor ingrese un número de teléfono válido."),
     observation: z.string().max(1000, "Máximo 1000 caracteres."),
-    dateFinish: z.date({
+    date: z.date({
         required_error: "Ingrese una fecha de ejecución.",
     }),
 })
@@ -91,7 +91,7 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
 
     const mutation = useMutation({
         mutationFn: async (data: z.infer<typeof Schema>) => {
-            const response = await api.post('/archievement', { ...data, created_by: userLoggin.data.role_id, action_id, management_unit_id: gerency_id, activity_id: activitie, status: "Completada", date: format(new Date(), "dd/MM/yyyy"),hour: format(new Date(), "HH:mm:ss"), dateFinished: format(data.dateFinish, "dd/MM/yyyy"), previously_scheduled: false });
+            const response = await api.post('/archievement', { ...data, created_by: userLoggin.data.role_id, action_id, management_unit_id: gerency_id, activity_id: activitie, status: "Completada" ,hour: format(new Date(), "HH:mm:ss"), previously_scheduled: false });
             return response.data;
         },
     })
@@ -309,7 +309,7 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
                     {/* -------Fecha------- */}
                     <FormField
                         control={form.control}
-                        name="dateFinish"
+                        name="date"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Fecha de ejecución</FormLabel>

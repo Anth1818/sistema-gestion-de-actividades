@@ -1,4 +1,4 @@
-
+"use client"
 import FormActivities from "@/components/form-activities";
 import ProtectedRoute from "@/components/protected-route";
 

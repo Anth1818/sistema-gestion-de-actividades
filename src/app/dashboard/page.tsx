@@ -1,3 +1,4 @@
+"use client";
 import { Statistics, StatisticsFull } from "@/components/chartBar";
 import { ChartDataPie } from "@/components/chartPie";
 import CardDashboard from "@/components/card-dashboard";

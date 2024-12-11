@@ -89,10 +89,10 @@ export default function Page() {
       <>
         <div className="flex flex-col justify-center items-center">
           <h1 className="text-3xl font-bold text-center mb-2">Logros</h1>
-          <div className="flex flex-col md:flex-row justify-center gap-4 w-full">
+          {/* <div className="flex flex-col md:flex-row justify-center gap-4 w-full">
             <DatePickerWithRange date={date} setDate={setDate} />
             <Button className="mb-4 lg:w-[200px]" onClick={handleResetFilter}>Limpiar filtro</Button>
-          </div>
+          </div> */}
         </div>
 
         <AchievementsTable columnas={columnas} achievements data={data} errorData={error} isLoading={isLoading} />

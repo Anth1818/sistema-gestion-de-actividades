@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const {userState} = useAuth();
-  const isAuthenticatedStorage = localStorage.getItem('user');
+  const isAuthenticatedStorage = localStorage?.getItem('user');
   const router = useRouter();
 
   useEffect(() => {

@@ -138,7 +138,7 @@ export const activities = [
     
    
     ],
-    "Capacitación": [
+    "Formación": [
       {
         id: 17,
         name: "community defenders",

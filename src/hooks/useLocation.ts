@@ -1,5 +1,5 @@
 import api from "@/api/api_regiones";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const useLocation = (estado_id: number, municipio_id: number) => {
     const [state, setState] = useState([]);
@@ -17,15 +17,18 @@ const useLocation = (estado_id: number, municipio_id: number) => {
             api.get(`/location/municipality/state/${estado_id}`).then((response) => {
                 setMunicipality(response.data.data);
             });
+        } else {
+            setMunicipality([]);
         }
-
     }, [estado_id]);
 
     useEffect(() => {
         if (municipio_id > 0) {
             api.get(`location/parish/municipality/${municipio_id}`).then((response) => {
                 setParish(response.data.data);
-            })
+            });
+        } else {
+            setParish([]);
         }
     }, [municipio_id]);
 

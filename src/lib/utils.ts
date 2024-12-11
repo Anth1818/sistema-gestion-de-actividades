@@ -43,7 +43,7 @@ export const actionsOptions = [
   {
     id: 3,
     name: "training",
-    label: "Capacitación",
+    label: "Formación",
   },
 ]
 

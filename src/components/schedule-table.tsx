@@ -43,28 +43,11 @@ import {
 import { useUpdateActivitie } from "@/context/updateActivitie";
 import { MobileUnit } from "@/lib/types";
 import { DateRange } from "react-day-picker";
-import { set } from "date-fns";
+import type { Agenda } from "@/lib/types";
+import { format } from "date-fns";
 
-type Agenda = {
-  id: number;
-  user: string;
-  activitie: string;
-  date: string;
-  dateFormatted: string;
-  status: "Por completar" | "Completada" | "No completada";
-  action: string;
-  gerency: string;
-  state: string;
-  municipality: string;
-  parish: string;
-  responsible: string;
-  place: string;
-  obs: string;
-  quantityWomen: number;
-  quantityMen: number;
-  obs2: string;
-  dateFinished: string;
-};
+
+
 
 type OrdenColumna = {
   columna: keyof Agenda | "id";
@@ -103,10 +86,10 @@ const FilaExpandible = ({
     <>
       <TableRow onClick={onToggle}>
         <TableCell>{actividad.id}</TableCell>
-        <TableCell>{actividad.user}</TableCell>
-        <TableCell>{actividad.activitie}</TableCell>
-        <TableCell>{achievements ? actividad.dateFinished : actividad.dateFormatted}</TableCell>
-        {<TableCell className={colorStatus}>{actividad.status}</TableCell>}
+        <TableCell>{actividad.username}</TableCell>
+        <TableCell>{actividad.type_activity}</TableCell>
+        <TableCell>{achievements ? format(actividad.date, "dd/MM/yyyy"  ) : actividad.dateFormatted}</TableCell>
+        {<TableCell className={colorStatus}>{achievements ? "Logrado": actividad.status}</TableCell>}
         {viewUser && (
           <TableCell>
             <AlertDialog>

@@ -87,7 +87,7 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
         resolver: zodResolver(Schema),
         defaultValues
     })
-    const { state, municipality, parish } = useLocation(form.getValues('state_id'), form.getValues('municipality_id'));
+    const { state, municipality, parish } = useLocation(form.watch('state_id'), form.watch('municipality_id'));
 
     const mutation = useMutation({
         mutationFn: async (data: z.infer<typeof Schema>) => {

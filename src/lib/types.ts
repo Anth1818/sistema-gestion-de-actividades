@@ -34,22 +34,22 @@ export interface AgeRangeData {
   
 export type Agenda = {
   id: number;
-  user: string;
-  activitie: string;
+  username: string;
+  type_activity: string;
   date: string;
   dateFormatted: string;
   status: "Por completar" | "Completada" | "No completada";
-  action: string;
-  gerency: string;
+  type_action: string;
+  management_unit: string;
   state: string;
   municipality: string;
   parish: string;
   responsible: string;
   place: string;
   obs: string;
-  quantityWomen: number;
-  quantityMen: number;
-  obs2: string;
+  n_womans: number;
+  n_man: number;
+  observation: string;
   dateFinished: string;
 };
 

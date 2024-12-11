@@ -1,4 +1,5 @@
 import {Agenda} from "@/lib/types";
+import { format } from "date-fns";
 
 interface ContentOfActivitiesProps {
     actividad: Agenda;
@@ -14,10 +15,10 @@ export default function ContentOfActivities({actividad, achievements}: ContentOf
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
             >
                 <p>
-                    <b>Gerencia:</b> {actividad.gerency}
+                    <b>Gerencia:</b> {actividad.management_unit}
                 </p>
                 <p>
-                    <b>Tipo de acción:</b> {actividad.action}
+                    <b>Tipo de acción:</b> {actividad.type_action}
                 </p>
                 <p>
                     <b>Estado:</b> {actividad.state}
@@ -35,13 +36,13 @@ export default function ContentOfActivities({actividad, achievements}: ContentOf
                     <b>Lugar:</b> {actividad.place}
                 </p>
                 <p>
-                    <b>N° de mujeres:</b> {actividad.quantityWomen}
+                    <b>N° de mujeres:</b> {actividad.n_womans}
                 </p>
                 <p>
-                    <b>N° de hombres:</b> {actividad.quantityMen}
+                    <b>N° de hombres:</b> {actividad.n_man}
                 </p>
                 <p>
-                    <b>Fecha de ejecución:</b> {actividad.dateFinished}
+                    <b>Fecha de ejecución:</b> {format(actividad.date, "dd/MM/yyyy")}
                 </p>
             </div>
             {!achievements && (
@@ -52,7 +53,7 @@ export default function ContentOfActivities({actividad, achievements}: ContentOf
             )}
             <p className="break-words whitespace-pre-wrap lg:max-w-screen-lg xl:max-w-screen-2xl mt-4">
                 <b>Observaciones de ejecución: </b>
-                {actividad.obs2}
+                {actividad.observation}
             </p>
         </div>
     )

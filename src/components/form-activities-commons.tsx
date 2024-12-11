@@ -31,6 +31,10 @@ import { Calendar } from "./ui/calendar"
 import { places } from "@/lib/utils"
 import { Notification } from "./notification"
 import { useState } from "react"
+import { useMutation } from "@tanstack/react-query"
+import api from "@/api/api_regiones"
+import useLocation from "@/hooks/useLocation"
+import { gerency as gerencyOptions, actionsOptions, activities as activitiesOptions } from "@/lib/utils"
 
 interface ActivitiesCommonsFormProps {
     gerency: string,
@@ -41,15 +45,15 @@ interface ActivitiesCommonsFormProps {
 // Esquema base
 const Schema = z.object({
     specify: z.string().min(1, { message: "Por favor escribe algo." }).max(100, "Máximo 100 caracteres."),
-    state: z.string().min(1, { message: "Seleccione un estado." }),
-    municipality: z.string().min(1, { message: "Seleccione un municipio." }),
-    parish: z.string().min(1, { message: "Seleccione una parroquia." }),
-    place: z.string().min(1, { message: "Seleccione un lugar." }),
-    quantityWomen: z.coerce.number().int().positive("Ingrese una cantidad válida").min(1, "Ingrese una cantidad válida"),
-    quantityMen: z.coerce.number().int().positive("Ingrese una cantidad válida").min(1, "Ingrese una cantidad válida"),
+    state_id: z.coerce.number().int().min(1, "Seleccione un estado."),
+    municipality_id: z.coerce.number().int().min(1, "Seleccione un municipio."),
+    parish_id: z.coerce.number().int().min(1, "Seleccione una parroquia."),
+    place_id: z.coerce.number().int().min(1, "Seleccione un lugar."),
+    n_womans: z.coerce.number().int().positive("Ingrese una cantidad válida").min(1, "Ingrese una cantidad válida"),
+    n_man: z.coerce.number().int().positive("Ingrese una cantidad válida").min(1, "Ingrese una cantidad válida"),
     responsible: z.string({ required_error: "Por favor indique un responsable." }).min(1, { message: "Este campo no puede estar vacío." }).max(30, "Máximo 30 caracteres."),
-    phone: z.string().regex(/^(0414|0424|0416|0426|0412|0212)\d{7}$/, "Por favor ingrese un número de teléfono válido."),
-    obs: z.string().max(1000, "Máximo 1000 caracteres."),
+    phone_number: z.string().regex(/^(0414|0424|0416|0426|0412|0212)\d{7}$/, "Por favor ingrese un número de teléfono válido."),
+    observation: z.string().max(1000, "Máximo 1000 caracteres."),
     dateFinish: z.date({
         required_error: "Ingrese una fecha de ejecución.",
     }),
@@ -57,41 +61,65 @@ const Schema = z.object({
 
 
 const defaultValues = {
-    state: "",
-    municipality: "",
-    parish: "",
-    place: "",
+    state_id: 0,
+    municipality_id: 0,
+    parish_id: 0,
+    place_id: 0,
     specify: "",
-    quantityWomen: 0,
-    quantityMen: 0,
+    n_womans: 0,
+    n_man: 0,
     responsible: "",
-    phone: "",
-    obs: "",
+    phone_number: "",
+    observation: "",
 }
 
 export default function ActivitiesCommonsForm({ gerency, action, activitie }: ActivitiesCommonsFormProps) {
     const [showNotification, setShowNotification] = useState(false)
-    const users = ["ARuiz", "NZapata", "JSalazar", "JGonzalez", "JGarcia", "JLopez",]
-    const userRandom = Math.floor(Math.random() * users.length)
+    const user = localStorage.getItem('user')
+    const userLoggin = user ? JSON.parse(user) : null;
+    const gerencyOption = gerencyOptions.find((option) => option.label === gerency);
+    const gerency_id = gerencyOption ? gerencyOption.id : null;
+    const actionOption = actionsOptions.find((option) => option.label === action);
+    const action_id = actionOption ? actionOption.id : null;
+   
 
     const form = useForm<z.infer<typeof Schema>>({
         resolver: zodResolver(Schema),
         defaultValues
     })
+    const { state, municipality, parish } = useLocation(form.getValues('state_id'), form.getValues('municipality_id'));
+
+    const mutation = useMutation({
+        mutationFn: async (data: z.infer<typeof Schema>) => {
+            const response = await api.post('/archievement', { ...data, created_by: userLoggin.data.role_id, action_id, management_unit_id: gerency_id, activity_id: activitie, status: "Completada", date: format(new Date(), "dd/MM/yyyy"),hour: format(new Date(), "HH:mm:ss"), dateFinished: format(data.dateFinish, "dd/MM/yyyy"), previously_scheduled: false });
+            return response.data;
+        },
+    })
 
     function onSubmit(data: z.infer<typeof Schema>) {
-        form.reset(defaultValues)
 
-        const existingData = localStorage.getItem('achievements')
-        let dataLocal = existingData ? JSON.parse(existingData) : []
+        mutation.mutate(data,
+            {
+                onSuccess: () => {
+                    form.reset(defaultValues)
+                    setShowNotification(true)
+                    console.log('Datos enviados con éxito');
+                },
+                onError: () => {
+                    console.error('Error al enviar los datos');
+                }
+            }
+        )
 
-        // Añade el nuevo dato al array
-        dataLocal.push({ id: Math.floor(Math.random() * 100), user: users[userRandom], dateFormatted: format(new Date(), "dd/MM/yyyy"), dateFinished:format(data.dateFinish, "dd/MM/yyyy"),  gerency, action, activitie, status: "Completada", ...data })
+        // const existingData = localStorage.getItem('achievements')
+        // let dataLocal = existingData ? JSON.parse(existingData) : []
 
-        // Guarda el array actualizado en localStorage
-        localStorage.setItem('achievements', JSON.stringify(dataLocal))
+        // // Añade el nuevo dato al array
+        // dataLocal.push({ id: Math.floor(Math.random() * 100), user: users[userRandom], dateFormatted: format(new Date(), "dd/MM/yyyy"), dateFinished:format(data.dateFinish, "dd/MM/yyyy"),  gerency, action, activitie, status: "Completada", ...data })
 
-        setShowNotification(true)
+        // // Guarda el array actualizado en localStorage
+        // localStorage.setItem('achievements', JSON.stringify(dataLocal))
+
 
     }
 
@@ -104,20 +132,21 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
                     {/* ------Estado------- */}
                     <FormField
                         control={form.control}
-                        name="state"
+                        name="state_id"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Estado</FormLabel>
-                                <Select onValueChange={field.onChange} value={field.value}>
+                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Seleccione" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="state 1">Estado 1</SelectItem>
-                                        <SelectItem value="state 2">Estado 2</SelectItem>
-                                        <SelectItem value="state 3">Estado 3</SelectItem>
+                                        <SelectItem value="0">Seleccione</SelectItem>
+                                        {state.map((state: { id: number, state: string }) => (
+                                            <SelectItem key={state.id} value={String(state.id)}>{state.state}</SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -129,20 +158,21 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
 
                     <FormField
                         control={form.control}
-                        name="municipality"
+                        name="municipality_id"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Municipio</FormLabel>
-                                <Select onValueChange={field.onChange} value={field.value}>
+                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Seleccione" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="municipality 1">Municipio 1</SelectItem>
-                                        <SelectItem value="municipality 2">Municipio 2</SelectItem>
-                                        <SelectItem value="municipality 3">Municipio 3</SelectItem>
+                                    <SelectItem value="0">Seleccione</SelectItem>
+                                        {municipality.map((municipality: { id: number, municipality: string }) => (
+                                            <SelectItem key={municipality.id} value={String(municipality.id)}>{municipality.municipality}</SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -154,20 +184,21 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
 
                     <FormField
                         control={form.control}
-                        name="parish"
+                        name="parish_id"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Parroquia</FormLabel>
-                                <Select onValueChange={field.onChange} value={field.value}>
+                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Seleccione" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="parish 1">Parroquia 1</SelectItem>
-                                        <SelectItem value="parish 2">Parroquia 2</SelectItem>
-                                        <SelectItem value="parish 3">Parroquia 3</SelectItem>
+                                    <SelectItem value="0">Seleccione</SelectItem>
+                                        {parish.map((parish: { id: number, parish: string }) => (
+                                            <SelectItem key={parish.id} value={String(parish.id)}>{parish.parish}</SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -178,19 +209,20 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
                     {/* ------Lugar------- */}
                     <FormField
                         control={form.control}
-                        name="place"
+                        name="place_id"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Lugar</FormLabel>
-                                <Select onValueChange={field.onChange} value={field.value}>
+                                <Select onValueChange={field.onChange} value={String(field.value)}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Seleccione" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
+                                        <SelectItem value="0">Seleccione</SelectItem>
                                         {places.map((place) => (
-                                            <SelectItem key={place.id} value={place.label}>{place.label}</SelectItem>
+                                            <SelectItem key={place.id} value={String(place.id)}>{place.label}</SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
@@ -217,7 +249,7 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
                     {/* ------N° de mujeres------- */}
                     <FormField
                         control={form.control}
-                        name="quantityWomen"
+                        name="n_womans"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Número de mujeres</FormLabel>
@@ -232,7 +264,7 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
                     {/* ------------N° de hombres------- */}
                     <FormField
                         control={form.control}
-                        name="quantityMen"
+                        name="n_man"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Número de hombres</FormLabel>
@@ -262,7 +294,7 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
                     {/* -------Telefono------- */}
                     <FormField
                         control={form.control}
-                        name="phone"
+                        name="phone_number"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Teléfono</FormLabel>
@@ -322,7 +354,7 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
 
                     <FormField
                         control={form.control}
-                        name="obs"
+                        name="observation"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-2 ">
                                 <FormLabel>Observaciones</FormLabel>

@@ -25,16 +25,16 @@ type Activity = {
 
 
 export default function FormActivities() {
-  const [activitie, setActivitie] = useState<Activity[] | string>("");
+  const [activitie, setActivitie] = useState<Activity | string>("");
   const [action, setAction] = useState("")
   const [gerency, setGerency] = useState("")
 
   const {activitieOption} = useActivitieOptions(action)
 
-  const renderFormCommons = activitie !== "" && activitie !== "Victima de trata" && activitie !== "Femicidio" && activitie !== "Atención telefónica"
-  const renderFormVictims = activitie === "Victima de trata"
-  const renderFormMurderFemale = activitie === "Femicidio"
-  const renderForm0800 = activitie === "Atención telefónica"
+  const renderFormCommons = activitie !== "" && activitie !== "5" && activitie !== "6" && activitie !== "16"
+  const renderFormVictims = activitie == "5"
+  const renderFormMurderFemale = activitie == "6"
+  const renderForm0800 = activitie == "16"
 
   return (
     <>
@@ -78,7 +78,7 @@ export default function FormActivities() {
 
             <SelectContent>
               {activitieOption?.map((activity: Activity) => (
-                <SelectItem key={activity.id} value={activity.label}>{activity.label}</SelectItem>
+                <SelectItem key={activity.id} value={activity.id.toString()}>{activity.label}</SelectItem>
               ))}
             </SelectContent>
           </Select>

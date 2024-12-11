@@ -3,10 +3,36 @@ const nextConfig = {
     async redirects() {
       return [
         {
-          source: '/login/recover-password', // La ruta que deseas ignorar
-          destination: '/', // La ruta a la que deseas redirigir
-          permanent: false, // Puedes cambiar esto a true si deseas una redirección permanente
+          source: '/login/recover-password', // ruta ignorada
+          destination: '/', // ruta de destino
+          permanent: false, // 
         },
+        {
+          source: '/dashboard', // ruta ignorada
+          destination: '/dashboard/achievements', // ruta de destino
+          permanent: false, //
+        },
+        {
+          source: '/dashboard/schedule-mobile-units', // ruta ignorada
+          destination: '/dashboard/achievements', // ruta de destino
+          permanent: false, //
+        },
+        {
+          source: '/dashboard/register-schedule-mobile-units', // ruta ignorada
+          destination: '/dashboard/achievements', // ruta de destino
+          permanent: false, //
+        },
+        {
+          source: '/dashboard/register-schedule-activities', // ruta ignorada
+          destination: '/dashboard/achievements', // ruta de destino
+          permanent: false, //
+        },
+        {
+          source: '/dashboard/schedule', // ruta ignorada
+          destination: '/dashboard/achievements', // ruta de destino
+          permanent: false, //
+        },                  
+
       ];
     },
   };

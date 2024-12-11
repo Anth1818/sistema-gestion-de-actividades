@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import {
   Table,
   TableBody,
@@ -39,11 +39,11 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogCancel,
-  AlertDialogAction,
-  AlertDialogOverlay,
 } from "./ui/alert-dialog";
 import { useUpdateActivitie } from "@/context/updateActivitie";
 import { MobileUnit } from "@/lib/types";
+import { DateRange } from "react-day-picker";
+import { set } from "date-fns";
 
 type Agenda = {
   id: number;
@@ -105,7 +105,7 @@ const FilaExpandible = ({
         <TableCell>{actividad.id}</TableCell>
         <TableCell>{actividad.user}</TableCell>
         <TableCell>{actividad.activitie}</TableCell>
-        <TableCell>{actividad.dateFormatted}</TableCell>
+        <TableCell>{achievements ? actividad.dateFinished : actividad.dateFormatted}</TableCell>
         {<TableCell className={colorStatus}>{actividad.status}</TableCell>}
         {viewUser && (
           <TableCell>
@@ -136,8 +136,8 @@ const FilaExpandible = ({
                   </AlertDialogTitle>
                   <AlertDialogDescription>
                     Llene los campos correspondientes para completar la unidad móvil agendada
-                    </AlertDialogDescription>
-                  <div  className="h-[400px] md:h-[550px] w-full overflow-y-auto">
+                  </AlertDialogDescription>
+                  <div className="h-[400px] md:h-[550px] w-full overflow-y-auto">
                     {mobileUnits && (
                       <CompleteMobileUnitSchedule id={actividad.id} />
                     )}
@@ -179,7 +179,7 @@ const FilaExpandible = ({
                 }}
                 transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
               >
-               {mobileUnits ? (
+                {mobileUnits ? (
                   <ContentOfMobileUnit
                     actividad={actividad as unknown as MobileUnit}
                     achievements={achievements}
@@ -190,7 +190,7 @@ const FilaExpandible = ({
                     achievements={achievements}
                   />
                 )}
-               
+
               </motion.div>
             </TableCell>
           </TableRow>
@@ -204,7 +204,11 @@ interface TableProps {
   viewUser?: boolean;
   achievements?: boolean;
   mobileUnits?: boolean;
+  dateFilter?: DateRange;
   columnas: { campo: string; label: string }[];
+  data?: Agenda[];
+  errorData?: any;
+  isLoading?: boolean;
 }
 
 export function TableUI({
@@ -212,38 +216,53 @@ export function TableUI({
   columnas,
   achievements,
   mobileUnits,
+  dateFilter,
+  data,
+  errorData,
+  isLoading
 }: TableProps) {
   const [actividad, setActividad] = useState<Agenda[]>([]);
   const { isUpdated } = useUpdateActivitie();
+ 
 
   useEffect(() => {
-    const dataFromLocalStorage = localStorage?.getItem("schedule");
-    const dataFromLocalStorageCompleted = localStorage?.getItem("achievements");
-    const dataFromLocalStorageMobileUnits = localStorage?.getItem(
-      "scheduleMobileUnits"
-    );
-    let parsedData = [];
-
-    if (dataFromLocalStorage) {
-      parsedData = JSON.parse(dataFromLocalStorage);
-      setActividad(parsedData);
+    if(data){
+      setActividad(data);
     }
-
-    if (dataFromLocalStorageMobileUnits && mobileUnits) {
-      parsedData = JSON.parse(dataFromLocalStorageMobileUnits);
-      setActividad(parsedData);
+    if(errorData){
+      setActividad([]);
     }
+  }, [data, errorData]);
+  // useEffect(() => {
+  //   const dataFromLocalStorage = localStorage?.getItem("schedule");
+  //   const dataFromLocalStorageCompleted = localStorage?.getItem("achievements");
+  //   const dataFromLocalStorageMobileUnits = localStorage?.getItem(
+  //     "scheduleMobileUnits"
+  //   );
+  //   let parsedData = [];
 
-    if (dataFromLocalStorageCompleted && achievements) {
-      const completedData = JSON.parse(dataFromLocalStorageCompleted);
-      setActividad(
-        parsedData.filter(
-          (actividad: Agenda) => actividad.status === "Completada"
-        )
-      );
-      setActividad((prev) => [...prev, ...completedData]);
-    }
-  }, [isUpdated]);
+  //   if (dataFromLocalStorage) {
+  //     parsedData = JSON.parse(dataFromLocalStorage);
+  //     setActividad(parsedData);
+  //   }
+
+  //   if (dataFromLocalStorageMobileUnits && mobileUnits) {
+  //     parsedData = JSON.parse(dataFromLocalStorageMobileUnits);
+  //     setActividad(parsedData);
+  //   }else{
+  //     setActividad([])
+  //   }
+
+  //   if (dataFromLocalStorageCompleted && achievements) {
+  //     const completedData = JSON.parse(dataFromLocalStorageCompleted);
+  //     setActividad(
+  //       parsedData.filter(
+  //         (actividad: Agenda) => actividad.status === "Completada"
+  //       )
+  //     );
+  //     setActividad((prev) => [...prev, ...completedData]);
+  //   }
+  // }, [isUpdated]);
 
   const [expandido, setExpandido] = useState<number | null>(null);
   const [ordenActual, setOrdenActual] = useState<OrdenColumna>(null);
@@ -288,6 +307,48 @@ export function TableUI({
       <ChevronDown size={16} />
     );
   };
+
+  useEffect(() => {
+    if (dateFilter && dateFilter.from !== undefined && dateFilter.to !== undefined) {
+      const dateFrom = dateFilter.from;
+      const dateTo = dateFilter.to;
+      const filteredData = actividad.filter((actividad) => {
+        const date = new Date(actividad.date);
+        return date >= dateFrom && date <= dateTo;
+      });
+
+      setActividad(filteredData);
+    }
+    if (dateFilter && dateFilter.from === undefined && dateFilter.to === undefined) {
+      // const dataFromLocalStorage = localStorage?.getItem("schedule");
+      // const dataFromLocalStorageCompleted = localStorage?.getItem("achievements");
+      // const dataFromLocalStorageMobileUnits = localStorage?.getItem(
+      //   "scheduleMobileUnits"
+      // );
+      // let parsedData = [];
+
+      // if (dataFromLocalStorage && !achievements && !mobileUnits) {
+      //   parsedData = JSON.parse(dataFromLocalStorage);
+      //   setActividad(parsedData);
+      // }
+
+      // if (dataFromLocalStorageMobileUnits && mobileUnits) {
+      //   parsedData = JSON.parse(dataFromLocalStorageMobileUnits);
+      //   setActividad(parsedData);
+      // }
+
+      // if (dataFromLocalStorageCompleted && achievements) {
+      //   const completedData = JSON.parse(dataFromLocalStorageCompleted);
+      //   setActividad(
+      //     parsedData.filter(
+      //       (actividad: Agenda) => actividad.status === "Completada"
+      //     )
+      //   );
+      //   setActividad((prev) => [...prev, ...completedData]);
+      // }
+    }
+  }, [dateFilter]);
+
 
   const actividadesPaginados = useMemo(() => {
     const indiceInicio = (paginaActual - 1) * elementosPorPagina;

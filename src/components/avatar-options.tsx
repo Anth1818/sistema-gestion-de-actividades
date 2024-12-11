@@ -34,10 +34,10 @@ export const AvatarOptions = () => {
             <DropdownMenuContent className="mr-4">
                 <DropdownMenuLabel>Opciones</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                {/* <DropdownMenuItem>
                     <User />
                     <span>Perfil</span>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
                 <DropdownMenuItem>
                     <LogOut />
                     <span onClick={handleLogOut}>Cerrar sesión</span>

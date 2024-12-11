@@ -1,33 +1,29 @@
 "use client"
-import { useEffect, useState } from 'react';
+import { useEffect} from 'react';
 import { useAuth } from '../context/auth-context';
 import { useRouter } from 'next/navigation';
-import PageDenied from '@/app/denied/page';
+
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated, setIsAuthenticated } = useAuth();
-  const [loading, setLoading] = useState(true);
+  const {userState} = useAuth();
+  const isAuthenticatedStorage = localStorage.getItem('user');
   const router = useRouter();
 
   useEffect(() => {
-    const checkAuth = () => {
-      const isAuthenticatedStorage = localStorage.getItem('isAuthenticated');
-      if (!isAuthenticatedStorage || isAuthenticatedStorage !== 'true') {
+    const checkAuth = () => {  
+      if (!isAuthenticatedStorage && !userState) {
         router.replace('/denied');
-      } else {
-        setIsAuthenticated(true);
-      }
-      setLoading(false);
+      } 
     };
 
     checkAuth();
-  }, [router, setIsAuthenticated]);
+  }, [router]);
 
   // if (loading) {
   //   return <div>Loading...</div>; // O un spinner de carga
   // }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticatedStorage && !userState) {
     return null; // O un spinner de carga
   }
 

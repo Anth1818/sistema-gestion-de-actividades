@@ -57,95 +57,100 @@ export const activities = [
       },
       {
         id: 2,
-        name: "procedural action",
-        label: "Acción procesal",
-      },
-      {
-        id: 3,
         name: "mobile ombudsman",
         label: "Defensoría móvil",
       },
       {
-        id: 4,
+        id: 3,
         name: "gender justice",
         label: "Mesa técnica de justicia de género",
       },
       {
-        id: 5,
+        id: 4,
         name: "representation in court cases",
         label: "Repesentación en causas judiciales",
       },
-      {
-        id: 6,
-        name: "femicide",
-        label: "Femicidio",
-      },
+      // {
+      //   id: 5,
+      //   name: "victimOfTrafficking",
+      //   label: "Victima de trata",
+      // },
+      // {
+      //   id: 6,
+      //   name: "femicide",
+      //   label: "Femicidio",
+      // },
       {
         id: 7,
-        name: "victimOfTrafficking",
-        label: "Victima de trata",
-      },
+        name: "procedural action",
+        label: "Acción procesal",
+      }, 
     ],
     "Prevención": [
       {
-        id: 1,
+        id: 8,
         name: "psicolocial attention",
         label: "Atención psicológica",
       },
       {
-        id: 2,
+        id: 9,
         name: "ginecoloical attention",
         label: "Atención ginecológica",
       },
       {
-        id: 3,
-        name: "telephone service",
-        label: "Atención telefónica",
-      },
-      {
-        id: 4,
+        id: 10,
         name: "house to house",
         label: "Casa por casa",
       },
       {
-        id: 5,
+        id: 11,
         name: "conversation",
         label: "Conversatorio",
       },
       {
-        id: 6,
-        name: "cinema Forum",
-        label: "Cine foro"
+        id: 12,
+        name: "violet Dot",
+        label: "Punto violeta",
+      },
+      
+      {
+        id: 13,
+        name: "space Intake",
+        label: "Toma de espacio",
       },
       {
-        id: 7,
+        id: 14,
         name: "preventive dynamics",
         label: "Dinámicas preventivas",
       },
       {
-        id: 8,
-        name: "violet Dot",
-        label: "Punto violeta",
+        id: 15,
+        name: "cinema Forum",
+        label: "Cine foro"
       },
-      {
-        id: 9,
-        name: "space Intake",
-        label: "Toma de espacio",
-      }
+      
+      // {
+      //   id: 16,
+      //   name: "telephone service",
+      //   label: "Atención telefónica",
+      // },
+    
+    
+   
     ],
     "Capacitación": [
       {
-        id: 1,
+        id: 17,
         name: "community defenders",
         label: "Defensoras comunales comunitarias",
       },
       {
-        id: 2,
+        id: 18,
         name: "communal labor defenders",
         label: "Defensoras comunales laborales"
       },
       {
-        id: 3,
+        id: 19,
         name: "youth community defenders",
         label: "Defensoras comunales juveniles"
       }

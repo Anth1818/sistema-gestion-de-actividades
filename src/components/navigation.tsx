@@ -2,19 +2,19 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { ChartColumn, CalendarCheck, LucideNotebookText, FilePlus, Award, UsersRound, Ambulance, ChevronDown } from 'lucide-react';
 const links = [
-  {
-    name: "Dashboard",
-    href: "/dashboard",
-    icon: ChartColumn,
-  },
-  {
-    name: "Actividades",
-    icon: CalendarCheck,
-    sublinks: [
-      { name: "Agendar", href: "/dashboard/register-schedule-activities", icon: CalendarCheck },
-      { name: "Ver agenda", href: "/dashboard/schedule", icon: LucideNotebookText },
-    ],
-  },
+  // {
+  //   name: "Dashboard",
+  //   href: "/dashboard",
+  //   icon: ChartColumn,
+  // },
+  // {
+  //   name: "Actividades",
+  //   icon: CalendarCheck,
+  //   sublinks: [
+  //     { name: "Agendar", href: "/dashboard/register-schedule-activities", icon: CalendarCheck },
+  //     { name: "Ver agenda", href: "/dashboard/schedule", icon: LucideNotebookText },
+  //   ],
+  // },
   {
     name: "Logros",
     icon: FilePlus,
@@ -24,14 +24,14 @@ const links = [
       { name: "Ver logros", href: "/dashboard/achievements", icon: Award },
     ],
   },
-  {
-    name: "Unidades móviles",
-    icon: Ambulance,
-    sublinks: [
-      { name: "Agendar", href: "/dashboard/register-schedule-mobile-units", icon: CalendarCheck },
-      { name: "Ver agenda", href: "/dashboard/schedule-mobile-units", icon: LucideNotebookText },
-    ],
-  },
+  // {
+  //   name: "Unidades móviles",
+  //   icon: Ambulance,
+  //   sublinks: [
+  //     { name: "Agendar", href: "/dashboard/register-schedule-mobile-units", icon: CalendarCheck },
+  //     { name: "Ver agenda", href: "/dashboard/schedule-mobile-units", icon: LucideNotebookText },
+  //   ],
+  // },
   {
     name: "Usuarios",
     href: "/dashboard/users",

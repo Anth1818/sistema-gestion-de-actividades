@@ -92,7 +92,7 @@ export default function ScheduleForm() {
     const {activitieOption} = useActivitieOptions(form.watch('action'))
 
     function onSubmit(data: z.infer<typeof Schema>) {
-        form.reset(defaultValues)
+        // form.reset(defaultValues)
         // alert("Submitted data: " + JSON.stringify({ id: Math.floor(Math.random() * 100), user: "ARuiz", ...data }, null, 2))
 
         // Verifica si hay datos existentes en localStorage

@@ -1,6 +1,8 @@
 "use client"
 
+import api from "@/api/api_regiones";
 import ActivitiesStatsTable from "@/components/activities-stats";
+import { DatePickerWithRange } from "@/components/date-picker";
 import FiltersDataGeneral from "@/components/filters-for-data-general";
 import MonthlyStatisticsTable from "@/components/monthly-stats";
 import ProtectedRoute from "@/components/protected-route";
@@ -12,8 +14,34 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { DateRange } from "react-day-picker";
 
 export default function Page() {
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: undefined,
+    to: undefined
+  });
+  console.log(date);
+
+  const handleResetFilter = () => {
+    setDate({
+      from: undefined,
+      to: undefined
+    })
+  }
+
+  const { isLoading, error, data } = useQuery({
+    queryKey: ['repoData'],
+    queryFn: () =>
+      api.get("/archievement").then((res) =>
+        res.data.data,
+      ),
+  })
+
+  // console.log(data);
 
   const items = [
     {
@@ -53,18 +81,21 @@ export default function Page() {
   {
     label: 'Estatus',
     campo: 'status'
-}
+  }
   ]
 
   return (
     <ProtectedRoute>
       <>
         <div className="flex flex-col justify-center items-center">
-          <h1 className="text-3xl font-bold text-center mb-2">Datos generales enero-noviembre 2024</h1>
-          <FiltersDataGeneral />
+          <h1 className="text-3xl font-bold text-center mb-2">Logros</h1>
+          <div className="flex flex-col md:flex-row justify-center gap-4 w-full">
+            <DatePickerWithRange date={date} setDate={setDate} />
+            <Button className="mb-4 lg:w-[200px]" onClick={handleResetFilter}>Limpiar filtro</Button>
+          </div>
         </div>
 
-        <AchievementsTable columnas={columnas} achievements />
+        <AchievementsTable columnas={columnas} achievements data={data} errorData={error} isLoading={isLoading} />
 
         {/* <Accordion type="single" collapsible>
           {items.map((item) => (

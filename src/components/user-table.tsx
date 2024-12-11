@@ -1,21 +1,33 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { use, useEffect, useMemo, useState } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { ChevronDown, ChevronUp, ArrowUpDown, ChevronRight, ChevronLeft } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { motion, AnimatePresence } from "framer-motion"
+import { useQuery } from '@tanstack/react-query'
+import api from '@/api/api_regiones'
 
 type Usuario = {
-    id: number
-    usuario: string
-    nombre: string
-    apellido: string
-    nivelAcceso: string
-    estatus: 'Activo' | 'Inactivo'
-    infoExtra: string
-}
+    id: number;
+    worker_id: number;
+    username: string;
+    password: string;
+    role_id: number;
+    is_active: boolean;
+    created: string;
+    role: string;
+    identity_card: number;
+    full_name: string;
+    status: boolean;
+    gender: string;
+    position: string;
+    position_id: number;
+    gender_id: number;
+    department: string;
+    department_id: number;
+  };
 
 type OrdenColumna = {
     columna: keyof Usuario | 'nombreCompleto'
@@ -32,15 +44,15 @@ const FilaExpandible = ({ usuario, expandida, onToggle, onActivar }: {
         <>
             <TableRow className="cursor-pointer" onClick={onToggle}>
                 <TableCell>{usuario.id}</TableCell>
-                <TableCell>{usuario.usuario}</TableCell>
-                <TableCell>{`${usuario.nombre} ${usuario.apellido}`}</TableCell>
-                <TableCell>{usuario.nivelAcceso}</TableCell>
-                <TableCell>{usuario.estatus}</TableCell>
+                <TableCell>{usuario.username}</TableCell>
+                <TableCell>{usuario.full_name}</TableCell>
+                <TableCell>{usuario.role}</TableCell>
+                {/* <TableCell>{usuario.estatus}</TableCell>
                 <TableCell>
                     <Button size="sm" onClick={(e) => { e.stopPropagation(); onActivar(); }}>
                         {usuario.estatus === 'Activo' ? 'Desactivar' : 'Activar'}
                     </Button>
-                </TableCell>
+                </TableCell> */}
                 <TableCell>
                     {expandida ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                 </TableCell>
@@ -61,7 +73,7 @@ const FilaExpandible = ({ usuario, expandida, onToggle, onActivar }: {
                             >
                                 <div className="p-4 bg-muted">
                                     <h3 className="font-semibold mb-2">Información adicional:</h3>
-                                    <p>{usuario.infoExtra}</p>
+                                    <p>{usuario.position}</p>
                                 </div>
                             </motion.div>
                         </TableCell>
@@ -73,15 +85,22 @@ const FilaExpandible = ({ usuario, expandida, onToggle, onActivar }: {
 }
 
 export default function TablaUsuarios() {
-    const [usuarios, setUsuarios] = useState<Usuario[]>([
-        { id: 1, usuario: 'jperez', nombre: 'Juan', apellido: 'Pérez', nivelAcceso: 'Admin', estatus: 'Activo', infoExtra: 'Último acceso: 2023-05-10' },
-        { id: 2, usuario: 'mgomez', nombre: 'María', apellido: 'Gómez', nivelAcceso: 'Usuario', estatus: 'Inactivo', infoExtra: 'Último acceso: 2023-04-22' },
-        { id: 3, usuario: 'alopez', nombre: 'Ana', apellido: 'López', nivelAcceso: 'Editor', estatus: 'Activo', infoExtra: 'Último acceso: 2023-05-09' },
-        { id: 4, usuario: 'rrodriguez', nombre: 'Roberto', apellido: 'Rodríguez', nivelAcceso: 'Usuario', estatus: 'Activo', infoExtra: 'Último acceso: 2023-05-11' },
-        { id: 5, usuario: 'cmartinez', nombre: 'Carmen', apellido: 'Martínez', nivelAcceso: 'Editor', estatus: 'Inactivo', infoExtra: 'Último acceso: 2023-05-08' },
-        { id: 6, usuario: 'lgarcia', nombre: 'Luis', apellido: 'García', nivelAcceso: 'Usuario', estatus: 'Activo', infoExtra: 'Último acceso: 2023-05-12' },
-        { id: 7, usuario: 'pherrera', nombre: 'Patricia', apellido: 'Herrera', nivelAcceso: 'Admin', estatus: 'Activo', infoExtra: 'Último acceso: 2023-05-10' },
-    ])
+
+    const { isLoading, error, data } = useQuery({
+        queryKey: ['repoData'],
+        queryFn: () =>
+            api.get("/user").then((res) =>
+                res.data.data,
+            ),
+    })
+    const [usuarios, setUsuarios] = useState<Usuario[]>([])
+    
+    useEffect(() => {
+        if (data) {
+            setUsuarios(data)
+        }
+    }, [data])
+    console.log(data);
 
     const columnas = [{
         label: 'ID',
@@ -117,7 +136,7 @@ export default function TablaUsuarios() {
     const toggleEstatus = (id: number) => {
         setUsuarios(usuarios.map(usuario =>
             usuario.id === id
-                ? { ...usuario, estatus: usuario.estatus === 'Activo' ? 'Inactivo' : 'Activo' }
+                ? { ...usuario, estatus: usuario.status ? 'Inactivo' : 'Activo' }
                 : usuario
         ))
     }
@@ -130,8 +149,8 @@ export default function TablaUsuarios() {
             let valorA: string, valorB: string
 
             if (columna === 'nombreCompleto') {
-                valorA = `${a.nombre} ${a.apellido}`
-                valorB = `${b.nombre} ${b.apellido}`
+                valorA = `${a.full_name}`.trim()
+                valorB = `${b.full_name}`.trim()
             } else {
                 valorA = a[columna].toString().trim()
                 valorB = b[columna].toString().trim()
@@ -175,7 +194,7 @@ export default function TablaUsuarios() {
                                 {renderIconoOrden(columna.campo as keyof Usuario)}
                             </TableHead>
                         ))}
-                        <TableHead className='bg-primary text-white p-2'>Acciones</TableHead>
+                        {/* <TableHead className='bg-primary text-white p-2'>Acciones</TableHead> */}
                         <TableHead className='bg-primary text-white p-2'></TableHead>
                     </TableRow>
                 </TableHeader>

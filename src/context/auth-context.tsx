@@ -1,52 +1,69 @@
 "use client"
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
-import { set } from 'date-fns';
+import { useMutation } from '@tanstack/react-query'
+import api from '@/api/api_regiones';
+
 
 interface AuthContextType {
-  isAuthenticated: boolean;
+  isAuthenticated?: boolean;
   wrongCredentials: boolean;
   login: (username: string, password: string) => void;
   logout: () => void;
+  userState: any;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [userState, setUserState] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [wrongCredentials, setWrongCredentials] = useState(false);
   const router = useRouter();
-  const users = [
-    { username: 'admin', password: 'password' },
-    { username: 'user', password: 'password' },
-  ]
 
-  const login = (username: string, password: string) => {
+  const mutation = useMutation({
+    mutationFn: async ({ user, pass }: { user: string, pass: string }) => {
+      const response = await api.post('/auth', { user, pass });
+      return response.data;
+    },
+  })
+
+  const login = (user: string, pass: string) => {
     // Verifica si las credenciales coinciden con alguno de los usuarios
-    const user = users.find((user) => user.username === username && user.password === password);
-    if (user) {
-      setWrongCredentials(false);
-      localStorage.setItem('isAuthenticated', 'true');
-      router.push('/dashboard');
-    } else {
-      // Maneja el error de autenticación si las credenciales son incorrectas
-      console.error('Credenciales incorrectas');
+    mutation.mutate({ user, pass }, {
+      onSuccess: (data) => {
+        if (data.data) {
+          setWrongCredentials(false);
+          localStorage.setItem('user', JSON.stringify(data));
+          setUserState(data.data);
+          if (data.data.role_id === 1) {
+            router.push('/dashboard/achievements');
+          } else if (data.data.role_id === 2) {
+            router.push('/dashboard/schedule');
+          }
+        }
+        console.log('Credenciales correctas');
+        console.log(data);
+      },
+      onError: () => {
+        console.error('Credenciales incorrectas');
         setWrongCredentials(true);
-    }
+      }
+    });
   };
 
-  const logout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem('isAuthenticated');
-    router.replace('/login');
-  };
+const logout = () => {
+  setUserState(null);
+  localStorage.removeItem('user');
+  router.replace('/login');
+};
 
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, login, logout, wrongCredentials}}>
-      {children}
-    </AuthContext.Provider>
-  );
+return (
+  <AuthContext.Provider value={{ userState, setIsAuthenticated, login, logout, wrongCredentials }}>
+    {children}
+  </AuthContext.Provider>
+);
 };
 
 export const useAuth = () => {

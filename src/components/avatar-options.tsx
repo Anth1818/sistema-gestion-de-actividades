@@ -16,12 +16,15 @@ import { useAuth } from "@/context/auth-context"
 import { log } from "console"
 
 export const AvatarOptions = () => {
-    const {logout} = useAuth()
+    const authContext = useAuth()
+    const logout = authContext?.logout
 
     // const router = useRouter()
 
     const handleLogOut = () => {
-        logout()
+        if (logout) {
+            logout()
+        }
     }
 
     return (

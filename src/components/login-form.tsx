@@ -26,13 +26,8 @@ export default function LoginForm({ children }: { children: React.ReactNode }) {
 
     // const router = useRouter()
 
-    const { login, wrongCredentials } = useAuth()
-
+    const auth = useAuth()
     const [showPassword, setShowPassword] = useState(false)
-
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword)
-    }
 
     const formLoginSchema = z.object({
         username: z.string({
@@ -56,6 +51,15 @@ export default function LoginForm({ children }: { children: React.ReactNode }) {
             password: "",
         }
     })
+
+    if (!auth) {
+        return <div>Error: Auth context is not available</div>
+    }
+    const { login, wrongCredentials } = auth
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword)
+    }
 
     // 2. Define a submit handler.
     function onSubmit(data: z.infer<typeof formLoginSchema>) {

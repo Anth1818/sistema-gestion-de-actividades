@@ -15,6 +15,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 
+
 const inter = Inter({ subsets: ["latin"] });
 
 const metadata: Metadata = {
@@ -40,6 +41,7 @@ export default function RootLayout({
               type="image/x-icon"
               sizes="any"
             />
+
             <body className={`${inter.className} dark:bg-dark`}>
 
               <ThemeProvider
@@ -49,11 +51,14 @@ export default function RootLayout({
                 disableTransitionOnChange
               >
                 <Cintillo />
-                {children}
+               
+                  {children}
+                
                 <Footer />
                 <Toaster />
               </ThemeProvider>
             </body>
+
           </html>
         </UpdateActivitieProvider>
       </AuthProvider>

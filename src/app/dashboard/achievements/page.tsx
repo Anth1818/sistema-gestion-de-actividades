@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { DateRange } from "react-day-picker";
 
 export default function Page() {

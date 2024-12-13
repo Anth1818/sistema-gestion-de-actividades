@@ -68,11 +68,11 @@ export default function Page() {
   },
   {
     label: 'Usuario',
-    campo: 'user'
+    campo: 'username'
   },
   {
     label: 'Actividad',
-    campo: 'activitie'
+    campo: 'type_activity'
   },
   {
     label: 'Fecha',
@@ -80,7 +80,7 @@ export default function Page() {
   },
   {
     label: 'Estatus',
-    campo: 'status'
+    campo: 'status_id'
   }
   ]
 

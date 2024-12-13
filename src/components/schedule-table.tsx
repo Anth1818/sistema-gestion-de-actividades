@@ -88,7 +88,7 @@ const FilaExpandible = ({
         <TableCell>{actividad.id}</TableCell>
         <TableCell>{actividad.username}</TableCell>
         <TableCell>{actividad.type_activity}</TableCell>
-        <TableCell>{achievements ? format(actividad.date, "dd/MM/yyyy"  ) : actividad.dateFormatted}</TableCell>
+        <TableCell>{achievements ? actividad.date !== undefined ? format(actividad.date, "dd/MM/yyyy") : "" : "" }</TableCell>
         {<TableCell className={colorStatus}>{achievements ? "Logrado": actividad.status}</TableCell>}
         {viewUser && (
           <TableCell>
@@ -216,37 +216,7 @@ export function TableUI({
       setActividad([]);
     }
   }, [data, errorData]);
-  // useEffect(() => {
-  //   const dataFromLocalStorage = localStorage?.getItem("schedule");
-  //   const dataFromLocalStorageCompleted = localStorage?.getItem("achievements");
-  //   const dataFromLocalStorageMobileUnits = localStorage?.getItem(
-  //     "scheduleMobileUnits"
-  //   );
-  //   let parsedData = [];
-
-  //   if (dataFromLocalStorage) {
-  //     parsedData = JSON.parse(dataFromLocalStorage);
-  //     setActividad(parsedData);
-  //   }
-
-  //   if (dataFromLocalStorageMobileUnits && mobileUnits) {
-  //     parsedData = JSON.parse(dataFromLocalStorageMobileUnits);
-  //     setActividad(parsedData);
-  //   }else{
-  //     setActividad([])
-  //   }
-
-  //   if (dataFromLocalStorageCompleted && achievements) {
-  //     const completedData = JSON.parse(dataFromLocalStorageCompleted);
-  //     setActividad(
-  //       parsedData.filter(
-  //         (actividad: Agenda) => actividad.status === "Completada"
-  //       )
-  //     );
-  //     setActividad((prev) => [...prev, ...completedData]);
-  //   }
-  // }, [isUpdated]);
-
+ 
   const [expandido, setExpandido] = useState<number | null>(null);
   const [ordenActual, setOrdenActual] = useState<OrdenColumna>(null);
   const [paginaActual, setPaginaActual] = useState(1);
@@ -267,6 +237,8 @@ export function TableUI({
         return nuevaDireccion === "asc" ? a.id - b.id : b.id - a.id;
       }
       let valorA: string, valorB: string;
+
+      // valorA = typeof a[columna] === "number"
 
       valorA = a[columna].toString().trim();
       valorB = b[columna].toString().trim();
@@ -291,46 +263,18 @@ export function TableUI({
     );
   };
 
-  useEffect(() => {
-    if (dateFilter && dateFilter.from !== undefined && dateFilter.to !== undefined) {
-      const dateFrom = dateFilter.from;
-      const dateTo = dateFilter.to;
-      const filteredData = actividad.filter((actividad) => {
-        const date = new Date(actividad.date);
-        return date >= dateFrom && date <= dateTo;
-      });
+  // useEffect(() => {
+  //   if (dateFilter && dateFilter.from !== undefined && dateFilter.to !== undefined) {
+  //     const dateFrom = dateFilter.from;
+  //     const dateTo = dateFilter.to;
+  //     const filteredData = actividad.filter((actividad) => {
+  //       const date = new Date(actividad.date);
+  //       return date >= dateFrom && date <= dateTo;
+  //     });
 
-      setActividad(filteredData);
-    }
-    if (dateFilter && dateFilter.from === undefined && dateFilter.to === undefined) {
-      // const dataFromLocalStorage = localStorage?.getItem("schedule");
-      // const dataFromLocalStorageCompleted = localStorage?.getItem("achievements");
-      // const dataFromLocalStorageMobileUnits = localStorage?.getItem(
-      //   "scheduleMobileUnits"
-      // );
-      // let parsedData = [];
-
-      // if (dataFromLocalStorage && !achievements && !mobileUnits) {
-      //   parsedData = JSON.parse(dataFromLocalStorage);
-      //   setActividad(parsedData);
-      // }
-
-      // if (dataFromLocalStorageMobileUnits && mobileUnits) {
-      //   parsedData = JSON.parse(dataFromLocalStorageMobileUnits);
-      //   setActividad(parsedData);
-      // }
-
-      // if (dataFromLocalStorageCompleted && achievements) {
-      //   const completedData = JSON.parse(dataFromLocalStorageCompleted);
-      //   setActividad(
-      //     parsedData.filter(
-      //       (actividad: Agenda) => actividad.status === "Completada"
-      //     )
-      //   );
-      //   setActividad((prev) => [...prev, ...completedData]);
-      // }
-    }
-  }, [dateFilter]);
+  //     setActividad(filteredData);
+  //   }
+  // }, [dateFilter]);
 
 
   const actividadesPaginados = useMemo(() => {

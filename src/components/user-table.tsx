@@ -129,7 +129,7 @@ export default function TablaUsuarios() {
     },
     {
       label: "Usuario",
-      campo: "usuario",
+      campo: "username",
     },
     {
       label: "Nombre Completo",
@@ -137,7 +137,7 @@ export default function TablaUsuarios() {
     },
     {
       label: "Nivel de Acceso",
-      campo: "nivelAcceso",
+      campo: "status",
     },
     // {
     //     label: 'Estatus',

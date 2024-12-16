@@ -12,6 +12,8 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import Cookies from 'js-cookie';
+import { gerency as gerencyOptions, actionsOptions, activities as activitiesOptions, countries } from "@/lib/utils"
 
 import {
     Select,
@@ -21,6 +23,12 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "./ui/textarea"
+import useLocation from "@/hooks/useLocation"
+import { useMutation } from "@tanstack/react-query"
+import api from "@/api/api_regiones"
+import { format } from "date-fns"
+import { useState } from "react"
+import { Notification } from "./notification"
 
 interface VictimsFormProps {
     gerency: string,
@@ -30,43 +38,87 @@ interface VictimsFormProps {
 
 
 const Schema = z.object({
-    originCountry: z.string().min(1, "Seleccione un país"),
-    stateResidence: z.string().min(1, "Seleccione un estado"),
-    methodOfRecruitment: z.string().min(1, "Seleccione un método de captación"),
-    receivedBy: z.string().min(1, "Seleccione un recibidor"),
+    country_id: z.string().min(1, "Seleccione un país"),
+    state_id: z.coerce.number().int().min(1, "Seleccione un estado."),
+    municipality_id: z.coerce.number().int().min(1, "Seleccione un municipio."),
+    parish_id: z.coerce.number().int().min(1, "Seleccione una parroquia."),
+    collection_method: z.string().min(1, "Seleccione un método de captación"),
+    received: z.string().min(1, "Seleccione un recibidor"),
     age: z.coerce.number().int().positive("Ingrese una edad válida").min(1, "Ingrese una edad válida").max(120, "Ingrese una edad válida"),
-    obs: z.string().max(1000, "Máximo 1000 caracteres."),
+    observation: z.string().max(1000, "Máximo 1000 caracteres."),
 })
 
 const defaultValues = {
-    originCountry: "",
-    stateResidence: "",
-    methodOfRecruitment: "",
-    receivedBy: "",
+    country_id: "",
+    state_id: 0,
+    municipality_id: 0,
+    parish_id: 0,
+    collection_method: "",
+    received: "",
     age: 0,
-    obs: "",
+    observation: "",
 }
 
 export default function VictimsForm({ gerency, action, activitie }: VictimsFormProps) {
-
+    const [showNotification, setShowNotification] = useState(false)
+    const user = Cookies.get('user')
+    const userLoggin = user ? JSON.parse(user) : null;
+    const gerencyOption = gerencyOptions.find((option) => option.label === gerency);
+    const gerency_id = gerencyOption ? gerencyOption.id : null;
+    const actionOption = actionsOptions.find((option) => option.label === action);
+    const action_id = actionOption ? actionOption.id : null;
     const form = useForm({
         resolver: zodResolver(Schema),
         defaultValues
     })
+    const { state, municipality, parish } = useLocation(form.watch('state_id'), form.watch('municipality_id'));
+
+    const othersData = {
+        country_id: Number(form.getValues("country_id")),
+        created_by: userLoggin.id,
+        action_id,
+        management_unit_id: gerency_id,
+        activity_id: Number(activitie),
+        hour: format(new Date(), "HH:mm:ss"),
+        previously_scheduled: false,
+        date: format(new Date(), "dd/MM/yyyy"),
+        gender_id: 1,
+    }
+
+    const mutation = useMutation({
+        mutationFn: async (data: z.infer<typeof Schema>) => {
+            const response = await api.post('/archievement', { ...data, ...othersData });
+            return response.data;
+        },
+    })
 
     function onSubmit(data: z.infer<typeof Schema>) {
-        form.reset(defaultValues)
-        alert("Submitted data: " + JSON.stringify({ ...data, gerency, action, activitie }, null, 2))
+        setShowNotification(false)
+        // console.log({ ...data, ...othersData });
+        mutation.mutate(data,
+            {
+                onSuccess: () => {
+                    form.reset(defaultValues)
+                    setShowNotification(true)
+                    console.log('Datos enviados con éxito');
+                },
+                onError: () => {
+                    console.error('Error al enviar los datos');
+                }
+            }
+        )
+        // alert("Submitted data: " + JSON.stringify({ ...data, gerency, action, activitie }, null, 2))
     }
     return (
         <>
+            {showNotification && <Notification message="Actividad registrada con éxito" />}
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2 lg:grid-cols-4 lg:gap-4">
 
                     {/* --------Pais de procedencia-------- */}
                     <FormField
                         control={form.control}
-                        name="originCountry"
+                        name="country_id"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Pais de procedencia</FormLabel>
@@ -77,9 +129,11 @@ export default function VictimsForm({ gerency, action, activitie }: VictimsFormP
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="Pais 1">Pais 1</SelectItem>
-                                        <SelectItem value="Pais 2">Pais 2</SelectItem>
-                                        <SelectItem value="Pais 3">Pais 3</SelectItem>
+                                        {countries.map((country) => (
+                                            <SelectItem key={country.id} value={country.id.toString()}>
+                                                {country.country}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -87,24 +141,24 @@ export default function VictimsForm({ gerency, action, activitie }: VictimsFormP
                         )}
                     />
 
-
-                    {/* --------Estado de residencia-------- */}
+                    {/* ------Estado------- */}
                     <FormField
                         control={form.control}
-                        name="stateResidence"
+                        name="state_id"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
-                                <FormLabel>Estado donde reside</FormLabel>
-                                <Select onValueChange={field.onChange} value={field.value}>
+                                <FormLabel>Estado</FormLabel>
+                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Seleccione" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="estado 1">Estado 1</SelectItem>
-                                        <SelectItem value="estado 2">Estado 2</SelectItem>
-                                        <SelectItem value="estado 3">Estado 3</SelectItem>
+                                        <SelectItem value="0">Seleccione</SelectItem>
+                                        {state.map((state: { id: number, state: string }) => (
+                                            <SelectItem key={state.id} value={String(state.id)}>{state.state}</SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -112,6 +166,57 @@ export default function VictimsForm({ gerency, action, activitie }: VictimsFormP
                         )}
                     />
 
+                    {/* ------Municipio------- */}
+
+                    <FormField
+                        control={form.control}
+                        name="municipality_id"
+                        render={({ field }) => (
+                            <FormItem className="col-span-12 md:col-span-1 ">
+                                <FormLabel>Municipio</FormLabel>
+                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Seleccione" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value="0">Seleccione</SelectItem>
+                                        {municipality.map((municipality: { id: number, municipality: string }) => (
+                                            <SelectItem key={municipality.id} value={String(municipality.id)}>{municipality.municipality}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* ------Parroquia------- */}
+
+                    <FormField
+                        control={form.control}
+                        name="parish_id"
+                        render={({ field }) => (
+                            <FormItem className="col-span-12 md:col-span-1 ">
+                                <FormLabel>Parroquia</FormLabel>
+                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Seleccione" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value="0">Seleccione</SelectItem>
+                                        {parish.map((parish: { id: number, parish: string }) => (
+                                            <SelectItem key={parish.id} value={String(parish.id)}>{parish.parish}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                     {/* -------Sexo------- */}
                     {/* <FormField
                 control={form.control}
@@ -140,51 +245,32 @@ export default function VictimsForm({ gerency, action, activitie }: VictimsFormP
                     {/* --------Forma de captación-------- */}
                     <FormField
                         control={form.control}
-                        name="methodOfRecruitment"
+                        name="collection_method"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Método de captación</FormLabel>
-                                <Select onValueChange={field.onChange} value={field.value}>
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Seleccione" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        <SelectItem value="Metodo de captacion 1">Metodo de captacion 1</SelectItem>
-                                        <SelectItem value="Metodo de captacion 2">Metodo de captacion 2</SelectItem>
-                                        <SelectItem value="Metodo de captacion 3">Metodo de captacion 3</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <FormControl>
+                                    <Input placeholder="..." {...field} />
+                                </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-
                     {/* ------Recibida por------ */}
+
                     <FormField
                         control={form.control}
-                        name="receivedBy"
+                        name="received"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Recibida por</FormLabel>
-                                <Select onValueChange={field.onChange} value={field.value}>
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Seleccione" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        <SelectItem value="Recibida 1">Recibida 1</SelectItem>
-                                        <SelectItem value="Recibida 2">Recibida 2</SelectItem>
-                                        <SelectItem value="Recibida 3">Recibida 3</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <FormControl>
+                                    <Input placeholder="..." {...field} />
+                                </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-
                     {/* --------Edad-------- */}
                     <FormField
                         control={form.control}
@@ -199,13 +285,13 @@ export default function VictimsForm({ gerency, action, activitie }: VictimsFormP
                             </FormItem>
                         )}
                     />
-                        
-                        {/* --------Observaciones-------- */}
+
+                    {/* --------Observaciones-------- */}
                     <FormField
                         control={form.control}
-                        name="obs"
+                        name="observation"
                         render={({ field }) => (
-                            <FormItem className="col-span-12 md:col-span-3 ">
+                            <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Observaciones</FormLabel>
                                 <FormControl>
                                     <Textarea

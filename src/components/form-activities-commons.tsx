@@ -25,7 +25,7 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
 import { cn } from "@/lib/utils"
-import { format } from "date-fns"
+import { format, set } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "./ui/calendar"
 import { places } from "@/lib/utils"
@@ -35,6 +35,7 @@ import { useMutation } from "@tanstack/react-query"
 import api from "@/api/api_regiones"
 import useLocation from "@/hooks/useLocation"
 import { gerency as gerencyOptions, actionsOptions, activities as activitiesOptions } from "@/lib/utils"
+import Cookies from "js-cookie"
 
 interface ActivitiesCommonsFormProps {
     gerency: string,
@@ -75,7 +76,7 @@ const defaultValues = {
 
 export default function ActivitiesCommonsForm({ gerency, action, activitie }: ActivitiesCommonsFormProps) {
     const [showNotification, setShowNotification] = useState(false)
-    const user = localStorage.getItem('user')
+    const user = Cookies.get('user')
     const userLoggin = user ? JSON.parse(user) : null;
     const gerencyOption = gerencyOptions.find((option) => option.label === gerency);
     const gerency_id = gerencyOption ? gerencyOption.id : null;
@@ -91,13 +92,13 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
 
     const mutation = useMutation({
         mutationFn: async (data: z.infer<typeof Schema>) => {
-            const response = await api.post('/archievement', { ...data, created_by: userLoggin.data.role_id, action_id, management_unit_id: gerency_id, activity_id: activitie, status: "Completada" ,hour: format(new Date(), "HH:mm:ss"), previously_scheduled: false });
+            const response = await api.post('/archievement', { ...data, created_by: userLoggin.id, action_id, management_unit_id: gerency_id, activity_id: activitie, status: "Completada" ,hour: format(new Date(), "HH:mm:ss"), previously_scheduled: false });
             return response.data;
         },
     })
 
     function onSubmit(data: z.infer<typeof Schema>) {
-
+        setShowNotification(false)
         mutation.mutate(data,
             {
                 onSuccess: () => {
@@ -237,7 +238,7 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
                         name="specify"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
-                                <FormLabel>Especifique</FormLabel>
+                                <FormLabel>Otro (Especifique)</FormLabel>
                                 <FormControl>
                                     <Input placeholder="..." {...field} />
                                 </FormControl>

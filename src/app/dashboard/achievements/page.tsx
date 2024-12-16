@@ -16,15 +16,20 @@ import {
 } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { Suspense, useState } from "react";
+import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
+import handleExportPDF from "@/lib/exportPDF";
+import { Agenda } from "@/lib/types";
+import { set } from "date-fns";
 
 export default function Page() {
   const [date, setDate] = useState<DateRange | undefined>({
     from: undefined,
     to: undefined
   });
-  console.log(date);
+   const [actividad, setActividad] = useState<Agenda[]>([]);
+   const [initialData, setInitialData] = useState<Agenda[]>([]);
+  // console.log(date);
 
   const handleResetFilter = () => {
     setDate({
@@ -36,12 +41,41 @@ export default function Page() {
   const { isLoading, error, data } = useQuery({
     queryKey: ['repoData'],
     queryFn: () =>
-      api.get("/archievement").then((res) =>
-        res.data.data,
-      ),
+      api.get("/archievement").then((res) => res.data.data),
   })
 
-  // console.log(data);
+    useEffect(() => {
+      if(!data){
+       return
+      }else{
+        setActividad(data);
+        setInitialData(data);
+      }
+      
+    }, [data]);
+
+    // console.log(actividad);
+
+  useEffect(() => {
+      if (date && date.from !== undefined && date.to !== undefined) {
+        // Restablece `actividad` al valor inicial
+        setActividad(initialData);
+        const dateFrom = date.from;
+        const dateTo = date.to;
+        const filteredData = data.filter((actividad: Agenda) => {
+          const date = new Date(actividad.date);
+          return date >= dateFrom && date <= dateTo;
+        });
+  
+        setActividad(filteredData);
+      } else {
+        setActividad(initialData);
+      }
+    }, [date?.from, date?.to, initialData]);
+
+  const exportPDF = () => {
+    handleExportPDF(date?.from?.toLocaleDateString(), date?.to?.toLocaleDateString(), actividad, data, "Reporte de logros");
+  }
 
   const items = [
     {
@@ -89,13 +123,14 @@ export default function Page() {
       <>
         <div className="flex flex-col justify-center items-center">
           <h1 className="text-3xl font-bold text-center mb-2">Logros</h1>
-          {/* <div className="flex flex-col md:flex-row justify-center gap-4 w-full">
+          <div className="flex flex-col md:flex-row justify-center gap-4 w-full">
             <DatePickerWithRange date={date} setDate={setDate} />
             <Button className="mb-4 lg:w-[200px]" onClick={handleResetFilter}>Limpiar filtro</Button>
-          </div> */}
+            <Button className="mb-4 lg:w-[200px]" onClick={exportPDF}>Exportar PDF</Button>
+          </div>
         </div>
 
-        <AchievementsTable columnas={columnas} achievements data={data} errorData={error} isLoading={isLoading} />
+        <AchievementsTable columnas={columnas} achievements data={actividad} errorData={error} isLoading={isLoading} dateFilter={date} setData={setActividad} />
 
         {/* <Accordion type="single" collapsible>
           {items.map((item) => (

@@ -190,6 +190,7 @@ interface TableProps {
   dateFilter?: DateRange;
   columnas: { campo: string; label: string }[];
   data?: Agenda[];
+  setData: (data: Agenda[]) => void; 
   errorData?: any;
   isLoading?: boolean;
 }
@@ -200,23 +201,14 @@ export function TableUI({
   achievements,
   mobileUnits,
   dateFilter,
-  data,
+  data: actividad,
+  setData: setActividad,
   errorData,
   isLoading
 }: TableProps) {
-  const [actividad, setActividad] = useState<Agenda[]>([]);
   const { isUpdated } = useUpdateActivitie();
  
-
-  useEffect(() => {
-    if(data){
-      setActividad(data);
-    }
-    if(errorData){
-      setActividad([]);
-    }
-  }, [data, errorData]);
- 
+  
   const [expandido, setExpandido] = useState<number | null>(null);
   const [ordenActual, setOrdenActual] = useState<OrdenColumna>(null);
   const [paginaActual, setPaginaActual] = useState(1);
@@ -232,13 +224,11 @@ export function TableUI({
         : "asc";
     setOrdenActual({ columna, direccion: nuevaDireccion });
 
-    const actividadesOrdenados = [...actividad].sort((a, b) => {
+    const actividadesOrdenados = [...(actividad || [])].sort((a, b) => {
       if (columna === "id") {
         return nuevaDireccion === "asc" ? a.id - b.id : b.id - a.id;
       }
       let valorA: string, valorB: string;
-
-      // valorA = typeof a[columna] === "number"
 
       valorA = a[columna].toString().trim();
       valorB = b[columna].toString().trim();
@@ -263,27 +253,14 @@ export function TableUI({
     );
   };
 
-  // useEffect(() => {
-  //   if (dateFilter && dateFilter.from !== undefined && dateFilter.to !== undefined) {
-  //     const dateFrom = dateFilter.from;
-  //     const dateTo = dateFilter.to;
-  //     const filteredData = actividad.filter((actividad) => {
-  //       const date = new Date(actividad.date);
-  //       return date >= dateFrom && date <= dateTo;
-  //     });
-
-  //     setActividad(filteredData);
-  //   }
-  // }, [dateFilter]);
-
 
   const actividadesPaginados = useMemo(() => {
     const indiceInicio = (paginaActual - 1) * elementosPorPagina;
     const indiceFin = indiceInicio + elementosPorPagina;
-    return actividad.slice(indiceInicio, indiceFin);
+    return (actividad || []).slice(indiceInicio, indiceFin);
   }, [actividad, paginaActual, elementosPorPagina]);
 
-  const totalPaginas = Math.ceil(actividad.length / elementosPorPagina);
+  const totalPaginas = Math.ceil((actividad?.length || 0) / elementosPorPagina);
 
   const cambiarPagina = (nuevaPagina: number) => {
     setPaginaActual(nuevaPagina);
@@ -327,7 +304,7 @@ export function TableUI({
             // onComplete={() => completeSchedule(actividad.id)}
             />
           ))}
-          {actividad.length === 0 && (
+          {(actividad?.length ?? 0) === 0 && (
             <TableRow>
               <TableCell colSpan={7} className="text-center">
                 No hay actividades agendadas
@@ -339,7 +316,7 @@ export function TableUI({
 
       {/* Paginación */}
 
-      {actividad.length !== 0 && (
+      {(actividad?.length ?? 0) !== 0 && (
         <div className="flex items-center justify-between mt-4">
           <div className="flex items-center space-x-2">
             <p className="text-sm font-medium">Filas por página</p>

@@ -1,7 +1,8 @@
 import api from "@/api/api_regiones";
 import { useEffect, useState } from "react";
 
-const useLocation = (estado_id: number, municipio_id: number) => {
+
+const useLocation = (estado_id = 0, municipio_id = 0 )  => {
     const [state, setState] = useState([]);
     const [municipality, setMunicipality] = useState([]);
     const [parish, setParish] = useState([]);

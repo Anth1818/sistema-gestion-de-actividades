@@ -55,7 +55,7 @@ export default function LoginForm({ children }: { children: React.ReactNode }) {
     if (!auth) {
         return <div>Error: Auth context is not available</div>
     }
-    const { login, wrongCredentials } = auth
+    const { login, wrongCredentials, userNotActive } = auth
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword)
@@ -125,6 +125,7 @@ export default function LoginForm({ children }: { children: React.ReactNode }) {
                 </div>
                 <div className="flex flex-col justify-center mt-4 gap-4">
                     {wrongCredentials && <AlertDestructive>Credenciales incorrectas</AlertDestructive>}
+                    {userNotActive && <AlertDestructive>Usuario no activo</AlertDestructive>}                    
                     {children}
                 </div>
             </form>

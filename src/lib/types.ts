@@ -1,37 +1,64 @@
 export interface AgeRangeData {
-    range: string
-    women: number
-    men: number
-  }
-  
-  export interface DisabilityData {
-    type: string
-    ageRanges: AgeRangeData[]
-  }
-  
-  export interface EthnicityData {
-    type: string
-    ageRanges: AgeRangeData[]
-  }
-  
-  export interface AttentionTypeData {
-    type: string
-    ageRanges: AgeRangeData[]
-    disabilities: DisabilityData[]
-    ethnicities: EthnicityData[]
-  }
-  
-  export interface FormData {
-    attentionTypes: AttentionTypeData[]
-  }
+  range: string
+  women: number
+  men: number
+}
 
-  export interface TableProps {
-    viewUser?: boolean;
-    achievements?: boolean;
-    mobileUnits?: boolean;
-    columnas: { campo: string; label: string }[];
-  }
-  
+export interface DisabilityData {
+  type: string
+  ageRanges: AgeRangeData[]
+}
+
+export interface EthnicityData {
+  type: string
+  ageRanges: AgeRangeData[]
+}
+
+export interface AttentionTypeData {
+  type: string
+  ageRanges: AgeRangeData[]
+  disabilities: DisabilityData[]
+  ethnicities: EthnicityData[]
+}
+
+export interface FormData {
+  attentionTypes: AttentionTypeData[]
+}
+
+export interface TableProps {
+  viewUser?: boolean;
+  achievements?: boolean;
+  mobileUnits?: boolean;
+  columnas: { campo: string; label: string }[];
+}
+
+export interface Worker {
+  id: number;
+  identity_card: number;
+  is_foreign: boolean;
+  full_name: string;
+  gender_id: number;
+  department_id: number;
+  position_id: number;
+  payroll_type_id: number;
+  area_coordination_id: number;
+  status: string;
+  created: string;
+  updated: string | null;
+  gender: string;
+  department: string;
+  position: string;
+  payroll_type: string;
+  area: string;
+  state_id: number | null;
+  state: string | null;
+  municipality_id: number | null;
+  municipality: string | null;
+  parish_id: number | null;
+  parish: string | null;
+  address: string | null;
+}
+
 export type Agenda = {
   id: number;
   username: string;
@@ -57,7 +84,7 @@ export type OrdenColumna = {
   columna: keyof Agenda | "id";
   direccion: "asc" | "desc";
 } | null;
-  
+
 
 export interface MobileUnit {
   id: number;

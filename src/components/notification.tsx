@@ -4,9 +4,10 @@ import { useEffect } from "react";
 
 interface NotificationProps {
   message: string;
+  variant?: "default" | "success" | "destructive" | null;
 }
 
-  const Notification: React.FC<NotificationProps> = ({ message }) => {
+  const Notification: React.FC<NotificationProps> = ({ message, variant="success" }) => {
     const { toast } = useToast();
   
     useEffect(() => {
@@ -14,7 +15,7 @@ interface NotificationProps {
         toast({
           title: "Notificación",
           description: message,
-          variant: "success",
+          variant: variant,
           action: <ToastAction altText="Cerrar">Cerrar</ToastAction>,
         });
       };

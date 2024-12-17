@@ -1,5 +1,6 @@
 "use client"
 
+import api from "@/api/api_regiones";
 import FormAddUser from "@/components/form-add-user";
 import ProtectedRoute from "@/components/protected-route";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -7,27 +8,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@radix-ui/react-select"
+import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, IdCard } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 export default function AddUserPage() {
-    const identification = "27451286"
-
-    const dataWorker = [
-        {
-            id: "27451286",
-            name: "Anthony",
-            lastname: "Ruiz",
-            phone: "04120001122",
-            email: "tonyjrc2291@gmail.com",
-            address: "Calle 1, casa 2",
-            department: "Desarrollo"
-        }
-    ]
-
+    const [shouldFetch, setShouldFetch] = useState(false);
     const [id, setId] = useState("")
+
 
     const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setId(e.target.value)
@@ -35,11 +25,33 @@ export default function AddUserPage() {
 
     const router = useRouter()
 
+    const handleSearchClick = () => {
+        setShouldFetch(true)
+    }
+
     const handleBackClick = () => {
         router.back()
     }
+
+    const fetchWorker = async (id: string) => {
+        const response = await api.get(`/worker/ic/${id}`)
+        return response.data.data
+    }
+
+    const {data: dataWorker, isLoading} = useQuery({
+        queryKey: ["worker"],
+        queryFn: () => fetchWorker(id),
+        enabled: shouldFetch
+    })
+    useEffect(() => {
+        if (dataWorker) {
+          setShouldFetch(false); // Restablece shouldFetch a false después de la búsqueda
+        }
+      }, [dataWorker]);
+
+    // console.log(dataWorker)
     return (
-        <ProtectedRoute>
+        <ProtectedRoute requiredRole={1}>
             <div>
                 <h1 className="text-2xl font-bold text-center mb-4">Añadir usuario</h1>
                 <div className="w-full">
@@ -54,23 +66,30 @@ export default function AddUserPage() {
                     <div className="flex flex-col justify-center items-start gap-2">
                         <Label htmlFor="number-id">Cédula:</Label>
                         <div className="relative">
-                            <Input id="number-id" type="number" placeholder="01234567" value={id} onChange={handleIdChange} />
+                            <Input id="number-id" type="number" placeholder="01234567" value={id} onChange={handleIdChange}/>
                             <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 dark:text-dark-foreground">
                                 <IdCard />
                             </div>
                         </div>
                     </div>
-                    <Button className=" self-end">Buscar</Button>
+                    <Button className=" self-end" onClick={handleSearchClick}>Buscar</Button>
                 </div>
                 <Separator className="border my-4" />
-                {id === identification && (
+                {Number(id) === dataWorker?.identity_card && (
                     <div className="flex flex-col justify-center items-center gap-4">
-                        <p>La cédula ingresada corresponde al trabajador Anthony Ruiz</p>
+                        <p>La cédula ingresada corresponde al trabajador {dataWorker?.full_name}</p>
                         <Accordion type="single" collapsible className="w-full">
                             <AccordionItem value="item-1">
                                 <AccordionTrigger>Ver información del trabajador</AccordionTrigger>
                                 <AccordionContent>
-                                    Detalles del trabajador
+                                    <b>Detalles del trabajador:</b>
+                                    <ul>
+                                        <li>Departamento: {dataWorker?.department}</li>
+                                        <li>Cargo: {dataWorker?.position}</li>
+                                        <li>Tipo de nómina: {dataWorker?.payroll_type}</li>
+                                        <li>Estatus: {dataWorker?.status === "true" ? "Trabajador activo" : "Trabajador Inactivo"}</li>
+                                       
+                                    </ul>
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>
@@ -78,6 +97,9 @@ export default function AddUserPage() {
                         <FormAddUser dataWorker={dataWorker} />
                     </div>)
                 }
+                {!dataWorker && (
+                    <p className="text-center">No se encontró ningún trabajador con la cédula ingresada</p>
+                )}
             </div>
         </ProtectedRoute>
     );

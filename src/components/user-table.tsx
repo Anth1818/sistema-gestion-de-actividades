@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Table,
   TableBody,
@@ -27,6 +27,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/api/api_regiones";
+import { Notification } from "./notification";
 
 type Usuario = {
   id: number;
@@ -71,12 +72,12 @@ const FilaExpandible = ({
         <TableCell>{usuario.username}</TableCell>
         <TableCell>{usuario.full_name}</TableCell>
         <TableCell>{usuario.role}</TableCell>
-        {/* <TableCell>{usuario.estatus}</TableCell>
-                <TableCell>
-                    <Button size="sm" onClick={(e) => { e.stopPropagation(); onActivar(); }}>
-                        {usuario.estatus === 'Activo' ? 'Desactivar' : 'Activar'}
-                    </Button>
-                </TableCell> */}
+        <TableCell>{usuario.is_active ? "Activo" : "Inactivo"}</TableCell>
+        <TableCell>
+          <Button size="sm" onClick={(e) => { e.stopPropagation(); onActivar(); }}>
+            {usuario.is_active ? 'Desactivar' : 'Activar'}
+          </Button>
+        </TableCell>
         <TableCell>
           {expandida ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </TableCell>
@@ -109,7 +110,7 @@ const FilaExpandible = ({
 };
 
 export default function TablaUsuarios() {
-  const { isLoading, error, data } = useQuery({
+  const { data } = useQuery({
     queryKey: ["repoData"],
     queryFn: () => api.get("/user").then((res) => res.data.data),
   });
@@ -120,7 +121,7 @@ export default function TablaUsuarios() {
       setUsuarios(data);
     }
   }, [data]);
-  console.log(data);
+  // console.log(data);
 
   const columnas = [
     {
@@ -137,31 +138,45 @@ export default function TablaUsuarios() {
     },
     {
       label: "Nivel de Acceso",
-      campo: "status",
+      campo: "role",
     },
-    // {
-    //     label: 'Estatus',
-    //     campo: 'estatus'
-    // }]
-  ];
+    {
+      label: 'Estatus',
+      campo: 'status'
+    }]
 
   const [expandido, setExpandido] = useState<number | null>(null);
   const [ordenActual, setOrdenActual] = useState<OrdenColumna>(null);
   const [paginaActual, setPaginaActual] = useState(1);
   const [elementosPorPagina, setElementosPorPagina] = useState(5);
+  const [showNotification, setShowNotification] = useState(false);
 
   const toggleExpansion = (id: number) => {
     setExpandido(expandido === id ? null : id);
   };
+  const toggleEstatus = async (id: number, status: boolean) => {
+    try {
+      const response = await api.patch(`/user`, { is_active: !status, id: id }).then((res) => res.data);
+      if (response.status === "ok") {
+        setShowNotification(true);
+        const usuariosActualizados = usuarios.map((usuario) => {
+          if (usuario.id === id) {
+            return { ...usuario, is_active: !status };
+          }
+          return usuario;
+        });
+        setUsuarios(usuariosActualizados);
 
-  const toggleEstatus = (id: number) => {
-    setUsuarios(
-      usuarios.map((usuario) =>
-        usuario.id === id
-          ? { ...usuario, estatus: usuario.status ? "Inactivo" : "Activo" }
-          : usuario
-      )
-    );
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      const timer = setTimeout(() => {
+        setShowNotification(false);
+        clearTimeout(timer);
+      }, 500);
+    }
+
   };
 
   const ordenarUsuarios = (columna: keyof Usuario | "nombreCompleto") => {
@@ -215,6 +230,7 @@ export default function TablaUsuarios() {
 
   return (
     <div className="container mx-auto py-1">
+      {showNotification && <Notification message="Usuario actualizado" />}
       <Table>
         <TableHeader>
           <TableRow>
@@ -228,7 +244,7 @@ export default function TablaUsuarios() {
                 {renderIconoOrden(columna.campo as keyof Usuario)}
               </TableHead>
             ))}
-            {/* <TableHead className='bg-primary text-white p-2'>Acciones</TableHead> */}
+            <TableHead className='bg-primary text-white p-2'>Acciones</TableHead>
             <TableHead className="bg-primary text-white p-2"></TableHead>
           </TableRow>
         </TableHeader>
@@ -239,7 +255,7 @@ export default function TablaUsuarios() {
               usuario={usuario}
               expandida={expandido === usuario.id}
               onToggle={() => toggleExpansion(usuario.id)}
-              onActivar={() => toggleEstatus(usuario.id)}
+              onActivar={async () => await toggleEstatus(usuario.id, usuario.is_active)}
             />
           ))}
         </TableBody>

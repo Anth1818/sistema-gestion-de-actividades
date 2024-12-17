@@ -320,7 +320,7 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
                                             <Button
                                                 variant={"outline"}
                                                 className={cn(
-                                                    "w-full pl-3 text-left font-normal",
+                                                    "w-full pl-3 text-left font-normal dark:bg-dark dark:border-white",
                                                     !field.value &&
                                                     "text-black dark:text-dark-foreground dark:border-dark-foreground",
                                                 )}

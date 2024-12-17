@@ -4,19 +4,27 @@ import { useAuth } from '../context/auth-context';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  requiredRole?: number; // Añade un prop para el rol requerido
+}
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
   const authContext = useAuth();
   const userState = authContext?.userState;
   const setUserState = authContext?.setUserState;
-  // const [loading, setLoading] = useState(true);
+  // const userRole = authContext?.userRole;
   const router = useRouter();
 
   useEffect(() => {
     const checkAuth = () => {
       const userCookie = Cookies.get('user');
       if (userCookie) {
-        setUserState(JSON.parse(userCookie));
+        const user = JSON.parse(userCookie);
+        setUserState(user);
+        if (requiredRole && user.role_id !== requiredRole) {
+          router.replace('/dashboard/register-achievements'); // Redirige si el rol no coincide
+        }
       } else {
         router.replace('/denied');
       }
@@ -25,9 +33,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     checkAuth();
   }, [router, setUserState]);
 
-  // if (loading) {
-  //   return <div>Loading...</div>; // O un spinner de carga
-  // }
 
   if (!userState) {
     return null; // O un spinner de carga

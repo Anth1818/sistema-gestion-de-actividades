@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form"
 
 import { Input } from "@/components/ui/input"
+import type { Worker } from "@/lib/types"
 
 import {
     Select,
@@ -23,28 +24,26 @@ import {
 } from "@/components/ui/select"
 import { EyeIcon, EyeOff, User2 } from "lucide-react"
 import { useState } from "react"
+import { useMutation } from "@tanstack/react-query"
+import api from "@/api/api_regiones"
+import { Notification } from "./notification"
 
 interface formAddUserProps {
-    dataWorker: {
-        id: string,
-        name: string,
-        lastname: string,
-        phone: string,
-        email: string,
-        address: string,
-        department: string,
-
-    }[]
+    dataWorker: Worker
 }
+
+
 
 const Schema = z.object({
     username: z.string().min(1, "Ingrese un nombre de usuario"),
     password: z.string().min(1, "Ingrese una contraseña"),
-    accesslevel: z.string().min(1, "Seleccione un nivel de acceso"),
+    role_id: z.coerce.number().min(1, "Seleccione un nivel de acceso"),
 })
 
 export default function FormAddUser({ dataWorker }: formAddUserProps) {
-
+    const [showNotification, setShowNotification] = useState(false)
+    const [userNameUsed, setUserNameUsed] = useState("")
+    const [userExist, setUserExist] = useState("")
     const [showPassword, setShowPassword] = useState(false)
 
     const togglePasswordVisibility = () => {
@@ -54,7 +53,7 @@ export default function FormAddUser({ dataWorker }: formAddUserProps) {
     const defaultValues = {
         username: "",
         password: "",
-        accesslevel: "",
+        role_id: 0,
     }
 
     const form = useForm({
@@ -62,12 +61,44 @@ export default function FormAddUser({ dataWorker }: formAddUserProps) {
         defaultValues
     })
 
+    const mutation = useMutation({
+        mutationFn: async (data: z.infer<typeof Schema>) => {
+            const response = await api.post('/user', { ...data, worker_id: dataWorker?.id });
+            return response.data;
+        },
+    })
+
     function onSubmit(data: z.infer<typeof Schema>) {
-        form.reset(defaultValues)
-        alert("Submitted data: " + JSON.stringify({ ...data, ...dataWorker[0] }, null, 2))
+        setShowNotification(false)
+        mutation.mutate(data,
+            {
+                onSuccess: () => {
+                    form.reset(defaultValues)
+                    setShowNotification(true)
+                    console.log('Datos enviados con éxito');
+                },
+                onError: (error: any) => {
+                    if (error.response.data.error === "El nombre de usuario ya esta en uso") {
+                        setUserNameUsed(error.response.data.error)
+                    }
+                    if (error.response.data.error === "Ese trabajador ya posee un usuario") {
+                        setUserExist(error.response.data.error)
+                    }
+                    const timer = setTimeout(() => {
+                        setUserNameUsed("")
+                        setUserExist("")
+                        clearTimeout(timer)
+                    }, 500)
+                }
+            }
+        )
+
     }
     return (
         <>
+            {showNotification && <Notification message="Usuario registrado" />}
+            {userNameUsed.length > 1 && <Notification message={userNameUsed} variant={"destructive"} />}
+            {userExist.length > 1 && <Notification message={userExist} variant={"destructive"} />}
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2 lg:grid-cols-3 lg:gap-4">
                     <FormField
@@ -118,27 +149,28 @@ export default function FormAddUser({ dataWorker }: formAddUserProps) {
                         )}
                     />
                     <FormField
-                    control={form.control}
-                    name="accesslevel"
-                    render={({ field }) => (
-                        <FormItem className="col-span-12 md:col-span-1 ">
-                            <FormLabel>Nivel de acceso</FormLabel>
-                            <Select onValueChange={field.onChange} value={field.value}>
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Seleccione" />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    <SelectItem value="accesslevel 1">Nivel de acceso 1</SelectItem>
-                                    <SelectItem value="accesslevel 2">Nivel de acceso 2</SelectItem>
-                                    <SelectItem value="accesslevel 3">Nivel de acceso 3</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                        control={form.control}
+                        name="role_id"
+                        render={({ field }) => (
+                            <FormItem className="col-span-12 md:col-span-1 ">
+                                <FormLabel>Nivel de acceso</FormLabel>
+                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Seleccione" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value="0">Seleccione</SelectItem>
+                                        <SelectItem value="1">Administrador(a)</SelectItem>
+                                        <SelectItem value="2">Usuario(a)</SelectItem>
+
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
                     <Button type="submit" className="col-span-12 md:col-span-4 justify-self-center w-full md:w-2/4 mt-2">Crear</Button>
                 </form>

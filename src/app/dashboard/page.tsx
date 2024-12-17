@@ -52,7 +52,7 @@ export default function Page() {
   const today = new Date().toLocaleDateString('es-ES');
 
   return (
-    <ProtectedRoute>
+    <ProtectedRoute requiredRole={1}>
       <div>
         {/* <h2 className="mb-4">Datos del {firstDayOfMonth} al {today}</h2> */}
 

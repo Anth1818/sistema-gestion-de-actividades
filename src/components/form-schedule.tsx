@@ -52,7 +52,7 @@ const Schema = z.object({
     place: z.string().min(1, { message: "Seleccione un lugar." }),
     responsible: z.string({ required_error: "Por favor indique un responsable." }).min(1, { message: "Este campo no puede estar vacío." }).max(30, "Máximo 30 caracteres."),
     // observation: z.string().max(1000, "Máximo 1000 caracteres."),
-    dateSchedule: z.date({
+    date: z.date({
         required_error: "Ingrese una fecha para agendar.",
     }),
 })
@@ -106,7 +106,7 @@ export default function ScheduleForm() {
 
     const mutation = useMutation({
         mutationFn: async (data: z.infer<typeof Schema>) => {
-            const response = await api.post('/archievement', { ...data, date: format(data.dateSchedule, "dd/MM/yyyy"), ...otherData });
+            const response = await api.post('/archievement', { ...data, ...otherData });
             return response.data;
         },
     })
@@ -327,7 +327,7 @@ export default function ScheduleForm() {
                     {/* --------Fecha------- */}
                     <FormField
                         control={form.control}
-                        name="dateSchedule"
+                        name="date"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Fecha a agendar</FormLabel>

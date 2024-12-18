@@ -24,6 +24,7 @@ import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
 import { Calendar } from "./ui/calendar"
 import { useUpdateActivitie } from "@/context/updateActivitie"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 
 interface completeScheduleModalProps {
     id: number;
@@ -31,7 +32,7 @@ interface completeScheduleModalProps {
 
 // Esquema base
 const Schema = z.object({
-
+    status: z.string().min(1, { message: "Seleccione un acción." }),
     quantityWomen: z.coerce.number().int().positive("Ingrese una cantidad válida").min(1, "Ingrese una cantidad válida"),
     quantityMen: z.coerce.number().int().positive("Ingrese una cantidad válida").min(1, "Ingrese una cantidad válida"),
     obs2: z.string().max(1000, "Máximo 1000 caracteres."),
@@ -42,6 +43,7 @@ const Schema = z.object({
 
 
 const defaultValues = {
+    status:"",
     quantityWomen: 0,
     quantityMen: 0,
     obs2: "",
@@ -95,6 +97,29 @@ export default function CompleteActivitieSchedule({ id}: completeScheduleModalPr
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2 lg:grid-cols-4 lg:gap-4">
+
+            <FormField
+                        control={form.control}
+                        name="status"
+                        render={({ field }) => (
+                            <FormItem className="col-span-12 md:col-span-4 ">
+                                <FormLabel>Estatus</FormLabel>
+                                <Select onValueChange={field.onChange} value={field.value}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Seleccione" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value="Completada">Completada</SelectItem>
+                                        <SelectItem value="No completada">No completada</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
 
                 {/* ------N° de mujeres------- */}
                 <FormField
@@ -189,7 +214,7 @@ export default function CompleteActivitieSchedule({ id}: completeScheduleModalPr
                     )}
                 />
 
-                <Button type="submit" className="col-span-12 md:col-span-4 justify-self-center w-full md:w-2/4 mt-2" disabled={disabledBtn}>Enviar</Button>
+                {/* <Button type="submit" className="col-span-12 md:col-span-4 justify-self-center w-full md:w-2/4 mt-2" disabled={disabledBtn}>Enviar</Button> */}
 
             </form>
         </Form>

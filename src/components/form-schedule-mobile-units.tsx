@@ -91,23 +91,23 @@ export default function ScheduleMobileUnitsForm() {
         // alert("Submitted data: " + JSON.stringify({ id: Math.floor(Math.random() * 100), user: "ARuiz", ...data }, null, 2))
 
         // Verifica si hay datos existentes en localStorage
-        const existingData = localStorage.getItem('scheduleMobileUnits')
-        let dataLocal = existingData ? JSON.parse(existingData) : []
+        // const existingData = localStorage.getItem('scheduleMobileUnits')
+        // let dataLocal = existingData ? JSON.parse(existingData) : []
 
         // Añade el nuevo dato al array
-        dataLocal.push({ id: Math.floor(Math.random() * 100), user: users[userRandom], status: "Por completar", dateFormatted: format(data.date, "dd/MM/yyyy"), activitie: "Unidad móvil", ...data })
+        // dataLocal.push({ id: Math.floor(Math.random() * 100), user: users[userRandom], status: "Por completar", dateFormatted: format(data.date, "dd/MM/yyyy"), activitie: "Unidad móvil", ...data })
 
         // Guarda el array actualizado en localStorage
-        localStorage.setItem('scheduleMobileUnits', JSON.stringify(dataLocal))
+        // localStorage.setItem('scheduleMobileUnits', JSON.stringify(dataLocal))
 
 
-        const tempo = setTimeout(() => {
+        // const tempo = setTimeout(() => {
 
-            notification("La actividad fue agendada correctamente.")
+        //     notification("La actividad fue agendada correctamente.")
 
-            clearTimeout(tempo)
+        //     clearTimeout(tempo)
 
-        }, 500)
+        // }, 500)
 
 
         // form.reset(defaultValues)
@@ -347,7 +347,7 @@ export default function ScheduleMobileUnitsForm() {
                     )}
                 />
 
-                <Button type="submit" className="col-span-12 md:col-span-4 justify-self-center w-full md:w-2/4 mt-2">Enviar</Button>
+                {/* <Button type="submit" className="col-span-12 md:col-span-4 justify-self-center w-full md:w-2/4 mt-2">Enviar</Button> */}
 
             </form>
         </Form>

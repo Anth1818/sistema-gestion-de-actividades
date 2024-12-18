@@ -51,7 +51,7 @@ const Schema = z.object({
     parish_id: z.coerce.number().int().min(1, "Seleccione una parroquia."),
     place: z.string().min(1, { message: "Seleccione un lugar." }),
     responsible: z.string({ required_error: "Por favor indique un responsable." }).min(1, { message: "Este campo no puede estar vacío." }).max(30, "Máximo 30 caracteres."),
-    observation: z.string().max(1000, "Máximo 1000 caracteres."),
+    // observation: z.string().max(1000, "Máximo 1000 caracteres."),
     dateSchedule: z.date({
         required_error: "Ingrese una fecha para agendar.",
     }),
@@ -67,7 +67,7 @@ const defaultValues = {
     parish_id: 0,
     place: "",
     responsible: "",
-    observation: "",
+    // observation: "",
 
 }
 
@@ -371,7 +371,7 @@ export default function ScheduleForm() {
                     />
 
                     {/* --------Observaciones------- */}
-                    <FormField
+                    {/* <FormField
                         control={form.control}
                         name="observation"
                         render={({ field }) => (
@@ -383,7 +383,7 @@ export default function ScheduleForm() {
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    /> */}
                     <Button type="submit" className="col-span-12 md:col-span-4 justify-self-center w-full md:w-2/4 mt-2">Enviar</Button>
 
                 </form>

@@ -73,6 +73,7 @@ export type Agenda = {
   date: string;
   dateFormatted: string;
   status: "Por completar" | "Completada" | "No completada";
+  status_id: number;
   type_action: string;
   management_unit: string;
   state: string;

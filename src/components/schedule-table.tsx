@@ -72,24 +72,24 @@ const FilaExpandible = ({
 }) => {
   // const status = actividad.date < new Date().toISOString() && actividad.status === 'Por completar' ? 'No completada' : actividad.status
   const colorStatus =
-    actividad.status === "Por completar"
+    actividad.status_id === 2
       ? "text-orange-600"
-      : actividad.status === "No completada"
+      : actividad.status_id === 3
         ? "text-red-700"
         : "text-success";
   const disabled =
     actividad.status === "Completada" || actividad.status === "No completada";
   const cursorPointer = disabled ? "cursor-not-allowed" : "cursor-pointer";
   const { isUpdated, setIsUpdated } = useUpdateActivitie();
-
   return (
     <>
       <TableRow onClick={onToggle}>
         <TableCell>{actividad.id}</TableCell>
         <TableCell>{actividad.username}</TableCell>
         <TableCell>{actividad.type_activity}</TableCell>
-        <TableCell>{achievements ? actividad.date !== undefined ? format(actividad.date, "dd/MM/yyyy") : "" : "" }</TableCell>
-        {<TableCell className={colorStatus}>{achievements ? "Logrado": actividad.status}</TableCell>}
+        {achievements && <TableCell>{achievements ? actividad.date !== undefined ? format(actividad.date, "dd/MM/yyyy") : "" : "" }</TableCell> }
+        {!achievements && <TableCell>{actividad.date !== undefined ? format(actividad.date, "dd/MM/yyyy") : "" }</TableCell>}
+        {<TableCell className={colorStatus}>{achievements ? "Logrado": (!achievements && !mobileUnits && actividad.status_id === 2) ? "Por completar" : "" }</TableCell>}
         {viewUser && (
           <TableCell>
             <AlertDialog>
@@ -102,9 +102,9 @@ const FilaExpandible = ({
                     e.stopPropagation();
                   }}
                 >
-                  {actividad.status === "Por completar"
+                  {actividad.status_id === 2
                     ? "Completar"
-                    : actividad.status === "No completada"
+                    : actividad.status_id === 3
                       ? "No completada"
                       : "Completado"}
                 </Button>

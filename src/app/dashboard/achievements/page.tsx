@@ -20,7 +20,6 @@ import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import handleExportPDF from "@/lib/exportPDF";
 import { Agenda } from "@/lib/types";
-import { set } from "date-fns";
 
 export default function Page() {
   const [date, setDate] = useState<DateRange | undefined>({

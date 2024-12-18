@@ -2,9 +2,9 @@
 
 import { ToggleDarkMode } from "@/components/toggle-dark-mode";
 import { AvatarOptions } from "@/components/avatar-options";
-import { useParams } from "next/navigation";
 import Navigation from "@/components/navigation";
 import ProtectedRoute from "@/components/protected-route";
+import Cookies from 'js-cookie';
 
 
 export default function DashboardLayout({
@@ -12,6 +12,9 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+  const user = Cookies.get('user')
+  const userLoggin = user ? JSON.parse(user) : null;
 
   // const urlParams = useParams();
 
@@ -57,10 +60,9 @@ export default function DashboardLayout({
                     ></path>
                   </svg>
                 </button>
-                {/* Logo */}
-                {/* <div className="hidden lg:inline mt-1">
-                  <Image src={Logo} alt="Logo" width={70} height={70} className="dark:bg-dark bg-white rounded-sm top-0" />
-                </div> */}
+                <div className="hidden lg:inline mt-1">
+                {userLoggin && <div className="text-white text-sm font-semibold">{`Usuario: ${userLoggin.username}`}</div>}
+                </div>
               </div>
               <div className="flex items-end gap-4 mt-[6px]">
                 <AvatarOptions />

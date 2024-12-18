@@ -34,7 +34,7 @@ export default function ScheduleMobileUnitsPage() {
         <ProtectedRoute>
             <div>
                 <h1 className="text-3xl font-bold text-center mb-8">Agenda de unidades móviles</h1>
-                <FiltersDataGeneral />
+                {/* <FiltersDataGeneral />
                 {adminLogged && <div>
                     <p>Tabla para admin</p>
                    <UnitMobileTable columnas={columnas} mobileUnits/>
@@ -43,7 +43,7 @@ export default function ScheduleMobileUnitsPage() {
                 {userLogged && <div className="mt-8">
                     <p>Tabla para usuario</p>
                     <UnitMobileTable viewUser columnas={columnas} mobileUnits/>
-                </div>}
+                </div>} */}
             </div>
         </ProtectedRoute>
     );

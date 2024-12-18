@@ -7,21 +7,21 @@ const nextConfig = {
           destination: '/', // ruta de destino
           permanent: false, // 
         },
-        {
-          source: '/dashboard', // ruta ignorada
-          destination: '/dashboard/achievements', // ruta de destino
-          permanent: false, //
-        },
-        {
-          source: '/dashboard/schedule-mobile-units', // ruta ignorada
-          destination: '/dashboard/achievements', // ruta de destino
-          permanent: false, //
-        },
-        {
-          source: '/dashboard/register-schedule-mobile-units', // ruta ignorada
-          destination: '/dashboard/achievements', // ruta de destino
-          permanent: false, //
-        },
+        // {
+        //   source: '/dashboard', // ruta ignorada
+        //   destination: '/dashboard/achievements', // ruta de destino
+        //   permanent: false, //
+        // },
+        // {
+        //   source: '/dashboard/schedule-mobile-units', // ruta ignorada
+        //   destination: '/dashboard/achievements', // ruta de destino
+        //   permanent: false, //
+        // },
+        // {
+        //   source: '/dashboard/register-schedule-mobile-units', // ruta ignorada
+        //   destination: '/dashboard/achievements', // ruta de destino
+        //   permanent: false, //
+        // },
         // {
         //   source: '/dashboard/register-schedule-activities', // ruta ignorada
         //   destination: '/dashboard/achievements', // ruta de destino

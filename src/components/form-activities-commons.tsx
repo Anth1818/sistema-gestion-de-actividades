@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { date, z } from "zod"
+import {  z } from "zod"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -352,7 +352,6 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
                             </FormItem>
                         )}
                     />
-
                     <FormField
                         control={form.control}
                         name="observation"

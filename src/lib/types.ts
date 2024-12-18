@@ -32,6 +32,13 @@ export interface TableProps {
   columnas: { campo: string; label: string }[];
 }
 
+
+export type Activity = {
+  id: number;
+  name: string;
+  label: string;
+};
+
 export interface Worker {
   id: number;
   identity_card: number;

@@ -53,14 +53,14 @@ export default function SchedulePage() {
                     <DatePickerWithRange date={date} setDate={setDate} />
                     <Button className="mb-4 lg:w-[200px]" onClick={handleResetFilter}>Limpiar filtro</Button>
                 </div>
-                {adminLogged && <div>
+                {/* {adminLogged && <div>
                     <p>Tabla para admin</p>
                     <ScheduleTable columnas={columnas} />
-                </div>}
+                </div>} */}
 
                 {userLogged && <div className="mt-8">
                     <p>Tabla para usuario</p>
-                    <ScheduleTable viewUser columnas={columnas} dateFilter={date} />
+                    <ScheduleTable viewUser columnas={columnas} dateFilter={date} setData={() => {}}/>
                 </div>}
             </div>
         </ProtectedRoute>

@@ -7,14 +7,14 @@ const links = [
   //   href: "/dashboard",
   //   icon: ChartColumn,
   // },
-  // {
-  //   name: "Actividades",
-  //   icon: CalendarCheck,
-  //   sublinks: [
-  //     { name: "Agendar", href: "/dashboard/register-schedule-activities", icon: CalendarCheck },
-  //     { name: "Ver agenda", href: "/dashboard/schedule", icon: LucideNotebookText },
-  //   ],
-  // },
+  {
+    name: "Actividades",
+    icon: CalendarCheck,
+    sublinks: [
+      { name: "Agendar", href: "/dashboard/register-schedule-activities", icon: CalendarCheck },
+      { name: "Ver agenda", href: "/dashboard/schedule", icon: LucideNotebookText },
+    ],
+  },
   {
     name: "Logros",
     icon: FilePlus,

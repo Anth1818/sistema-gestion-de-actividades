@@ -50,6 +50,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           Cookies.set('user', JSON.stringify(data.data), { expires: 7 }); // Almacena el token en una cookie
           setUserState(data.data);
         }
+        setUserNotActive(false);
         console.log('Credenciales correctas');
       },
       onError: () => {

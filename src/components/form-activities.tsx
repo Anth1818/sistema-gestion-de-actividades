@@ -16,12 +16,7 @@ import MurderFemaleForm from "./form-murder-famale"
 import Form0800 from "./form-0800"
 import { gerency as gerencyOptions, actionsOptions} from "@/lib/utils"
 import useActivitieOptions from "@/hooks/useActivitieOptions"
-
-type Activity = {
-  id: number;
-  name: string;
-  label: string;
-};
+import type { Activity } from "@/lib/types"
 
 
 export default function FormActivities() {

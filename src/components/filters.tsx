@@ -15,9 +15,10 @@ interface FiltersProps {
     actividad: Agenda[] | MobileUnit[];
     data: any;
     labelPDF?: string;
+    mobileUnits?: boolean;
 }
 
-export default function Filters({ initialData, setActividad, setActividadMobile, actividad, data, labelPDF="Reporte de logros" }: FiltersProps) {
+export default function Filters({ initialData, setActividad, setActividadMobile, actividad, data, labelPDF="Reporte de logros", mobileUnits }: FiltersProps) {
 
     const [date, setDate] = useState<DateRange | undefined>({
         from: undefined,
@@ -87,7 +88,7 @@ export default function Filters({ initialData, setActividad, setActividadMobile,
                 <div className="flex flex-col md:flex-row justify-center gap-4 w-full">
                     <DatePickerWithRange date={date} setDate={setDate} />
                     <Button className="mb-4 lg:w-[200px]" onClick={handleResetFilter}>Limpiar filtro</Button>
-                    <Button className="mb-4 lg:w-[200px]" onClick={exportPDF}>Exportar PDF</Button>
+                    {!mobileUnits && <Button className="mb-4 lg:w-[200px]" onClick={exportPDF}>Exportar PDF</Button>}
                 </div>
             </div>
         </>

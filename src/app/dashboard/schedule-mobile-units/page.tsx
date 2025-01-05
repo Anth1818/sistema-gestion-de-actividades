@@ -65,7 +65,7 @@ export default function ScheduleMobileUnitsPage() {
         <ProtectedRoute>
             <div>
                 <h1 className="text-3xl font-bold text-center mb-8">Agenda de unidades móviles</h1>
-                <Filters initialData={initialData} setActividadMobile={setMobile_units} actividad={mobile_units} data={data} labelPDF="Reporte de unidades móviles" />
+                <Filters initialData={initialData} setActividadMobile={setMobile_units} actividad={mobile_units} data={data} labelPDF="Reporte de unidades móviles" mobileUnits/>
             
                     <UnitMobileTable viewUser columnas={columnas} data={mobile_units} mobileUnits  setData={(data: Agenda[] | MobileUnit[]) => setMobile_units(data as MobileUnit[])} />
                

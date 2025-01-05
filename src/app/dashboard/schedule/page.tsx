@@ -1,53 +1,46 @@
 "use client";
 import api from "@/api/api_regiones";
-import { DatePickerWithRange } from "@/components/date-picker";
-import FiltersDataGeneral from "@/components/filters-for-data-general";
 import ProtectedRoute from "@/components/protected-route";
 import { TableUI as ScheduleTable } from "@/components/schedule-table";
-import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { DateRange } from "react-day-picker";
-import { Agenda } from "@/lib/types";
 import CookieS from 'js-cookie';
+import { Agenda, MobileUnit } from "@/lib/types";
+import Filters from "@/components/filters";
+
 
 export default function SchedulePage() {
   const user = CookieS.get('user')
   const userLoggin = user ? JSON.parse(user) : null;
-  const userLogged = userLoggin.role_id === 2 ;
+  const userLogged = userLoggin.role_id === 2;
   const adminLogged = userLoggin.role_id === 1;
 
   const [actividad, setActividad] = useState<Agenda[]>([]);
   const [initialData, setInitialData] = useState<Agenda[]>([]);
 
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: undefined,
-    to: undefined,
-  });
-  // console.log(date);
 
-  // const handleResetFilter = () => {
-  //     setDate({
-  //         from: undefined,
-  //         to: undefined
-  //     })
-  // }
+  const { data } = useQuery({
+    queryKey: ["dataSchedule"],
+    queryFn: async () => {
+      if (adminLogged) {
+        return await api.get("/schedule").then((res) => res.data.data)
+      }
+      return await api.get(`/schedule/user/${userLoggin?.id}`).then((res) => res.data.data)
 
-  const { isLoading, error, data } = useQuery({
-    queryKey: ["repoData"],
-    queryFn: () => api.get("/schedule").then((res) => res.data.data),
+    },
+
   });
 
   useEffect(() => {
     if (!data) {
-      return;
+      return
     } else {
       setActividad(data);
       setInitialData(data);
     }
+
   }, [data]);
 
-  console.log(data)
 
   const columnas = [
     {
@@ -56,11 +49,11 @@ export default function SchedulePage() {
     },
     {
       label: "Usuario",
-      campo: "user",
+      campo: "username",
     },
     {
       label: "Actividad agendada",
-      campo: "activitie",
+      campo: "type_activity",
     },
     {
       label: "Fecha agendada",
@@ -68,7 +61,7 @@ export default function SchedulePage() {
     },
     {
       label: "Estatus",
-      campo: "status",
+      campo: "status_id",
     },
   ];
 
@@ -78,37 +71,29 @@ export default function SchedulePage() {
         <h1 className="text-3xl font-bold text-center mb-8">
           Agenda de actividades
         </h1>
-        {/* <div className="flex flex-col md:flex-row justify-center gap-4 w-full">
-                    <DatePickerWithRange date={date} setDate={setDate} />
-                    <Button className="mb-4 lg:w-[200px]" onClick={handleResetFilter}>Limpiar filtro</Button>
-                </div> */}
 
+        <Filters initialData={initialData} setActividad={setActividad} actividad={actividad} data={data} labelPDF={"Reporte de actividades agendadas"} />
 
-        {adminLogged && (
-          <div className="mt-8">
-            <p>Tabla para admin</p>
+     
             <ScheduleTable
               columnas={columnas}
-              dateFilter={date}
               viewUser
-              setData={() => {}}
-              data={data}
+              setData={(data: Agenda[] | MobileUnit[]) => setActividad(data as Agenda[])}
+              data={actividad}
             />
-          </div>
-        )}
-
+    
+{/* 
         {userLogged && (
           <div className="mt-8">
             <p>Tabla para usuario</p>
             <ScheduleTable
               viewUser
               columnas={columnas}
-              dateFilter={date}
-              setData={() => {}}
-              data={data}
+              setData={() => { }}
+              data={actividad}
             />
           </div>
-        )}
+        )} */}
       </div>
     </ProtectedRoute>
   );

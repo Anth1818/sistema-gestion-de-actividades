@@ -1,3 +1,6 @@
+import { type_telephone_service } from '@/lib/utils';
+import { type_femicide } from '@/lib/utils';
+import { type_weapon } from '@/lib/utils';
 export interface AgeRangeData {
   range: string
   women: number
@@ -88,30 +91,90 @@ export type Agenda = {
   dateFinished: string;
 };
 
+export type Victims = {
+  country_id: number;
+  state: string;
+  municipality: string;
+  parish: string;
+  collection_method: string;
+  received: string;
+  age: number;
+  observation: string;
+  created_on: string;
+}
+
+export type Violence = {
+  state: string;
+  municipality: string;
+  parish: string;
+  age_range_id: number;
+  type_weapon_id: number;
+  type_femicide_id: number;
+  killer_status_id: number;
+  observation: string;
+  created_on: string;
+}
+
+export type Atencion0800 = {
+  state: string;
+  municipality: string;
+  parish: string;
+  type_telephone_service_id: number;
+  great_mission: string;
+  observation: string;
+  created_on: string;
+}
+
+
 export type OrdenColumna = {
   columna: keyof Agenda | "id";
+  direccion: "asc" | "desc";
+} | null;
+
+export type OrdenColumnaUser = {
+  columna: keyof Usuario | "nombreCompleto";
   direccion: "asc" | "desc";
 } | null;
 
 
 export interface MobileUnit {
   id: number;
-  user: string;
+  username: string;
   status: string;
   dateFormatted: string;
-  cantMobileUnitsRequired: number;
-  cantUltrasoundRequired: number;
-  logisticalSupport: string;
+  num_mobile_units: number;
+  num_ultrasounds: number;
+  logistical_support: string;
   state: string;
   municipality: string;
   parish: string;
   place: string;
   responsible: string;
-  obs: string;
+  observation1: string;
   date: string;
-  poblationServed: string;
-  obs2: string;
+  approximate: number;
+  observation2: string;
   dateFinished: string;
   attentionTypes: AttentionTypeData[];
   dateUpdated: string;
 }
+
+export type Usuario = {
+  id: number;
+  worker_id: number;
+  username: string;
+  password: string;
+  role_id: number;
+  is_active: boolean;
+  created: string;
+  role: string;
+  identity_card: number;
+  full_name: string;
+  status: boolean;
+  gender: string;
+  position: string;
+  position_id: number;
+  gender_id: number;
+  department: string;
+  department_id: number;
+};

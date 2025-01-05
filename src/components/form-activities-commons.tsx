@@ -112,16 +112,6 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
             }
         )
 
-        // const existingData = localStorage.getItem('achievements')
-        // let dataLocal = existingData ? JSON.parse(existingData) : []
-
-        // // Añade el nuevo dato al array
-        // dataLocal.push({ id: Math.floor(Math.random() * 100), user: users[userRandom], dateFormatted: format(new Date(), "dd/MM/yyyy"), dateFinished:format(data.dateFinish, "dd/MM/yyyy"),  gerency, action, activitie, status: "Completada", ...data })
-
-        // // Guarda el array actualizado en localStorage
-        // localStorage.setItem('achievements', JSON.stringify(dataLocal))
-
-
     }
 
 

@@ -2,7 +2,7 @@ import { jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable';
 import inamujerLogo from "../../public/ina.png";
 import cintilloInamujer from "../../public/cintillo_ministerio.png";
-import { Agenda } from './types';
+import { Agenda, MobileUnit } from './types';
 
 function toBase64(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -39,6 +39,7 @@ function handleExportPDF(
     date_end: string | undefined,
     filterActividades: Agenda[] | undefined,
     dataInitial: Agenda[] | undefined,
+    // filterActividadesMobile: MobileUnit[] | undefined,
     titleReport: string
 ) {
     const doc = new jsPDF();
@@ -88,7 +89,7 @@ function handleExportPDF(
             Responsable: ${record.responsible}
             N° de mujeres: ${record.n_womans}
             N° de hombres: ${record.n_man}
-            Observaciones de ejecución: ${record.observation}
+            Observaciones: ${record.observation}
           `,
           colSpan: 4,
           styles: { fontSize: 8, cellPadding: 2, lineHeight: 4 }

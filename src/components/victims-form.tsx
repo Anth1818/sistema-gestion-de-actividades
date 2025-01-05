@@ -94,7 +94,6 @@ export default function VictimsForm({ gerency, action, activitie }: VictimsFormP
 
     function onSubmit(data: z.infer<typeof Schema>) {
         setShowNotification(false)
-        // console.log({ ...data, ...othersData });
         mutation.mutate(data,
             {
                 onSuccess: () => {
@@ -107,7 +106,6 @@ export default function VictimsForm({ gerency, action, activitie }: VictimsFormP
                 }
             }
         )
-        // alert("Submitted data: " + JSON.stringify({ ...data, gerency, action, activitie }, null, 2))
     }
     return (
         <>
@@ -217,31 +215,7 @@ export default function VictimsForm({ gerency, action, activitie }: VictimsFormP
                             </FormItem>
                         )}
                     />
-                    {/* -------Sexo------- */}
-                    {/* <FormField
-                control={form.control}
-                name="originCountry"
-                render={({ field }) => (
-                    <FormItem className="col-span-12 md:col-span-1 ">
-                        <FormLabel>Pais de procedencia</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value}>
-                            <FormControl>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Seleccione" />
-                                </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                                <SelectItem value="Pais 1">Pais 1</SelectItem>
-                                <SelectItem value="Pais 2">Pais 2</SelectItem>
-                                <SelectItem value="Pais 3">Pais 3</SelectItem>
-                            </SelectContent>
-                        </Select>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            /> */}
-
-
+                  
                     {/* --------Forma de captación-------- */}
                     <FormField
                         control={form.control}

@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { date, z } from "zod";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,16 +13,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 
 import { Textarea } from "@/components/ui/textarea";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { cn } from "@/lib/utils";
-import { format, set } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "./ui/toast";
-import { Calendar } from "./ui/calendar";
 import { useUpdateActivitie } from "@/context/updateActivitie";
 import DynamicForm from "./dynamic-form-mobile-unit";
 import {
@@ -42,6 +37,7 @@ interface completeScheduleModalProps {
 // Esquema base
 const Schema = z.object({
   poblationServed: z.string().min(1, { message: "Seleccione un aprox." }),
+  status: z.string().min(1, { message: "Seleccione un acción." }),
   obs2: z.string().max(1000, "Máximo 1000 caracteres."),
   dateFinished: z.date({
     required_error: "Ingrese la fecha de ejecución.",
@@ -110,13 +106,13 @@ export default function CompleteMobileUnitSchedule({
     });
     alert(JSON.stringify(newSchedule));
     console.log(newSchedule);
-    // localStorage.setItem("scheduleMobileUnits", JSON.stringify(newSchedule));
-    // if (data) {
-    //   setIsUpdated(true);
-    //   return notification("Se ha completado la actividad.");
-    // } else {
-    //   return notification("No se ha podido completar la actividad.");
-    // }
+    localStorage.setItem("scheduleMobileUnits", JSON.stringify(newSchedule));
+    if (data) {
+      setIsUpdated(true);
+      return notification("Se ha completado la actividad.");
+    } else {
+      return notification("No se ha podido completar la actividad.");
+    }
   }
   return (
 
@@ -125,12 +121,14 @@ export default function CompleteMobileUnitSchedule({
         onSubmit={form.handleSubmit(onSubmit)}
         className="grid gap-2 md:grid-cols-4 lg:gap-4"
       >
+
+
         <FormField
           control={form.control}
-          name="poblationServed"
+          name="status"
           render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-4">
-              <FormLabel>Pobalción aprox a ser atendida</FormLabel>
+            <FormItem className="col-span-12 md:col-span-4 ">
+              <FormLabel>Estatus</FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -138,9 +136,8 @@ export default function CompleteMobileUnitSchedule({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="1-50">1-50</SelectItem>
-                  <SelectItem value="50-250">50-250</SelectItem>
-                  <SelectItem value="250+">250+</SelectItem>
+                  <SelectItem value="Completada">Completada</SelectItem>
+                  <SelectItem value="No completada">No completada</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -149,7 +146,7 @@ export default function CompleteMobileUnitSchedule({
         />
 
         {/* -------Fecha------- */}
-        <FormField
+        {/* <FormField
           control={form.control}
           name="dateFinished"
           render={({ field }) => (
@@ -191,7 +188,7 @@ export default function CompleteMobileUnitSchedule({
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         <div className="col-span-12 md:col-span-4">
           <DynamicForm formData={formData} setFormData={setFormData}></DynamicForm>

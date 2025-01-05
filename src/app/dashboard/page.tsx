@@ -1,10 +1,17 @@
-"use client";
 import { Statistics, StatisticsFull } from "@/components/chartBar";
 import { ChartDataPie } from "@/components/chartPie";
 import CardDashboard from "@/components/card-dashboard";
 import { Award, CalendarCheck, Ambulance } from "lucide-react"
-import FiltersDataGeneral from "@/components/filters-for-data-general";
 import ProtectedRoute from '../../components/protected-route';
+import ActivitiesStatsTable from "@/components/activities-stats";
+import MonthlyStatisticsTable from "@/components/monthly-stats";
+import ExpandableStateTable from "@/components/states-stats";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 export default function Page() {
 
@@ -24,7 +31,7 @@ export default function Page() {
   ]
 
   const chartData1 = [
-    { month: "January", completado: 186, no_completado: 45 },
+    { month: "Enero", completado: 186, no_completado: 45 },
     { month: "Febrero", completado: 305, no_completado: 21 },
     { month: "Marzo", completado: 237, no_completado: 32 },
     { month: "Abril", completado: 173, no_completado: 19 },
@@ -48,31 +55,61 @@ export default function Page() {
     { activitie: "activitie4", done: 173, fill: "hsl(var(--chart-4))" },
   ]
 
-  const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toLocaleDateString('es-ES');
-  const today = new Date().toLocaleDateString('es-ES');
+  const items = [
+    {
+      id: 1,
+      title: 'Ver estados',
+      content: <ExpandableStateTable />
+    },
+    {
+      id: 2,
+      title: 'Ver actividades',
+      content: <ActivitiesStatsTable />,
+    },
+    {
+      id: 3,
+      title: 'Ver meses',
+      content: <MonthlyStatisticsTable />,
+    }
+
+  ]
 
   return (
     <ProtectedRoute requiredRole={1}>
-      <div>
-        {/* <h2 className="mb-4">Datos del {firstDayOfMonth} al {today}</h2> */}
+      <a href="#desglozado" className="text-center block"> Ir a los datos desglozados</a>
 
-        <div className="flex flex-col gap-4 md:flex-row justify-around mt-2 ">
-          <CardDashboard title="Logros completados" content="+250" footer="+45% más que el mes pasado" Icon={Award} />
-          <CardDashboard title="Actividades agendadas" content="+124" footer="+36% más que el mes pasado" Icon={CalendarCheck} />
-          <CardDashboard title="Unidades móviles agendadas" content="+50" footer="+43% más que el mes pasado" Icon={Ambulance} />
+      {/* Cards */}
+      <div className="flex flex-col gap-4 md:flex-row justify-around mt-2 ">
+        <CardDashboard title="Logros completados este mes" content="+250" footer="+45% más que el mes pasado" Icon={Award} />
+        <CardDashboard title="Actividades agendadas este mes" content="+124" footer="+36% más que el mes pasado" Icon={CalendarCheck} />
+        <CardDashboard title="Unidades móviles agendadas este mes" content="+50" footer="+43% más que el mes pasado" Icon={Ambulance} />
+      </div>
+
+      {/* Gráficas */}
+      <div className="flex flex-col gap-4 md:flex-row justify-around mt-4 h-[380px]">
+        <div className="hidden md:block w-full h-[50px]">
+          <StatisticsFull chartData={chartDataFullMonths} />
         </div>
-        <div className="flex flex-col gap-4 md:flex-row justify-around mt-4 h-[380px]">
-          <div className="hidden md:block w-full h-[50px]">
-            <StatisticsFull chartData={chartDataFullMonths} />
-          </div>
-          <div className="block md:hidden">
-            <Statistics chartData={chartData1} />
-            <Statistics chartData={chartData2} />
-          </div>
-          <ChartDataPie chartDataPie={chartDataPie} />
-        </div>
-        <div />
-      </div >
+        <ChartDataPie chartDataPie={chartDataPie} />
+      </div>
+      <div className="flex flex-col gap-4 md:hidden ">
+        <Statistics chartData={chartData1} />
+          <Statistics chartData={chartData2} />
+      </div>
+      <div />
+
+      {/* Datos desglozados */}
+      <div className="mt-4">
+        <h2 className="text-xl" id="desglozado">Datos desglozados</h2>
+        <Accordion type="single" collapsible className="mt-4">
+          {items.map((item) => (
+            <AccordionItem key={item.id} value={`item-${item.id}`}>
+              <AccordionTrigger>{item.title}</AccordionTrigger>
+              <AccordionContent>{item.content}</AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
     </ProtectedRoute >
   );
 }

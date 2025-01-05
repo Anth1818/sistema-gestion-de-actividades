@@ -19,7 +19,6 @@ import { AlertDestructive } from "./alert"
 
 import React from "react";
 
-import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth-context"
 
 export default function LoginForm({ children }: { children: React.ReactNode }) {

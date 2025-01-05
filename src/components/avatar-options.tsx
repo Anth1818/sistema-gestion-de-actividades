@@ -1,6 +1,6 @@
 "use client"
 
-import { LogOut, User, Settings } from "lucide-react"
+import { LogOut, Settings } from "lucide-react"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -10,16 +10,14 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/context/auth-context"
-import { log } from "console"
+
 
 export const AvatarOptions = () => {
     const authContext = useAuth()
     const logout = authContext?.logout
 
-    // const router = useRouter()
 
     const handleLogOut = () => {
         if (logout) {
@@ -37,13 +35,9 @@ export const AvatarOptions = () => {
             <DropdownMenuContent className="mr-4">
                 <DropdownMenuLabel>Opciones</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {/* <DropdownMenuItem>
-                    <User />
-                    <span>Perfil</span>
-                </DropdownMenuItem> */}
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogOut}>
                     <LogOut />
-                    <span onClick={handleLogOut}>Cerrar sesión</span>
+                    <span >Cerrar sesión</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

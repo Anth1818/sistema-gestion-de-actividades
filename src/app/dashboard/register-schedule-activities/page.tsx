@@ -7,8 +7,6 @@ export default function SchedulePage() {
 
     const date = new Date().toLocaleDateString();
     const day = new Date().toLocaleDateString('es-ES', { weekday: 'long' });
-
-    // const habilitado = (day === 'lunes' || day === 'viernes') ? true : false;
     const habilitado = true
 
     return (

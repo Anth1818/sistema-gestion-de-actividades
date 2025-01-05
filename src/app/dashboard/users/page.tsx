@@ -1,10 +1,7 @@
 "use client"
-
-import api from "@/api/api_regiones";
 import ProtectedRoute from "@/components/protected-route";
 import { Button } from "@/components/ui/button";
 import TablaUsuarios from "@/components/user-table";
-import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react"
 import { useRouter } from "next/navigation"
 

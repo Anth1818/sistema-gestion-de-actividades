@@ -79,7 +79,7 @@ export const activities = [
       {
         id: 6,
         name: "femicide",
-        label: "Femicidio",
+        label: "Violencia de genero",
       },
       {
         id: 7,

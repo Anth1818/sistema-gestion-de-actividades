@@ -28,31 +28,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/api/api_regiones";
 import { Notification } from "./notification";
+import { Usuario, OrdenColumnaUser } from "@/lib/types";
 
-type Usuario = {
-  id: number;
-  worker_id: number;
-  username: string;
-  password: string;
-  role_id: number;
-  is_active: boolean;
-  created: string;
-  role: string;
-  identity_card: number;
-  full_name: string;
-  status: boolean;
-  gender: string;
-  position: string;
-  position_id: number;
-  gender_id: number;
-  department: string;
-  department_id: number;
-};
-
-type OrdenColumna = {
-  columna: keyof Usuario | "nombreCompleto";
-  direccion: "asc" | "desc";
-} | null;
 
 const FilaExpandible = ({
   usuario,
@@ -111,7 +88,7 @@ const FilaExpandible = ({
 
 export default function TablaUsuarios() {
   const { data } = useQuery({
-    queryKey: ["repoData"],
+    queryKey: ["usuarios"],
     queryFn: () => api.get("/user").then((res) => res.data.data),
   });
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
@@ -146,9 +123,9 @@ export default function TablaUsuarios() {
     }]
 
   const [expandido, setExpandido] = useState<number | null>(null);
-  const [ordenActual, setOrdenActual] = useState<OrdenColumna>(null);
+  const [ordenActual, setOrdenActual] = useState<OrdenColumnaUser>(null);
   const [paginaActual, setPaginaActual] = useState(1);
-  const [elementosPorPagina, setElementosPorPagina] = useState(5);
+  const [elementosPorPagina, setElementosPorPagina] = useState(10);
   const [showNotification, setShowNotification] = useState(false);
 
   const toggleExpansion = (id: number) => {
@@ -274,7 +251,7 @@ export default function TablaUsuarios() {
               <SelectValue placeholder={elementosPorPagina.toString()} />
             </SelectTrigger>
             <SelectContent side="top">
-              {[5, 10, 20].map((pageSize) => (
+              {[10,25,50,100,250,500].map((pageSize) => (
                 <SelectItem key={pageSize} value={pageSize.toString()}>
                   {pageSize}
                 </SelectItem>

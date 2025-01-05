@@ -1,5 +1,5 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
-import { ForwardRefExoticComponent, ReactElement, RefAttributes } from 'react';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card";
+import { ForwardRefExoticComponent, RefAttributes } from 'react';
 import { LucideProps } from 'lucide-react';
 
 interface CardDashboardProps {

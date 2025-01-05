@@ -11,19 +11,19 @@ export default function ContentOfMobileUnit({ actividad, achievements }: Content
             <h3 className="font-semibold mb-2 text-xl">Información adicional:</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <p>
-                    <b>Usuario:</b> {actividad.user}
+                    <b>Usuario:</b> {actividad.username}
                 </p>
                 <p>
                     <b>Estatus:</b> {actividad.status}
                 </p>
                 <p>
-                    <b>Unidades Móviles Requeridas:</b> {actividad.cantMobileUnitsRequired}
+                    <b>Unidades Móviles Requeridas:</b> {actividad.num_mobile_units}
                 </p>
                 <p>
-                    <b>Ultrasonidos Requeridos:</b> {actividad.cantUltrasoundRequired}
+                    <b>Ultrasonidos Requeridos:</b> {actividad.num_ultrasounds}
                 </p>
                 <p>
-                    <b>Apoyo Logístico:</b> {actividad.logisticalSupport}
+                    <b>Apoyo Logístico:</b> {actividad.logistical_support}
                 </p>
                 <p>
                     <b>Estado:</b> {actividad.state}
@@ -41,21 +41,18 @@ export default function ContentOfMobileUnit({ actividad, achievements }: Content
                     <b>Responsable:</b> {actividad.responsible}
                 </p>
                 <p>
-                    <b>Población Atendida:</b> {actividad.poblationServed}
-                </p>
-                <p>
-                    <b>Fecha de Ejecución:</b> {actividad.dateFinished}
+                    <b>Población Atendida:</b> {actividad.approximate}
                 </p>
             </div>
             {!achievements && (
                 <p className="break-words whitespace-pre-wrap lg:max-w-screen-lg xl:max-w-screen-2xl mt-4">
                     <b>Observaciones de agenda: </b>
-                    {actividad.obs}
+                    {actividad.observation1}
                 </p>
             )}
             <p className="break-words whitespace-pre-wrap lg:max-w-screen-lg xl:max-w-screen-2xl mt-4">
                 <b>Observaciones de ejecución: </b>
-                {actividad.obs2}
+                {actividad.observation2}
             </p>
             <div className="mt-4">
                 <h4 className="font-semibold mb-2">Tipos de Atención:</h4>

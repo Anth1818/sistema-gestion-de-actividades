@@ -27,9 +27,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
-import { ToastAction } from "./ui/toast"
-import { Textarea } from "./ui/textarea"
 import { gerency as gerencyOptions, actionsOptions, activities as activitiesOptions } from "@/lib/utils"
 import { places } from "@/lib/utils"
 import useActivitieOptions from "@/hooks/useActivitieOptions"
@@ -337,7 +334,7 @@ export default function ScheduleForm() {
                                             <Button
                                                 variant={"outline"}
                                                 className={cn(
-                                                    "w-full pl-3 text-left font-normal",
+                                                    "w-full pl-3 text-left font-normal dark:bg-dark dark:border-white",
                                                     !field.value &&
                                                     "text-black dark:text-dark-foreground dark:border-dark-foreground",
                                                 )}
@@ -369,21 +366,6 @@ export default function ScheduleForm() {
                             </FormItem>
                         )}
                     />
-
-                    {/* --------Observaciones------- */}
-                    {/* <FormField
-                        control={form.control}
-                        name="observation"
-                        render={({ field }) => (
-                            <FormItem className="col-span-12 md:col-span-3 ">
-                                <FormLabel>Observaciones</FormLabel>
-                                <FormControl>
-                                    <Textarea placeholder="..." {...field} className="h-40" />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    /> */}
                     <Button type="submit" className="col-span-12 md:col-span-4 justify-self-center w-full md:w-2/4 mt-2">Enviar</Button>
 
                 </form>

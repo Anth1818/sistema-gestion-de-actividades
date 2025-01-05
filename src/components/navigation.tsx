@@ -21,7 +21,7 @@ const links = [
     icon: FilePlus,
     sublinks: [
       { name: "Registrar actividad", href: "/dashboard/register-achievements", icon: FilePlus },
-      { name: "Ver logros", permission:"admin", href: "/dashboard/achievements", icon: Award },
+      { name: "Ver logros", permission: "admin", href: "/dashboard/achievements", icon: Award },
     ],
   },
   {
@@ -35,12 +35,17 @@ const links = [
   {
     name: "Usuarios",
     href: "/dashboard/users",
-    permission:"admin",
+    permission: "admin",
     icon: UsersRound,
   },
 ];
 
-const Navigation = () => {
+interface NavigationProps {
+  userLoggin: { role_id: number };
+  handleCloseDrawer?: () => void;
+}
+
+const Navigation = ({ userLoggin, handleCloseDrawer }: NavigationProps) => {
   const [openSubmenus, setOpenSubmenus] = useState<{ [key: string]: boolean }>({});
 
   const toggleSubmenu = (name: string) => {
@@ -61,11 +66,13 @@ const Navigation = () => {
       <ul className="space-y-4">
 
         {links.map((link) => (
+          link.permission === "admin" && userLoggin.role_id === 2 ? null :
           <li key={link.name}>
             {link.href ? (
               <Link
                 href={link.href}
                 className="text-base capitalize dark:text-dark-foreground dark:hover:bg-dark-foreground dark:hover:text-dark text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-primary hover:text-white group transition duration-300"
+                onClick={handleCloseDrawer}
               >
                 <link.icon className="w-6 h-6 text-primary dark:group-hover:text-dark group-hover:text-dark-foreground" />
                 <span className="ml-3">{link.name}</span>
@@ -78,8 +85,8 @@ const Navigation = () => {
                 <link.icon className="w-6 h-6 text-primary dark:group-hover:text-dark group-hover:text-dark-foreground" />
                 <span className="ml-3">{link.name}</span>
                 {link.sublinks && (
-              <ChevronDown className="w-6 h-6 text-primary dark:group-hover:text-dark group-hover:text-dark-foreground" />
-            )}
+                  <ChevronDown className="w-6 h-6 text-primary dark:group-hover:text-dark group-hover:text-dark-foreground" />
+                )}
               </div>
             )}
             {link.sublinks && (
@@ -88,10 +95,12 @@ const Navigation = () => {
                   }`}
               >
                 {link.sublinks.map((sublink) => (
+                  sublink.permission === "admin" && userLoggin.role_id === 2 ? null :
                   <li key={sublink.name}>
                     <Link
                       href={sublink.href}
                       className="text-base capitalize dark:text-dark-foreground dark:hover:bg-dark-foreground dark:hover:text-dark text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-primary hover:text-white group transition duration-300"
+                      onClick={handleCloseDrawer}
                     >
                       <sublink.icon className="w-6 h-6 text-primary dark:group-hover:text-dark group-hover:text-dark-foreground" />
                       <span className="ml-3">{sublink.name}</span>

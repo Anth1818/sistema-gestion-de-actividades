@@ -48,8 +48,6 @@ export default function AddUserPage() {
           setShouldFetch(false); // Restablece shouldFetch a false después de la búsqueda
         }
       }, [dataWorker]);
-
-    // console.log(dataWorker)
     return (
         <ProtectedRoute requiredRole={1}>
             <div>

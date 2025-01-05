@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { date, z } from "zod"
+import { z } from "zod"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -16,15 +16,12 @@ import {
 import { Input } from "@/components/ui/input"
 
 import { Textarea } from "@/components/ui/textarea"
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
-import { cn } from "@/lib/utils"
-import { format, set } from "date-fns"
-import { CalendarIcon } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
-import { ToastAction } from "./ui/toast"
-import { Calendar } from "./ui/calendar"
 import { useUpdateActivitie } from "@/context/updateActivitie"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
+import { useMutation } from "@tanstack/react-query"
+import api from "@/api/api_regiones"
+import { useState } from "react"
+import { Notification } from "./notification"
 
 interface completeScheduleModalProps {
     id: number;
@@ -32,75 +29,63 @@ interface completeScheduleModalProps {
 
 // Esquema base
 const Schema = z.object({
-    status: z.string().min(1, { message: "Seleccione un acción." }),
-    quantityWomen: z.coerce.number().int().positive("Ingrese una cantidad válida").min(1, "Ingrese una cantidad válida"),
-    quantityMen: z.coerce.number().int().positive("Ingrese una cantidad válida").min(1, "Ingrese una cantidad válida"),
-    obs2: z.string().max(1000, "Máximo 1000 caracteres."),
-    dateFinished: z.date({
-        required_error: "Ingrese la fecha de ejecución.",
-    }),
-})
+    status_id: z.string().min(1, { message: "Seleccione una acción." }),
+    n_womans: z.coerce.number().int(),
+    n_man: z.coerce.number().int(),
+    observation: z.string().max(1000, "Máximo 1000 caracteres."),
+});
 
 
 const defaultValues = {
-    status:"",
-    quantityWomen: 0,
-    quantityMen: 0,
-    obs2: "",
+    status_id: "",
+    n_womans: 0,
+    n_man: 0,
+    observation: "",
 }
 
-export default function CompleteActivitieSchedule({ id}: completeScheduleModalProps) {
-    const { toast } = useToast()
-    const { isUpdated, setIsUpdated} = useUpdateActivitie()
+export default function CompleteActivitieSchedule({ id }: completeScheduleModalProps) {
+    const { isUpdated, setIsUpdated } = useUpdateActivitie()
     const disabledBtn = isUpdated
+    const [showNotification, setShowNotification] = useState(false)
 
-    const notification = (message: string) => {
-        toast({
-            title: "Notificación",
-            description: message,
-            variant: "success",
-            action: (
-                <ToastAction altText="Cerrar">Cerrar</ToastAction>
-            ),
-        })
-    }
 
     const form = useForm<z.infer<typeof Schema>>({
         resolver: zodResolver(Schema),
         defaultValues
     })
 
-    function onSubmit(data: z.infer<typeof Schema>, ) {
-        form.reset(defaultValues)
-        const localData = localStorage.getItem("schedule")
-        const schedule = localData ? JSON.parse(localData) : []
-        const newSchedule = schedule.map((item: any) => {
-            if (item.id === id) {
-                return {
-                    ...item,
-                    ...data,
-                    dateUpdated: format(new Date(), "dd/MM/yyyy"),
-                    dateFinished: format(data.dateFinished, "dd/MM/yyyy"),
-                    status: "Completada",
+    const mutation = useMutation({
+        mutationFn: async (data: z.infer<typeof Schema>) => {
+            const response = await api.put('/schedule', { ...data, id, status_id: parseInt(data.status_id) });
+            return response.data;
+        },
+    })
+
+    function onSubmit(data: z.infer<typeof Schema>,) {
+        setShowNotification(false)
+        mutation.mutate(data,
+            {
+                onSuccess: () => {
+                    form.reset(defaultValues)
+                    setShowNotification(true)
+                    setIsUpdated(true)
+                    console.log('Datos enviados con éxito');
+                },
+                onError: () => {
+                    console.error('Error al enviar los datos');
                 }
             }
-            return item
-        })
-        localStorage.setItem("schedule", JSON.stringify(newSchedule))
-        if (data) {
-            setIsUpdated(true)
-            return notification("Se ha completado la actividad.")
-        } else {
-            return notification("No se ha podido completar la actividad.")
-        }
+        )
     }
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2 lg:grid-cols-4 lg:gap-4">
+        <>
+            {showNotification && <Notification message="Se ha completado la actividad." />}
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2 lg:grid-cols-4 lg:gap-4">
 
-            <FormField
+                    <FormField
                         control={form.control}
-                        name="status"
+                        name="status_id"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-4 ">
                                 <FormLabel>Estatus</FormLabel>
@@ -111,8 +96,8 @@ export default function CompleteActivitieSchedule({ id}: completeScheduleModalPr
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="Completada">Completada</SelectItem>
-                                        <SelectItem value="No completada">No completada</SelectItem>
+                                        <SelectItem value="1">Completada</SelectItem>
+                                        <SelectItem value="3">No completada</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -121,38 +106,42 @@ export default function CompleteActivitieSchedule({ id}: completeScheduleModalPr
                     />
 
 
-                {/* ------N° de mujeres------- */}
-                <FormField
-                    control={form.control}
-                    name="quantityWomen"
-                    render={({ field }) => (
-                        <FormItem className="col-span-12 md:col-span-4 ">
-                            <FormLabel>Número de mujeres</FormLabel>
-                            <FormControl>
-                                <Input placeholder="..." type="number" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                    {/* ------N° de mujeres------- */}
+                    {form.watch("status_id") === "1" && (
+                        <FormField
+                        control={form.control}
+                        name="n_womans"
+                        render={({ field }) => (
+                            <FormItem className="col-span-12 md:col-span-4 ">
+                                <FormLabel>Número de mujeres</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="..." type="number" {...field} pattern="^[1-9]\d*$" />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />)}
+                    
 
-                {/* ------------N° de hombres------- */}
-                <FormField
-                    control={form.control}
-                    name="quantityMen"
-                    render={({ field }) => (
-                        <FormItem className="col-span-12 md:col-span-4 ">
-                            <FormLabel>Número de hombres</FormLabel>
-                            <FormControl>
-                                <Input placeholder="..." type="number" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                    {/* ------------N° de hombres------- */}
+                    {form.watch("status_id") === "1" && (
+                         <FormField
+                         control={form.control}
+                         name="n_man"
+                         render={({ field }) => (
+                             <FormItem className="col-span-12 md:col-span-4 ">
+                                 <FormLabel>Número de hombres</FormLabel>
+                                 <FormControl>
+                                     <Input placeholder="..." type="number" {...field} pattern="^[1-9]\d*$" />
+                                 </FormControl>
+                                 <FormMessage />
+                             </FormItem>
+                         )}
+                     />)}
+                   
 
-                {/* -------Fecha------- */}
-                <FormField
+                    {/* -------Fecha------- */}
+                    {/* <FormField
                     control={form.control}
                     name="dateFinished"
                     render={({ field }) => (
@@ -194,29 +183,30 @@ export default function CompleteActivitieSchedule({ id}: completeScheduleModalPr
                             <FormMessage />
                         </FormItem>
                     )}
-                />
+                /> */}
 
-                <FormField
-                    control={form.control}
-                    name="obs2"
-                    render={({ field }) => (
-                        <FormItem className="col-span-12 md:col-span-4 ">
-                            <FormLabel>Observaciones</FormLabel>
-                            <FormControl>
-                                <Textarea
-                                    placeholder="Escriba sus observaciones aquí..."
-                                    className="resize w-full h-24"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                    <FormField
+                        control={form.control}
+                        name="observation"
+                        render={({ field }) => (
+                            <FormItem className="col-span-12 md:col-span-4 ">
+                                <FormLabel>Observaciones</FormLabel>
+                                <FormControl>
+                                    <Textarea
+                                        placeholder="Escriba sus observaciones aquí..."
+                                        className="resize w-full h-24"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                {/* <Button type="submit" className="col-span-12 md:col-span-4 justify-self-center w-full md:w-2/4 mt-2" disabled={disabledBtn}>Enviar</Button> */}
+                    <Button type="submit" className="col-span-12 md:col-span-4 justify-self-center w-full md:w-2/4 mt-2" disabled={disabledBtn}>Enviar</Button>
 
-            </form>
-        </Form>
+                </form>
+            </Form>
+        </>
     )
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Table,
   TableBody,
@@ -43,11 +43,10 @@ import {
 import { useUpdateActivitie } from "@/context/updateActivitie";
 import { MobileUnit } from "@/lib/types";
 import { DateRange } from "react-day-picker";
-import type { Agenda } from "@/lib/types";
-import { format } from "date-fns";
-
-
-
+import type { Agenda, Atencion0800, Victims, Violence } from "@/lib/types";
+import ContentOfVictims from "./ContentOfVictims";
+import ContentOfViolence from "./ContentOfViolence";
+import ContentOfAtencion0800 from "./ContentOfAtencion0800";
 
 type OrdenColumna = {
   columna: keyof Agenda | "id";
@@ -68,9 +67,7 @@ const FilaExpandible = ({
   viewUser?: boolean;
   mobileUnits?: boolean;
   achievements?: boolean;
-  // onComplete: () => void
 }) => {
-  // const status = actividad.date < new Date().toISOString() && actividad.status === 'Por completar' ? 'No completada' : actividad.status
   const colorStatus =
     actividad.status_id === 2
       ? "text-orange-600"
@@ -78,18 +75,21 @@ const FilaExpandible = ({
         ? "text-red-700"
         : "text-success";
   const disabled =
-    actividad.status === "Completada" || actividad.status === "No completada";
+    actividad.status_id === 1 || actividad.status_id === 3;
   const cursorPointer = disabled ? "cursor-not-allowed" : "cursor-pointer";
   const { isUpdated, setIsUpdated } = useUpdateActivitie();
+  const completeLabel = achievements ? "Logrado" : (actividad.status_id === 2) ? "Por completar" : ( actividad.status_id === 3) ? "No completado" : "Completado";
+
   return (
     <>
       <TableRow onClick={onToggle}>
         <TableCell>{actividad.id}</TableCell>
         <TableCell>{actividad.username}</TableCell>
-        <TableCell>{actividad.type_activity}</TableCell>
-        {achievements && <TableCell>{achievements ? actividad.date !== undefined ? format(actividad.date, "dd/MM/yyyy") : "" : "" }</TableCell> }
-        {!achievements && <TableCell>{actividad.date !== undefined ? format(actividad.date, "dd/MM/yyyy") : "" }</TableCell>}
-        {<TableCell className={colorStatus}>{achievements ? "Logrado": (!achievements && !mobileUnits && actividad.status_id === 2) ? "Por completar" : "" }</TableCell>}
+        <TableCell>{mobileUnits ? "Unidad móvil" : actividad.type_activity}</TableCell>
+        {achievements && <TableCell>{achievements ? actividad.date !== undefined ? new Date (actividad.date).toLocaleDateString() : "" : ""}</TableCell>}
+        {viewUser && !mobileUnits && <TableCell>{actividad.date !== undefined ? new Date (actividad.date).toLocaleDateString() : ""}</TableCell>}
+        {mobileUnits && <TableCell>{actividad.date !== undefined ? actividad.date : ""}</TableCell>}
+        {<TableCell className={colorStatus}>{completeLabel}</TableCell>}
         {viewUser && (
           <TableCell>
             <AlertDialog>
@@ -162,18 +162,29 @@ const FilaExpandible = ({
                 }}
                 transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
               >
-                {mobileUnits ? (
+                {mobileUnits && (
                   <ContentOfMobileUnit
                     actividad={actividad as unknown as MobileUnit}
                     achievements={achievements}
                   />
-                ) : (
+                )}
+                 {actividad.type_activity === "Víctima de trata" && (
+                  <ContentOfVictims actividad={actividad as unknown as Victims} achievements />
+                )}
+                {actividad.type_activity === "Violencia de Genero" && (
+                  <ContentOfViolence actividad={actividad as unknown as Violence} achievements />
+                )}
+                {actividad.type_activity === "Atención Telefónica" && (
+                  <ContentOfAtencion0800 actividad={actividad as unknown as Atencion0800} achievements />
+                )}
+
+                {!mobileUnits && actividad.type_activity !== "Víctima de trata" && actividad.type_activity !== "Violencia de Genero" && actividad.type_activity !== "Atención Telefónica" && (
                   <ContentOfActivities
                     actividad={actividad}
                     achievements={achievements}
                   />
                 )}
-
+              
               </motion.div>
             </TableCell>
           </TableRow>
@@ -189,8 +200,8 @@ interface TableProps {
   mobileUnits?: boolean;
   dateFilter?: DateRange;
   columnas: { campo: string; label: string }[];
-  data?: Agenda[];
-  setData: (data: Agenda[]) => void; 
+  data?: Agenda[] | MobileUnit[];
+  setData: (data: Agenda[] | MobileUnit[]) => void;
   errorData?: any;
   isLoading?: boolean;
 }
@@ -200,44 +211,42 @@ export function TableUI({
   columnas,
   achievements,
   mobileUnits,
-  dateFilter,
   data: actividad,
   setData: setActividad,
-  errorData,
-  isLoading
+
 }: TableProps) {
   const { isUpdated } = useUpdateActivitie();
- 
-  
   const [expandido, setExpandido] = useState<number | null>(null);
   const [ordenActual, setOrdenActual] = useState<OrdenColumna>(null);
   const [paginaActual, setPaginaActual] = useState(1);
-  const [elementosPorPagina, setElementosPorPagina] = useState(5);
+  const [elementosPorPagina, setElementosPorPagina] = useState(20);
 
   const toggleExpansion = (id: number) => {
     setExpandido(expandido === id ? null : id);
   };
-  const ordenarActividades = (columna: keyof Agenda | "id") => {
+  const ordenarActividades = (columna: "id" | "username" | "type_activity" | "date" | "status_id") => {
     const nuevaDireccion =
       ordenActual?.columna === columna && ordenActual.direccion === "asc"
         ? "desc"
         : "asc";
     setOrdenActual({ columna, direccion: nuevaDireccion });
 
-    const actividadesOrdenados = [...(actividad || [])].sort((a, b) => {
-      if (columna === "id") {
-        return nuevaDireccion === "asc" ? a.id - b.id : b.id - a.id;
-      }
-      let valorA: string, valorB: string;
+    const actividadesOrdenados = [...(actividad || [])]
+      .filter((item): item is Agenda => 'username' in item)
+      .sort((a, b) => {
+        if (columna === "id") {
+          return nuevaDireccion === "asc" ? a.id - b.id : b.id - a.id;
+        }
+        let valorA: string, valorB: string;
 
-      valorA = a[columna].toString().trim();
-      valorB = b[columna].toString().trim();
+        valorA = a[columna]?.toString().trim();
+        valorB = b[columna]?.toString().trim();
 
-      if (valorA < valorB) return nuevaDireccion === "asc" ? -1 : 1;
-      if (valorA > valorB) return nuevaDireccion === "asc" ? 1 : -1;
+        if (valorA < valorB) return nuevaDireccion === "asc" ? -1 : 1;
+        if (valorA > valorB) return nuevaDireccion === "asc" ? 1 : -1;
 
-      return 0;
-    });
+        return 0;
+      });
 
     setActividad(actividadesOrdenados);
   };
@@ -257,7 +266,7 @@ export function TableUI({
   const actividadesPaginados = useMemo(() => {
     const indiceInicio = (paginaActual - 1) * elementosPorPagina;
     const indiceFin = indiceInicio + elementosPorPagina;
-    return (actividad || []).slice(indiceInicio, indiceFin);
+    return (actividad ?? []).slice(indiceInicio, indiceFin);
   }, [actividad, paginaActual, elementosPorPagina]);
 
   const totalPaginas = Math.ceil((actividad?.length || 0) / elementosPorPagina);
@@ -265,6 +274,7 @@ export function TableUI({
   const cambiarPagina = (nuevaPagina: number) => {
     setPaginaActual(nuevaPagina);
   };
+
 
   return (
     <div className="container mx-auto py-1">
@@ -275,8 +285,7 @@ export function TableUI({
               <TableHead
                 key={columna.campo}
                 onClick={() =>
-                  ordenarActividades(columna.campo as keyof Agenda)
-                }
+                  ordenarActividades(columna.campo as "id" | "username" | "type_activity" | "date" | "status_id")}
                 className="cursor-pointer bg-primary text-white p-2"
               >
                 {columna.label}
@@ -295,7 +304,7 @@ export function TableUI({
           {actividadesPaginados.map((actividad) => (
             <FilaExpandible
               key={actividad.id}
-              actividad={actividad}
+              actividad={actividad as Agenda}
               expandida={expandido === actividad.id}
               onToggle={() => toggleExpansion(actividad.id)}
               viewUser={viewUser}
@@ -331,7 +340,7 @@ export function TableUI({
                 <SelectValue placeholder={elementosPorPagina.toString()} />
               </SelectTrigger>
               <SelectContent side="top">
-                {[5, 10, 20].map((pageSize) => (
+                {[20,50,100,250,500].map((pageSize) => (
                   <SelectItem key={pageSize} value={pageSize.toString()}>
                     {pageSize}
                   </SelectItem>

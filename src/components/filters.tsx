@@ -49,17 +49,15 @@ export default function Filters({ initialData, setActividad, setActividadMobile,
 
         // Filtra los datos por fecha
         if (date?.from !== undefined && date?.to !== undefined) {
-            const dateFrom = date.from.toLocaleDateString();
-            const dateTo = date.to.toLocaleDateString();
+            const dateFrom = date.from
+            const dateTo = date.to
             filteredData = filteredData.filter((actividad: Agenda | MobileUnit) => {
                 if ('date' in actividad) {
-                    const actividadDate = new Date(actividad.date).toLocaleDateString();
-                    console.log("actividadDate", actividadDate, dateFrom, dateTo)
+                    const actividadDate = new Date(actividad.date)
                     return actividadDate >= dateFrom && actividadDate <= dateTo;
                 }
                 return false;
             });
-            // console.log("filteredData", filteredData)
         }
 
         if (setActividad) {

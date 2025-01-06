@@ -117,6 +117,7 @@ export default function ScheduleForm() {
                     form.reset(defaultValues)
                     setShowNotification(true)
                     console.log('Datos enviados con éxito');
+                    console.log(data);
                 },
                 onError: () => {
                     console.error('Error al enviar los datos');
@@ -340,7 +341,7 @@ export default function ScheduleForm() {
                                                 )}
                                             >
                                                 {field.value ? (
-                                                    format(field.value, "PPP")
+                                                    format(field.value, "MM/dd/yyyy")
                                                 ) : (
                                                     <span>Seleccion una fecha</span>
                                                 )}

@@ -41,7 +41,7 @@ export default function SchedulePage() {
 
   }, [data]);
 
-
+console.log(actividad)
   const columnas = [
     {
       label: "ID",

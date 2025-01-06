@@ -88,7 +88,7 @@ const FilaExpandible = ({
         <TableCell>{mobileUnits ? "Unidad móvil" : actividad.type_activity}</TableCell>
         {achievements && <TableCell>{achievements ? actividad.date !== undefined ? new Date (actividad.date).toLocaleDateString() : "" : ""}</TableCell>}
         {viewUser && !mobileUnits && <TableCell>{actividad.date !== undefined ? new Date (actividad.date).toLocaleDateString() : ""}</TableCell>}
-        {mobileUnits && <TableCell>{actividad.date !== undefined ? actividad.date : ""}</TableCell>}
+        {mobileUnits && <TableCell>{actividad.date !== undefined ? new Date (actividad.date).toLocaleDateString() : ""}</TableCell>}
         {<TableCell className={colorStatus}>{completeLabel}</TableCell>}
         {viewUser && (
           <TableCell>

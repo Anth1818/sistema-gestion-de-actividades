@@ -1,24 +1,26 @@
 import { type_telephone_service } from '@/lib/utils';
 import { type_femicide } from '@/lib/utils';
 import { type_weapon } from '@/lib/utils';
+
 export interface AgeRangeData {
-  range: string
+  range: number
   women: number
   men: number
 }
 
 export interface DisabilityData {
-  type: string
+  type: number
   ageRanges: AgeRangeData[]
 }
 
 export interface EthnicityData {
-  type: string
+  type: number
   ageRanges: AgeRangeData[]
 }
 
 export interface AttentionTypeData {
-  type: string
+  type: number
+  subType: number
   ageRanges: AgeRangeData[]
   disabilities: DisabilityData[]
   ethnicities: EthnicityData[]

@@ -61,6 +61,7 @@ export default function ScheduleMobileUnitsPage() {
     }
     ]
 
+    console.log(mobile_units)
     return (
         <ProtectedRoute>
             <div>

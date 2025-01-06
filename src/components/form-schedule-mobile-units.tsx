@@ -94,6 +94,7 @@ export default function ScheduleMobileUnitsForm() {
                     form.reset(defaultValues)
                     setShowNotification(true)
                     console.log('Datos enviados con éxito');
+                    console.log(data);
                 },
                 onError: () => {
                     console.error('Error al enviar los datos');
@@ -116,7 +117,7 @@ export default function ScheduleMobileUnitsForm() {
                         name="cantMobileUnitsRequired"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
-                                <FormLabel>Cantidad de unidades móviles solicitadas</FormLabel>
+                                <FormLabel>Número de unidades móviles solicitadas</FormLabel>
                                 <FormControl>
                                     <Input placeholder="..." type="number" {...field} />
                                 </FormControl>
@@ -130,7 +131,7 @@ export default function ScheduleMobileUnitsForm() {
                         name="cantUltrasoundRequired"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
-                                <FormLabel>Cantidad de ecografos solicitados</FormLabel>
+                                <FormLabel>Número de ecografos solicitados</FormLabel>
                                 <FormControl>
                                     <Input placeholder="..." type="number" {...field} />
                                 </FormControl>
@@ -313,7 +314,7 @@ export default function ScheduleMobileUnitsForm() {
                                                 )}
                                             >
                                                 {field.value ? (
-                                                    format(field.value, "dd/MM/yyyy")
+                                                    format(field.value, "MM/dd/yyyy")
                                                 ) : (
                                                     <span>Seleccion una fecha</span>
                                                 )}

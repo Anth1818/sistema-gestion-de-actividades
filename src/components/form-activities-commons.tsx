@@ -316,7 +316,7 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
                                                 )}
                                             >
                                                 {field.value ? (
-                                                    format(field.value, "dd/MM/yyyy")
+                                                    format(field.value, "MM/dd/yyyy")
                                                 ) : (
                                                     <span>Seleccion una fecha</span>
                                                 )}

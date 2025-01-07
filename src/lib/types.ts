@@ -1,6 +1,33 @@
-import { type_telephone_service } from '@/lib/utils';
-import { type_femicide } from '@/lib/utils';
-import { type_weapon } from '@/lib/utils';
+export interface Disability {
+  id: number;
+  service_type: string;
+  subtype: string;
+  disability: string;
+  age_range: string;
+}
+
+export interface Ethnicity {
+  id: number;
+  service_type: string;
+  subtype: string;
+  ethnicity: string;
+  age_range: string;
+}
+
+export interface Service {
+  id: number;
+  service_type: string;
+  subtype: string;
+  age_range: string;
+}
+
+export interface AttentionType {
+  disability: Disability[];
+  ethnicity: Ethnicity[];
+  service: Service[];
+}
+
+
 
 export interface AgeRangeData {
   range: number

@@ -1,5 +1,4 @@
 import { clsx, type ClassValue } from "clsx"
-import { id } from "date-fns/locale"
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -584,4 +583,104 @@ export const type_telephone_service = [
   }
 ]
 
+// Para la grafica de barras
+const chartDataFullMonths = [
+  { month: "Enero", completado: 186, no_completado: 45 },
+  { month: "Febrero", completado: 305, no_completado: 21 },
+  { month: "Marzo", completado: 237, no_completado: 22 },
+  { month: "Abril", completado: 173, no_completado: 19 },
+  { month: "Mayo", completado: 209, no_completado: 23 },
+  { month: "Junio", completado: 214, no_completado: 14 },
+  { month: "Julio", completado: 186, no_completado: 28 },
+  { month: "Agosto", completado: 305, no_completado: 26 },
+  { month: "Septiembre", completado: 237, no_completado: 22 },
+  { month: "Octubre", completado: 273, no_completado: 23 },
+  { month: "Noviembre", completado: 209, no_completado: 23 },
+  { month: "Diciembre", completado: 214, no_completado: 24 },
+]
 
+//Para la grafica de pastel
+const chartDataPie = [
+  { activitie: "activitie1", done: 275, fill: "hsl(var(--chart-1))" },
+  { activitie: "activitie2", done: 90, fill: "hsl(var(--chart-2))" },
+  { activitie: "activitie3", done: 187, fill: "hsl(var(--chart-3))" },
+  { activitie: "activitie4", done: 173, fill: "hsl(var(--chart-4))" },
+]
+
+//Para la tabla de estados y sede central
+const stateData = [
+  {
+    id: 1, name: "Estado 1", total: 500, percentage: "20.2%", activities: [
+      { name: "Actividad 1", total: 200 },
+      { name: "Actividad 2", total: 300 },
+    ]
+  },
+  {
+    id: 2, name: "Estado 2", total: 294, percentage: "15.2%", activities: [
+      { name: "Actividad 1", total: 150 },
+      { name: "Actividad 2", total: 144 },
+    ]
+  },
+  {
+    id: 3, name: "Estado 3", total: 423, percentage: "18.5%", activities: [
+      { name: "Actividad 1", total: 200 },
+      { name: "Actividad 2", total: 223 },
+    ]
+  },
+  {
+    id: 4, name: "Estado 4", total: 533, percentage: "21.3%", activities: [
+      { name: "Actividad 1", total: 250 },
+      { name: "Actividad 2", total: 283 },
+    ]
+  },
+]
+
+//Para la tabla de actividades
+const mockDataActivities = [
+  {
+    action: "1. Atención Jurídica",
+    details: [
+      { no: "1.1", description: "Asesoramiento inicial", total: "15,442", percentage: "14.2%" },
+      { no: "1.2", description: "Asistencia Legal", total: "1,351", percentage: "1.3%" },
+      { no: "1.3", description: "Representación Legal", total: "2,123", percentage: "2.0%" },
+      { no: "1.4", description: "Mediación", total: "987", percentage: "0.9%" },
+      { no: "1.5", description: "Otros", total: "543", percentage: "0.5%" },
+    ],
+    subTotal: { total: "18,189", percentage: "16.7%" },
+  },
+  {
+    action: "2. Atención Preventiva",
+    details: [
+      { no: "2.1", description: "Atención psicológica", total: "3,614", percentage: "3.3%" },
+      { no: "2.2", description: "Atención social", total: "8,227", percentage: "7.6%" },
+      { no: "2.3", description: "Contenciones \"violencia de género\"", total: "42,410", percentage: "39.0%" },
+      { no: "2.4", description: "Derivaciones \"violencia de género\"", total: "25,209", percentage: "23.2%" },
+      { no: "2.5", description: "Toma de espacios \"violencia de género\"", total: "8,584", percentage: "7.9%" },
+    ],
+    subTotal: { total: "90,029", percentage: "82.8%" },
+  },
+  {
+    action: "3. Capacitación",
+    details: [
+      { no: "3.1", description: "Asistentes Comunitarios", total: "464", percentage: "0.4%" },
+    ],
+    subTotal: { total: "464", percentage: "0.4%" },
+  },
+];
+
+
+//Para la tabla de datos mensuales
+const monthlyData = [
+  { id: 1, category: "Atención Jurídica", subCategory: "Asesoramiento inicial", jan: 272, feb: 540, mar: 834, apr: 915, may: 1954, jun: 140, jul: 1147, aug: 2715, sep: 5925, oct: 1, nov: 3, dec: 10, total: 15442, percentage: "14.2%" },
+  { id: 2, category: "Atención Jurídica", subCategory: "Asistencia Legal (Sede Central)", jan: 61, feb: 113, mar: 151, apr: 172, may: 180, jun: 267, jul: 95, aug: 177, sep: 148, oct: 1, nov: 3, dec: 10, total: 1353, percentage: "1.3%" },
+  { id: 3, category: "Atención Jurídica", subCategory: "Patrocinio (Delegaciones)", jan: 47, feb: 38, mar: 38, apr: 70, may: 182, jun: 127, jul: 132, aug: 111, sep: 156, oct: 1, nov: 3, dec: 10, total: 881, percentage: "0.8%" },
+  { id: 4, category: "Atención Jurídica", subCategory: "Representación en trámites judiciales (por designaciones)", jan: 3, feb: 118, mar: 12, apr: 18, may: 10, jun: 120, jul: 31, aug: 6, sep: 34, oct: 1, nov: 3, dec: 10, total: 335, percentage: "0.3%" },
+  { id: 5, category: "Atención Jurídica", subCategory: "Informe de Tesis", jan: 16, feb: 8, mar: 8, apr: 12, may: 3, jun: 0, jul: 0, aug: 2, sep: 18, oct: 1, nov: 3, dec: 10, total: 50, percentage: "0.1%" },
+  { id: 6, category: "Atención Preventiva", subCategory: "Atención psicológica", jan: 26, feb: 105, mar: 147, apr: 142, may: 1143, jun: 407, jul: 399, aug: 668, sep: 608, oct: 1, nov: 3, dec: 10, total: 3614, percentage: "3.3%" },
+  { id: 7, category: "Atención Preventiva", subCategory: "Casa a casa", jan: 48, feb: 234, mar: 348, apr: 408, may: 1166, jun: 1212, jul: 1192, aug: 2021, sep: 1598, oct: 1, nov: 3, dec: 10, total: 8227, percentage: "7.6%" },
+  { id: 8, category: "Atención Preventiva", subCategory: 'Puntos violeta "violencia de género"', jan: 428, feb: 1494, mar: 2058, apr: 2241, may: 9181, jun: 7292, jul: 5186, aug: 5788, sep: 8771, oct: 1, nov: 3, dec: 10, total: 42410, percentage: "39.0%" },
+  { id: 9, category: "Atención Preventiva", subCategory: 'Conversatorios "violencia de género"', jan: 100, feb: 343, mar: 467, apr: 364, may: 3778, jun: 3045, jul: 3448, aug: 3188, sep: 9809, oct: 1, nov: 3, dec: 10, total: 25209, percentage: "23.2%" },
+  { id: 10, category: "Atención Preventiva", subCategory: 'Toma de espacios "violencia de género"', jan: 475, feb: 213, mar: 305, apr: 227, may: 1249, jun: 968, jul: 1139, aug: 891, sep: 3330, oct: 1, nov: 3, dec: 10, total: 8584, percentage: "7.9%" },
+  { id: 11, category: "Atención Preventiva", subCategory: "Atención Telefónica", jan: 5, feb: 410, mar: 315, apr: 541, may: 82, jun: 85, jul: 4, aug: 57, sep: 896, oct: 1, nov: 3, dec: 10, total: 1985, percentage: "1.8%" },
+  { id: 12, category: "Capacitación", subCategory: "Defensoras comunales", jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 264, jul: 110, aug: 21, sep: 69, oct: 1, nov: 3, dec: 10, total: 464, percentage: "0.4%" },
+]

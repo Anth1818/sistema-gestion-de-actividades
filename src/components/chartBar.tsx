@@ -1,6 +1,6 @@
 "use client"
 
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis, Legend, LabelList } from "recharts"
 
 import {
   Card,
@@ -29,6 +29,7 @@ interface ChartData {
     no_completado: number
 
   }[]
+  id?: string
 }
 
 const chartConfig = {
@@ -42,15 +43,15 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function StatisticsFull({ chartData }: ChartData) {
+export function StatisticsFull({ chartData, id }: ChartData) {
   return (
-    <Card className="w-full">
+    <Card className="w-full" id={id}>
       <CardHeader>
         <CardTitle>Estadística de barra - Logros por meses</CardTitle>
         <CardDescription>Enero - Diciembre 2024</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="h-[200px] w-full">
+        <ChartContainer config={chartConfig} className="h-[250px] w-full">
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
@@ -65,8 +66,13 @@ export function StatisticsFull({ chartData }: ChartData) {
               content={<ChartTooltipContent indicator="dashed"
               />}
             />
-            <Bar dataKey="completado" fill="var(--success)" radius={4} />
-            <Bar dataKey="no_completado" fill="var(--warning)" radius={4} />
+            <Bar dataKey="completado" fill="var(--success)" radius={4}>
+              <LabelList dataKey="completado" position="top" />
+            </Bar>
+            <Bar dataKey="no_completado" fill="var(--warning)" radius={4}>
+              <LabelList dataKey="no_completado" position="top" />
+            </Bar>
+            <Legend />
           </BarChart>
         </ChartContainer>
       </CardContent>

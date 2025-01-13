@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { ChartColumn, CalendarCheck, LucideNotebookText, FilePlus, Award, UsersRound, Ambulance, ChevronDown } from 'lucide-react';
 const links = [
   {
-    name: "Dashboard",
+    name: "Métricas",
     href: "/dashboard",
     permission: "admin",
     icon: ChartColumn,
@@ -64,7 +64,6 @@ const Navigation = ({ userLoggin, handleCloseDrawer }: NavigationProps) => {
   return (
     <nav>
       <ul className="space-y-4">
-
         {links.map((link) => (
           link.permission === "admin" && userLoggin.role_id === 2 ? null :
           <li key={link.name}>

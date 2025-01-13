@@ -1,6 +1,6 @@
 "use client"
 
-import { Pie, PieChart } from "recharts"
+import { Pie, PieChart, Legend } from "recharts"
 
 import {
   Card,
@@ -29,6 +29,7 @@ interface ChartDataPie {
         fill: string
 
     }[]
+    id?: string
 }
 
 const chartConfig = {
@@ -53,9 +54,9 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function ChartDataPie({ chartDataPie }: ChartDataPie) {
+export function ChartDataPie({ chartDataPie,id }: ChartDataPie) {
   return (
-    <Card className="flex flex-col w-full md:w-[600px] ">
+    <Card className="flex flex-col w-full md:w-[400px]" id={id}>
       <CardHeader className="items-center pb-0">
         <CardTitle className="text-center">Mayor cantidades de actividades completadas</CardTitle>
         <CardDescription>Enero - Diciembre 2024</CardDescription>
@@ -68,6 +69,7 @@ export function ChartDataPie({ chartDataPie }: ChartDataPie) {
           <PieChart>
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
             <Pie data={chartDataPie} dataKey="done" label nameKey="activitie" />
+            <Legend />
           </PieChart>
         </ChartContainer>
       </CardContent>

@@ -69,6 +69,10 @@ export default function CompleteActivitieSchedule({ id }: completeScheduleModalP
                     form.reset(defaultValues)
                     setShowNotification(true)
                     setIsUpdated(true)
+                    const tempo = setTimeout(() => {
+                        window.location.reload();
+                        clearTimeout(tempo);
+                      }, 1500);
                     console.log('Datos enviados con éxito');
                 },
                 onError: () => {

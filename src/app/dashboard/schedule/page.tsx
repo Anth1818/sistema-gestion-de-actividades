@@ -26,8 +26,9 @@ export default function SchedulePage() {
         return await api.get("/schedule").then((res) => res.data.data)
       }
       return await api.get(`/schedule/user/${userLoggin?.id}`).then((res) => res.data.data)
-
+    
     },
+    
 
   });
 

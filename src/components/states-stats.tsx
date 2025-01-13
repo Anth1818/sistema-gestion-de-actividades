@@ -166,7 +166,7 @@ export default function ExpandableStateTable() {
         <TableBody>
           {stateData.map((state) => (
             <>
-              <TableRow key={state.id} className={`bg-pink-100 dark:bg-dark dark:text-dark-foreground text-black transition-max-height duration-500 ease-in-out overflow-hidden ${expandedRows.includes(state.id) ? 'max-h-96' : 'max-h-0'}`} onClick={() => toggleRow(state.id)}>
+              <TableRow key={state.id} className={` dark:bg-dark dark:text-dark-foreground text-black transition-max-height duration-500 ease-in-out overflow-hidden ${expandedRows.includes(state.id) ? 'max-h-96' : 'max-h-0'}`} onClick={() => toggleRow(state.id)}>
                 <TableCell>{state.name}</TableCell>
                 <TableCell>{state.total}</TableCell>
                 <TableCell>{state.percentage}</TableCell>

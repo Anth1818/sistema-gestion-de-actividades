@@ -66,12 +66,14 @@ export default function CompleteMobileUnitSchedule({
       return false;
     }
 
-    if (formData.attentionTypes.length === 0) {
-      return true;
-    }
-    if (formData.attentionTypes.some((attentionType) => attentionType.type === 0 || attentionType.ageRanges.length === 0 || attentionType.ageRanges.some((ageRange) => ageRange.range === 0 || ageRange.women === 0 || ageRange.men === 0))) {
-      return true;
-    }
+    if (formData.attentionTypes.length === 0) return true;
+ 
+    if(formData.attentionTypes.some((attentionType) => attentionType.type === 0 || attentionType.ageRanges.length === 0 || attentionType.ageRanges.some((ageRange) => ageRange.range === 0 || ageRange.women === 0 && ageRange.men === 0))) return true;
+
+    if(formData.attentionTypes.some((attentionType) => attentionType.disabilities.length === 0 || attentionType.disabilities.some((disability) => disability.ageRanges.length === 0 || disability.ageRanges.some((ageRange) => ageRange.range === 0 || ageRange.women === 0 && ageRange.men === 0)))) return true;
+
+    if(formData.attentionTypes.some((attentionType) => attentionType.ethnicities.length === 0 || attentionType.ethnicities.some((ethnicitie) => ethnicitie.ageRanges.length === 0 || ethnicitie.ageRanges.some((ageRange) => ageRange.range === 0 || ageRange.women === 0 && ageRange.men === 0)))) return true;
+
     return false;
   }
 
@@ -93,6 +95,10 @@ export default function CompleteMobileUnitSchedule({
           form.reset(defaultValues)
           setFormData({ attentionTypes: [] })
           setShowNotification(true)
+          const tempo = setTimeout(() => {
+            window.location.reload();
+            clearTimeout(tempo);
+          }, 1500);
           console.log('Datos enviados con éxito');
         },
         onError: () => {
@@ -104,7 +110,7 @@ export default function CompleteMobileUnitSchedule({
   }
   return (
     <>
-    {showNotification && <Notification message="Datos de unidad móvil registrada con éxito" />}
+      {showNotification && <Notification message="Datos de unidad móvil registrada con éxito" />}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

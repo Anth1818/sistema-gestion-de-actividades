@@ -304,7 +304,7 @@ export default function MurderFemaleForm({ gerency, action, activitie }: MurderF
                         )}
                     />
 
-                    <Button type="submit" className="col-span-12 md:col-span-4 justify-self-center w-full md:w-2/4 mt-2">Enviar</Button>
+                    <Button type="submit" disabled={mutation.isLoading} className="col-span-12 md:col-span-4 justify-self-center w-full md:w-2/4 mt-2">Enviar</Button>
                 </form>
             </Form>
         </>

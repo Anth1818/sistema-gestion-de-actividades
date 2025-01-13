@@ -1,3 +1,4 @@
+"use client"
 import { Statistics, StatisticsFull } from "@/components/chartBar";
 import { ChartDataPie } from "@/components/chartPie";
 import CardDashboard from "@/components/card-dashboard";
@@ -12,8 +13,22 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { DatePickerWithRange } from "@/components/date-picker";
+import { DateRange } from "react-day-picker";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { printGraphics } from "@/lib/exportPDFGraphics";
+
 
 export default function Page() {
+
+  const FirtsDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  const LastDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: FirtsDayOfMonth,
+    to: LastDayOfMonth
+  });
 
   const chartDataFullMonths = [
     { month: "Enero", completado: 186, no_completado: 45 },
@@ -76,30 +91,37 @@ export default function Page() {
 
   return (
     <ProtectedRoute requiredRole={1}>
-      <a href="#desglozado" className="text-center block"> Ir a los datos desglozados</a>
+      <h1 className="text-2xl mb-2">Métricas</h1>
+      <div className="flex justify-center">
+        <DatePickerWithRange date={date} setDate={setDate} />
+      </div>
 
       {/* Cards */}
       <div className="flex flex-col gap-4 md:flex-row justify-around mt-2 ">
-        <CardDashboard title="Logros completados este mes" content="+250" footer="+45% más que el mes pasado" Icon={Award} />
-        <CardDashboard title="Actividades agendadas este mes" content="+124" footer="+36% más que el mes pasado" Icon={CalendarCheck} />
-        <CardDashboard title="Unidades móviles agendadas este mes" content="+50" footer="+43% más que el mes pasado" Icon={Ambulance} />
+        <CardDashboard title="Logros completados" content="+250" footer="+45% más que el mes pasado" date={date} Icon={Award} />
+        <CardDashboard title="Actividades agendadas " content="+124" footer="+36% más que el mes pasado" date={date} Icon={CalendarCheck} />
+        <CardDashboard title="Unidades móviles agendadas " content="+50" footer="+43% más que el mes pasado" date={date} Icon={Ambulance} />
       </div>
 
       {/* Gráficas */}
-      <div className="flex flex-col gap-4 md:flex-row justify-around mt-4 h-[380px]">
+      <div className="flex flex-col gap-4 md:flex-row justify-around mt-4 h-[380px]" id="charts">
         <div className="hidden md:block w-full h-[50px]">
-          <StatisticsFull chartData={chartDataFullMonths} />
+          <StatisticsFull chartData={chartDataFullMonths} id="bar-chart" />
         </div>
-        <ChartDataPie chartDataPie={chartDataPie} />
+        <div >
+          <ChartDataPie chartDataPie={chartDataPie} id="pie-chart"/>
+        </div>
       </div>
       <div className="flex flex-col gap-4 md:hidden ">
         <Statistics chartData={chartData1} />
-          <Statistics chartData={chartData2} />
+        <Statistics chartData={chartData2} />
       </div>
       <div />
 
+      <Button className="mt-4" onClick={printGraphics}>Exportar gráficas</Button>
+
       {/* Datos desglozados */}
-      <div className="mt-4">
+      <div className="mt-6">
         <h2 className="text-xl" id="desglozado">Datos desglozados</h2>
         <Accordion type="single" collapsible className="mt-4">
           {items.map((item) => (

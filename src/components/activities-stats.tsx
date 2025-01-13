@@ -1,5 +1,40 @@
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import React from 'react';
+
+const mockData = [
+  {
+    action: "1. Atención Jurídica",
+    details: [
+      { no: "1.1", description: "Asesoramiento inicial", total: "15,442", percentage: "14.2%" },
+      { no: "1.2", description: "Asistencia Legal", total: "1,351", percentage: "1.3%" },
+      { no: "1.3", description: "Representación Legal", total: "2,123", percentage: "2.0%" },
+      { no: "1.4", description: "Mediación", total: "987", percentage: "0.9%" },
+      { no: "1.5", description: "Otros", total: "543", percentage: "0.5%" },
+    ],
+    subTotal: { total: "18,189", percentage: "16.7%" },
+  },
+  {
+    action: "2. Atención Preventiva",
+    details: [
+      { no: "2.1", description: "Atención psicológica", total: "3,614", percentage: "3.3%" },
+      { no: "2.2", description: "Atención social", total: "8,227", percentage: "7.6%" },
+      { no: "2.3", description: "Contenciones \"violencia de género\"", total: "42,410", percentage: "39.0%" },
+      { no: "2.4", description: "Derivaciones \"violencia de género\"", total: "25,209", percentage: "23.2%" },
+      { no: "2.5", description: "Toma de espacios \"violencia de género\"", total: "8,584", percentage: "7.9%" },
+    ],
+    subTotal: { total: "90,029", percentage: "82.8%" },
+  },
+  {
+    action: "3. Capacitación",
+    details: [
+      { no: "3.1", description: "Asistentes Comunitarios", total: "464", percentage: "0.4%" },
+    ],
+    subTotal: { total: "464", percentage: "0.4%" },
+  },
+];
+
+const total = { total: "108,682", percentage: "100%" };
 
 export default function ActivitiesStatsTable() {
   return (
@@ -11,101 +46,39 @@ export default function ActivitiesStatsTable() {
             <TableHead className="bg-primary text-white font-bold">No</TableHead>
             <TableHead className="bg-primary text-white font-bold">Descripción</TableHead>
             <TableHead className="bg-primary text-white font-bold">Total</TableHead>
-            <TableHead className="bg-primary text-white font-bold">%</TableHead>
+            <TableHead className="bg-primary text-white font-bold">%/</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow>
-            <TableCell rowSpan={5} className="bg-pink-100 dark:bg-dark ">1. Atención Jurídica</TableCell>
-            <TableCell>1.1</TableCell>
-            <TableCell>Asesoramiento inicial</TableCell>
-            <TableCell>15,442</TableCell>
-            <TableCell>14.2%</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>1.2</TableCell>
-            <TableCell>Asistencia Legal</TableCell>
-            <TableCell>1,351</TableCell>
-            <TableCell>1.3%</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>1.3</TableCell>
-            <TableCell>Patrocinio (Delegaciones)</TableCell>
-            <TableCell>1,022</TableCell>
-            <TableCell>0.9%</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>1.4</TableCell>
-            <TableCell>Representación en trámite judiciales (por designaciones)</TableCell>
-            <TableCell>330</TableCell>
-            <TableCell>0.3%</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>1.5</TableCell>
-            <TableCell>Informe de Tesis</TableCell>
-            <TableCell>44</TableCell>
-            <TableCell>0.0%</TableCell>
-          </TableRow>
-          <TableRow className="bg-pink-200 font-bold dark:bg-dark">
-            <TableCell colSpan={3}>Sub - Total</TableCell>
-            <TableCell>18,189</TableCell>
-            <TableCell>16.7%</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell rowSpan={5} className="bg-pink-100 dark:bg-dark">2. Atención Preventiva</TableCell>
-            <TableCell>2.1</TableCell>
-            <TableCell>Atención psicológica</TableCell>
-            <TableCell>3,614</TableCell>
-            <TableCell>3.3%</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>2.2</TableCell>
-            <TableCell>Atención social</TableCell>
-            <TableCell>8,227</TableCell>
-            <TableCell>7.6%</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>2.3</TableCell>
-            <TableCell>Contenciones &quot;violencia de género&quot;</TableCell>
-            <TableCell>42,410</TableCell>
-            <TableCell>39.0%</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>2.4</TableCell>
-            <TableCell>Derivaciones &quot;violencia de género&quot;</TableCell>
-            <TableCell>25,209</TableCell>
-            <TableCell>23.2%</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>2.5</TableCell>
-            <TableCell>Toma de espacios &quot;violencia de género&quot;</TableCell>
-            <TableCell>8,584</TableCell>
-            <TableCell>7.9%</TableCell>
-          </TableRow>
-          <TableRow className="bg-pink-200 font-bold dark:bg-dark">
-            <TableCell colSpan={3}>Sub - Total</TableCell>
-            <TableCell>90,029</TableCell>
-            <TableCell>82.8%</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="bg-pink-100 dark:bg-dark">3. Capacitación</TableCell>
-            <TableCell>3.1</TableCell>
-            <TableCell>Asistentes Comunitarios</TableCell>
-            <TableCell>464</TableCell>
-            <TableCell>0.4%</TableCell>
-          </TableRow>
-          <TableRow className="bg-pink-200 font-bold dark:bg-dark">
-            <TableCell colSpan={3}>Sub - Total</TableCell>
-            <TableCell>464</TableCell>
-            <TableCell>0.4%</TableCell>
-          </TableRow>
+          {mockData.map((activity, index) => (
+            <React.Fragment key={index}>
+              {activity.details.map((detail, detailIndex) => (
+                <TableRow key={detailIndex}>
+                  {detailIndex === 0 && (
+                    <TableCell rowSpan={activity.details.length} className="bg-pink-100 dark:bg-dark">
+                      {activity.action}
+                    </TableCell>
+                  )}
+                  <TableCell>{detail.no}</TableCell>
+                  <TableCell>{detail.description}</TableCell>
+                  <TableCell>{detail.total}</TableCell>
+                  <TableCell>{detail.percentage}</TableCell>
+                </TableRow>
+              ))}
+              <TableRow className="bg-pink-200 font-bold dark:bg-dark">
+                <TableCell colSpan={3}>Sub - Total</TableCell>
+                <TableCell>{activity.subTotal.total}</TableCell>
+                <TableCell>{activity.subTotal.percentage}</TableCell>
+              </TableRow>
+            </React.Fragment>
+          ))}
           <TableRow className="bg-pink-300 font-bold dark:bg-dark">
             <TableCell colSpan={3}>Total</TableCell>
-            <TableCell>108,682</TableCell>
-            <TableCell>100%</TableCell>
+            <TableCell>{total.total}</TableCell>
+            <TableCell>{total.percentage}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }

@@ -20,7 +20,7 @@ export default function DashboardLayout({
   return (
     <ProtectedRoute>
       <>
-        <nav className="fixed  h-12 bg-primary border-b border-gray-200 z-30 w-full lg:h-15 dark:bg-dark ">
+        <nav className="absolute h-12 bg-primary border-b border-gray-200 z-30 w-full lg:h-15 dark:bg-dark">
           <div className="px-3 lg:px-5 lg:pl-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center justify-center border-[1px] rounded-sm border-white lg:border-none mt-[2px]">
@@ -37,7 +37,7 @@ export default function DashboardLayout({
             </div>
           </div>
         </nav >
-        <div className="flex overflow-hidden bg-white pt-16 dark:bg-dark">
+        <div className="flex overflow-hidden bg-white dark:bg-dark pt-10">
           <aside
             id="sidebar"
             className="fixed hidden z-20 h-full top-0 left-0 pt-40 lg:flex flex-shrink-0 flex-col w-60 transition-width duration-75 border-r-2 dark:border-dark-foreground"
@@ -63,7 +63,7 @@ export default function DashboardLayout({
           >
             <main className="dark:bg-dark">
               <div className=" px-4 md: dark:bg-dark " >
-                <div className="w-full min-h-[calc(100vh-230px)] ">
+                <div className="w-full min-h-[calc(100vh-230px)]">
                   <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 overflow-x-auto max-h-[70vh] lg:max-h-[75vh] dark:bg-dark scroll-smooth">
                     {children}
                   </div>

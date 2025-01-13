@@ -117,7 +117,7 @@ export default function ScheduleMobileUnitsForm() {
                         name="cantMobileUnitsRequired"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
-                                <FormLabel>Número de unidades móviles solicitadas</FormLabel>
+                                <FormLabel>N° de unidades móviles solicitadas</FormLabel>
                                 <FormControl>
                                     <Input placeholder="..." type="number" {...field} />
                                 </FormControl>
@@ -131,7 +131,7 @@ export default function ScheduleMobileUnitsForm() {
                         name="cantUltrasoundRequired"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
-                                <FormLabel>Número de ecografos solicitados</FormLabel>
+                                <FormLabel>N° de ecografos solicitados</FormLabel>
                                 <FormControl>
                                     <Input placeholder="..." type="number" {...field} />
                                 </FormControl>
@@ -146,7 +146,7 @@ export default function ScheduleMobileUnitsForm() {
                         name="logisticalSupport"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
-                                <FormLabel>Apoyo logistico del estado o municipio</FormLabel>
+                                <FormLabel>Apoyo logistico estado/municipio</FormLabel>
                                 <Select onValueChange={field.onChange} value={field.value}>
                                     <FormControl>
                                         <SelectTrigger>
@@ -356,7 +356,7 @@ export default function ScheduleMobileUnitsForm() {
                         )}
                     />
 
-                    <Button type="submit" className="col-span-12 md:col-span-4 justify-self-center w-full md:w-2/4 mt-2">Enviar</Button>
+                    <Button type="submit" disabled={mutation.isLoading} className="col-span-12 md:col-span-4 justify-self-center w-full md:w-2/4 mt-2">Enviar</Button>
 
                 </form>
             </Form>

@@ -4,7 +4,7 @@ import inamujerLogo from "../../public/ina.png";
 import cintilloInamujer from "../../public/cintillo_ministerio.png";
 import { Agenda, MobileUnit } from './types';
 
-function toBase64(url: string): Promise<string> {
+export function toBase64(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
         let image = new Image();
         image.onload = function () {

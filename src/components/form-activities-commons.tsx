@@ -46,9 +46,9 @@ interface ActivitiesCommonsFormProps {
 // Esquema base
 const Schema = z.object({
     specify: z.string().max(100, "Máximo 100 caracteres."),
-    state_id: z.coerce.number().int().min(1, "Seleccione un estado."),
-    municipality_id: z.coerce.number().int().min(1, "Seleccione un municipio."),
-    parish_id: z.coerce.number().int().min(1, "Seleccione una parroquia."),
+    state_id: z.coerce.number(),
+    municipality_id: z.coerce.number(),
+    parish_id: z.coerce.number(),
     place_id: z.coerce.number().int().min(1, "Seleccione un lugar."),
     n_womans: z.coerce.number().int().positive("Ingrese una cantidad válida").min(1, "Ingrese una cantidad válida"),
     n_man: z.coerce.number().int().positive("Ingrese una cantidad válida").min(1, "Ingrese una cantidad válida"),
@@ -99,6 +99,7 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
 
     function onSubmit(data: z.infer<typeof Schema>) {
         setShowNotification(false)
+        console.log(data);
         mutation.mutate(data,
             {
                 onSuccess: () => {
@@ -120,6 +121,7 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
             {showNotification && <Notification message="Actividad registrada con éxito" />}
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2 lg:grid-cols-4 lg:gap-4">
+
                     {/* ------Estado------- */}
                     <FormField
                         control={form.control}
@@ -130,11 +132,10 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
                                 <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)}>
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Seleccione" />
+                                            <SelectValue placeholder="" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="0">Seleccione</SelectItem>
                                         {state.map((state: { id: number, state: string }) => (
                                             <SelectItem key={state.id} value={String(state.id)}>{state.state}</SelectItem>
                                         ))}
@@ -153,7 +154,7 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Municipio</FormLabel>
-                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)}>
+                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)} disabled={form.watch("state_id") === 0} >
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Seleccione" />
@@ -179,7 +180,7 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Parroquia</FormLabel>
-                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)}>
+                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)} disabled={form.watch("state_id") === 0}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Seleccione" />

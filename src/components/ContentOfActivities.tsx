@@ -40,6 +40,12 @@ export default function ContentOfActivities({
           <b>N° de hombres:</b> {actividad.n_man}
         </p>
       </div>
+
+      <p className="break-words whitespace-pre-wrap lg:max-w-screen-lg xl:max-w-screen-2xl mt-4">
+        <b>Observaciones de agenda: </b>
+        {actividad.observation_schedule}
+      </p>
+
       <p className="break-words whitespace-pre-wrap lg:max-w-screen-lg xl:max-w-screen-2xl mt-4">
         <b>Observaciones: </b>
         {actividad.observation}

@@ -1,3 +1,5 @@
+import { type_telephone_service } from '@/lib/utils';
+
 export interface Disability {
   id: number;
   service_type: string;
@@ -117,7 +119,15 @@ export type Agenda = {
   n_womans: number;
   n_man: number;
   observation: string;
+  observation_schedule: string;
   dateFinished: string;
+  country_id: number;
+  age: number;
+  collection_method: string;
+  received: string;
+  type_telephone_service_id: number;
+  great_mission: string;
+
 };
 
 export type Victims = {
@@ -207,3 +217,16 @@ export type Usuario = {
   department: string;
   department_id: number;
 };
+
+export interface QueryData {
+  type_action: string;
+  type_activity: string;
+  finished: string;
+  unfinished: string;
+  total: string;
+}
+
+export interface ApiResponseActivities {
+  status: string;
+  data: QueryData[];
+}

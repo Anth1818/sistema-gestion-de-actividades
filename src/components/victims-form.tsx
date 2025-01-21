@@ -39,9 +39,9 @@ interface VictimsFormProps {
 
 const Schema = z.object({
     country_id: z.string().min(1, "Seleccione un país"),
-    state_id: z.coerce.number().int().min(1, "Seleccione un estado."),
+    state_id: z.coerce.number(),
     municipality_id: z.coerce.number().int().min(1, "Seleccione un municipio."),
-    parish_id: z.coerce.number().int().min(1, "Seleccione una parroquia."),
+    parish_id: z.coerce.number(),
     collection_method: z.string().min(1, "Seleccione un método de captación"),
     received: z.string().min(1, "Seleccione un recibidor"),
     age: z.coerce.number().int().positive("Ingrese una edad válida").min(1, "Ingrese una edad válida").max(120, "Ingrese una edad válida"),
@@ -139,8 +139,8 @@ export default function VictimsForm({ gerency, action, activitie }: VictimsFormP
                         )}
                     />
 
-                    {/* ------Estado------- */}
-                    <FormField
+                     {/* ------Estado------- */}
+                     <FormField
                         control={form.control}
                         name="state_id"
                         render={({ field }) => (
@@ -149,11 +149,10 @@ export default function VictimsForm({ gerency, action, activitie }: VictimsFormP
                                 <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)}>
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Seleccione" />
+                                            <SelectValue placeholder="" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="0">Seleccione</SelectItem>
                                         {state.map((state: { id: number, state: string }) => (
                                             <SelectItem key={state.id} value={String(state.id)}>{state.state}</SelectItem>
                                         ))}
@@ -172,14 +171,14 @@ export default function VictimsForm({ gerency, action, activitie }: VictimsFormP
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Municipio</FormLabel>
-                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)}>
+                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)} disabled={form.watch("state_id") === 0} >
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Seleccione" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="0">Seleccione</SelectItem>
+                                    <SelectItem value="0">Seleccione</SelectItem>
                                         {municipality.map((municipality: { id: number, municipality: string }) => (
                                             <SelectItem key={municipality.id} value={String(municipality.id)}>{municipality.municipality}</SelectItem>
                                         ))}
@@ -198,14 +197,14 @@ export default function VictimsForm({ gerency, action, activitie }: VictimsFormP
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Parroquia</FormLabel>
-                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)}>
+                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)} disabled={form.watch("state_id") === 0}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Seleccione" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="0">Seleccione</SelectItem>
+                                    <SelectItem value="0">Seleccione</SelectItem>
                                         {parish.map((parish: { id: number, parish: string }) => (
                                             <SelectItem key={parish.id} value={String(parish.id)}>{parish.parish}</SelectItem>
                                         ))}

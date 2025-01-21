@@ -1,5 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
+import { id } from "date-fns/locale"
 import { twMerge } from "tailwind-merge"
+import { ApiResponseActivities } from "./types"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -27,6 +29,11 @@ export const gerency = [
     name: "research",
     label: "Gerencia de investigación y capacitación ",
   },
+  {
+    id: 5,
+    name: "oac",
+    label: "Gerencia de oficina de atención a la ciudadania",
+  }
 ]
 
 export const actionsOptions = [
@@ -44,6 +51,11 @@ export const actionsOptions = [
     id: 3,
     name: "training",
     label: "Formación",
+  },
+  {
+    id: 4,
+    name: "oac",
+    label: "OAC",
   },
 ]
 
@@ -83,7 +95,7 @@ export const activities = [
       {
         id: 7,
         name: "procedural action",
-        label: "Acción procesal",
+        label: "Actuación procesal",
       },
     ],
     "Prevención": [
@@ -154,6 +166,13 @@ export const activities = [
         name: "youth community defenders",
         label: "Defensoras comunales juveniles"
       }
+    ],
+    "OAC": [
+      {
+        id: 0,
+        name: "not activity",
+        label: "Sin actividad"
+      }
     ]
   }
 ]
@@ -176,49 +195,59 @@ export const places = [
   },
   {
     id: 4,
+    name: "community",
+    label: "Comunidad",
+  },
+  {
+    id: 5,
     name: "public ministry",
     label: "Ministerio público",
   },
   {
-    id: 5,
+    id: 6,
     name: "TSJ",
     label: "TSJ",
   },
   {
-    id: 6,
+    id: 7,
     name: "justice palace",
     label: "Palacio de justicia",
   },
   {
-    id: 7,
+    id: 8,
     name: "hospital",
     label: "Hospital",
   },
   {
-    id: 8,
+    id: 9,
     name: "ambulatory",
     label: "Ambulatorio",
   },
   {
-    id: 9,
+    id: 10,
     name: "CDI",
     label: "CDI",
   },
   {
-    id: 10,
+    id: 11,
     name: "mission base",
     label: "Base de misiones",
   },
   {
-    id: 11,
+    id: 12,
     name: "educational Unit",
     label: "Unidad educativa",
   },
   {
-    id: 12,
+    id: 13,
     name: "university",
     label: "Universidad",
   },
+  {
+    id: 14,
+    name: "others",
+    label: "Otros",
+  }
 ]
 
 export const countries = [
@@ -684,3 +713,117 @@ const monthlyData = [
   { id: 11, category: "Atención Preventiva", subCategory: "Atención Telefónica", jan: 5, feb: 410, mar: 315, apr: 541, may: 82, jun: 85, jul: 4, aug: 57, sep: 896, oct: 1, nov: 3, dec: 10, total: 1985, percentage: "1.8%" },
   { id: 12, category: "Capacitación", subCategory: "Defensoras comunales", jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 264, jul: 110, aug: 21, sep: 69, oct: 1, nov: 3, dec: 10, total: 464, percentage: "0.4%" },
 ]
+
+
+export const formatDataActivities = (data: ApiResponseActivities) => {
+  const formattedData = Array.isArray(data) ? data.reduce((acc, item) => {
+    const actionIndex = acc.findIndex((action: { action: string }) => action.action === item.type_action);
+    if (actionIndex === -1) {
+      acc.push({
+        action: item.type_action,
+        details: [{
+          no: `${acc.length + 1}.1`,
+          description: item.type_activity,
+          total: item.finished,
+          percentage: "0%" // Placeholder, calculate percentage later
+        }],
+        subTotal: { total: item.finished, percentage: "0%" } // Placeholder, calculate percentage later
+      });
+    } else {
+      const detailIndex = acc[actionIndex].details.findIndex((detail: { description: string }) => detail.description === item.type_activity);
+      if (detailIndex === -1) {
+        acc[actionIndex].details.push({
+          no: `${actionIndex + 1}.${acc[actionIndex].details.length + 1}`,
+          description: item.type_activity,
+          total: item.finished,
+          percentage: "0%" // Placeholder, calculate percentage later
+        });
+      } else {
+        acc[actionIndex].details[detailIndex].total = (parseInt(acc[actionIndex].details[detailIndex].total) + parseInt(item.finished)).toString();
+      }
+      acc[actionIndex].subTotal.total = (parseInt(acc[actionIndex].subTotal.total) + parseInt(item.finished)).toString();
+    }
+    return acc;
+  }, []) : [];
+
+  // Calculate percentages
+  const grandTotal = formattedData.reduce((acc: number, item: { subTotal: { total: string } }) => acc + parseInt(item.subTotal.total), 0);
+  formattedData.forEach((action: { subTotal: { total: string, percentage: string }, details: { total: string, percentage: string }[] }) => {
+    action.subTotal.percentage = ((parseInt(action.subTotal.total) / grandTotal) * 100).toFixed(1) + "%";
+    action.details.forEach((detail: { total: string, percentage: string }) => {
+      detail.percentage = ((parseInt(detail.total) / grandTotal) * 100).toFixed(1) + "%";
+    });
+  });
+
+  return { data: formattedData, grandTotal };
+};
+
+export const transformDataState = (data: any) => {
+  return data?.map((item: any, index: number) => {
+    const activities = Object.keys(item)
+      .filter(key => key !== 'state' && key !== 'total')
+      .map(key => ({
+        name: key,
+        total: Number(item[key])
+      }));
+
+    const total = Number(item.total);
+
+    return {
+      id: index + 1,
+      name: item.state,
+      total,
+      // percentage: total / 100,
+      activities
+    };
+  });
+};
+
+export const getMonths = (startMonth: number, yearActual: number, yearCard: number) => {
+  const currentMonth = new Date().getMonth();
+  let months = [];
+  const monthNames = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+  ];
+
+  const fullMonths = [
+    { number: 0, name: "Enero" },
+    { number: 1, name: "Febrero" },
+    { number: 2, name: "Marzo" },
+    { number: 3, name: "Abril" },
+    { number: 4, name: "Mayo" },
+    { number: 5, name: "Junio" },
+    { number: 6, name: "Julio" },
+    { number: 7, name: "Agosto" },
+    { number: 8, name: "Septiembre" },
+    { number: 9, name: "Octubre" },
+    { number: 10, name: "Noviembre" },
+    { number: 11, name: "Diciembre" },
+  ]
+  if (yearCard < yearActual) {
+    return months = fullMonths;
+  } else {
+    for (let month = startMonth; month <= currentMonth; month++) {
+      months.push({ number: month, name: monthNames[month] });
+    }
+    return months;
+  }
+}
+
+export const getMonth = (month: number) => {
+  const monthNames = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+  ];
+  return monthNames[month];
+}
+
+export const getYears = (startYear: number) => {
+  const currentYear = new Date().getFullYear();
+  const years = [];
+  for (let year = startYear; year <= currentYear; year++) {
+    years.push(year);
+  }
+  return years;
+};

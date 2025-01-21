@@ -7,6 +7,10 @@ import { Agenda, MobileUnit } from "@/lib/types";
 import handleExportPDF from "@/lib/exportPDF";
 import { Input } from "./ui/input";
 import { Search } from "lucide-react";
+import { handleExportExcel } from "@/lib/exportExcel";
+import { Label } from "./ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import useLocation from "@/hooks/useLocation";
 
 interface FiltersProps {
     initialData: Agenda[] | MobileUnit[];
@@ -16,15 +20,39 @@ interface FiltersProps {
     data: any;
     labelPDF?: string;
     mobileUnits?: boolean;
+    achievements?: boolean;
+}
+type status = {
+    id: number;
+    state: string;
 }
 
-export default function Filters({ initialData, setActividad, setActividadMobile, actividad, data, labelPDF="Reporte de logros", mobileUnits }: FiltersProps) {
-
+export default function Filters({ initialData, setActividad, setActividadMobile, actividad, data, labelPDF = "Reporte de logros", mobileUnits, achievements }: FiltersProps) {
+    const [selectedActivity, setSelectedActivity] = useState<string>("all")
+    const [selectedStatus, setSelectedStatus] = useState<string>("all")
+    const [selectedState, setSelectedState] = useState<string>("all")
     const [date, setDate] = useState<DateRange | undefined>({
         from: undefined,
         to: undefined
     });
     const [search, setSearch] = useState<string>("");
+    // Get unique activities for the select
+
+    const activities: string[] = Array.from(new Set(data?.map((row: Agenda) => row.type_activity as string)))
+    const stateOptions: string[] = Array.from(new Set(data?.map((row: Agenda) => row.state as string)))
+
+    const statusOptions = [{
+        id: 1,
+        state: "Completado"
+    }, {
+        id: 2,
+        state: "Por completar"
+    }, {
+        id: 3,
+        state: "No completado"
+    }]
+
+    const { state } = useLocation()
 
     const handleResetFilter = () => {
         setDate({
@@ -32,10 +60,37 @@ export default function Filters({ initialData, setActividad, setActividadMobile,
             to: undefined
         })
         setSearch("")
+        setSelectedActivity("all")
+        setSelectedState("all")
+        setSelectedStatus("all")
     }
 
     useEffect(() => {
         let filteredData: (Agenda | MobileUnit)[] = initialData;
+
+        if (selectedActivity !== "all") {
+            filteredData = filteredData.filter((actividad: Agenda | MobileUnit) => {
+                return (
+                    (actividad as Agenda).type_activity?.toLowerCase().includes(selectedActivity.toLowerCase())
+                );
+            });
+        }
+
+        if (selectedState !== "all") {
+            filteredData = filteredData.filter((actividad: Agenda | MobileUnit) => {
+                return (
+                    (actividad as Agenda).state?.toLowerCase().includes(selectedState.toLowerCase())
+                );
+            });
+        }
+
+        if (selectedStatus !== "all") {
+            filteredData = filteredData.filter((actividad: Agenda | MobileUnit) => {
+                return (
+                    (actividad as Agenda).status_id.toString() === selectedStatus
+                );
+            });
+        }
 
         // Filtra los datos por búsqueda
         if (search) {
@@ -66,14 +121,17 @@ export default function Filters({ initialData, setActividad, setActividadMobile,
         if (setActividadMobile) {
             setActividadMobile(filteredData.filter((item): item is MobileUnit => 'username' in item) as MobileUnit[]);
         }
-    }, [date?.from, date?.to, search, initialData]);
+    }, [date?.from, date?.to, search, initialData, selectedActivity, selectedState, selectedStatus]);
 
-   
+
 
     const exportPDF = () => {
-        handleExportPDF(date?.from?.toLocaleDateString(), date?.to?.toLocaleDateString(), actividad as Agenda[], data, labelPDF,  );
+        handleExportPDF(date?.from?.toLocaleDateString(), date?.to?.toLocaleDateString(), actividad as Agenda[], data, labelPDF,);
     }
 
+    const exportExcel = () => {
+        handleExportExcel(date?.from?.toLocaleDateString(), date?.to?.toLocaleDateString(), actividad as Agenda[], data, "Reporte de logros", selectedActivity);
+    }
     return (
         <>
             <div className="relative">
@@ -84,9 +142,70 @@ export default function Filters({ initialData, setActividad, setActividadMobile,
             </div>
             <div className="flex flex-col justify-center items-center">
                 <div className="flex flex-col md:flex-row justify-center gap-4 w-full">
+
+                    {/* Select para filtrar por estatus */}
+                    {!achievements &&
+                        <Select
+                            value={selectedStatus}
+                            onValueChange={setSelectedStatus}
+                        >
+                            <SelectTrigger className="w-[280px]" id="activity-filter">
+                                <SelectValue placeholder="Seleccionar estatus" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">Todos los estatus</SelectItem>
+                                {statusOptions.map((status: status, index: number) => (
+                                    <SelectItem key={index} value={status.id.toString()}>
+                                        {status.state}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>}
+
+
+
+                    {/* Select para filtrar por estado */}
+                    <Select
+                        value={selectedState}
+                        onValueChange={setSelectedState}
+                    >
+                        <SelectTrigger className="w-[280px]" id="activity-filter">
+                            <SelectValue placeholder="Seleccionar estados" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">Todos los estados</SelectItem>
+                            {stateOptions.map((state: string, index: number) => (
+                                <SelectItem key={index} value={state}>
+                                    {state}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+
+                    {/* Select para filtrar por actividad, (no se incluye unidades móviles) */}
+                    {!mobileUnits &&
+                        <Select
+                            value={selectedActivity}
+                            onValueChange={setSelectedActivity}
+                        >
+                            <SelectTrigger className="w-[280px]" id="activity-filter">
+                                <SelectValue placeholder="Seleccionar tipo de actividad" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">Todas las actividades</SelectItem>
+                                {activities.map((activity: string, index: number) => (
+                                    <SelectItem key={index} value={activity}>
+                                        {activity}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    }
                     <DatePickerWithRange date={date} setDate={setDate} />
                     <Button className="mb-4 lg:w-[200px]" onClick={handleResetFilter}>Limpiar filtro</Button>
-                    {!mobileUnits && <Button className="mb-4 lg:w-[200px]" onClick={exportPDF}>Exportar PDF</Button>}
+                    {/* {!mobileUnits && <Button className="mb-4 lg:w-[200px]" onClick={exportPDF}>Exportar PDF</Button>} */}
+                    {achievements && <Button className="mb-4 lg:w-[200px]" onClick={exportExcel} disabled={selectedActivity === "all"}>Exportar Excel</Button>}
+
                 </div>
             </div>
         </>

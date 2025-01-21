@@ -15,7 +15,7 @@ export default function CardDashboard({title, content, footer, Icon, date} : Car
     return (
         <Card className="w-full md:w-[350px]">
             <CardHeader className="flex flex-row justify-between">
-                <CardTitle className="text-1xl w-fit">{`${title} del ${date?.from?.toLocaleDateString()} al ${date?.to?.toLocaleDateString()}`}</CardTitle>
+                <CardTitle className="text-1xl w-fit">{`${title}`}</CardTitle>
                 <Icon className="w-6 h-6" />
             </CardHeader>
             <CardContent className="text-3xl -mb-5">

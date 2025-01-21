@@ -56,7 +56,7 @@ export default function Page() {
     <ProtectedRoute>
       <>
         <h1 className="text-3xl font-bold text-center mb-2">Logros</h1>
-        <Filters initialData={initialData} setActividad={setActividad} actividad={actividad} data={data} />
+        <Filters initialData={initialData} setActividad={setActividad} actividad={actividad} data={data} achievements/>
         <AchievementsTable columnas={columnas} achievements data={actividad} errorData={error} isLoading={isLoading} setData={(data: Agenda[] | MobileUnit[]) => setActividad(data as Agenda[])} />
       </>
     </ProtectedRoute>

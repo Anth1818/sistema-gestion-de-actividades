@@ -36,19 +36,20 @@ import { useMutation } from "@tanstack/react-query"
 import api from "@/api/api_regiones"
 import { useState } from "react"
 import { Notification } from "./notification"
+import { Textarea } from "./ui/textarea"
 
 
 // Esquema base
 const Schema = z.object({
     gerency: z.string().min(1, { message: "Seleccione una gerencia." }),
     action: z.string().min(1, { message: "Seleccione un acción." }),
-    activitie: z.string().min(1, { message: "Seleccione una actividad." }),
-    state_id: z.coerce.number().int().min(1, "Seleccione un estado."),
-    municipality_id: z.coerce.number().int().min(1, "Seleccione un municipio."),
-    parish_id: z.coerce.number().int().min(1, "Seleccione una parroquia."),
+    activitie: z.string(),
+    state_id: z.coerce.number(),
+    municipality_id: z.coerce.number(),
+    parish_id: z.coerce.number(),
     place: z.string().min(1, { message: "Seleccione un lugar." }),
     responsible: z.string({ required_error: "Por favor indique un responsable." }).min(1, { message: "Este campo no puede estar vacío." }).max(30, "Máximo 30 caracteres."),
-    // observation: z.string().max(1000, "Máximo 1000 caracteres."),
+    observation_scheduled: z.string().max(1000, "Máximo 1000 caracteres."),
     date: z.date({
         required_error: "Ingrese una fecha para agendar.",
     }),
@@ -64,7 +65,7 @@ const defaultValues = {
     parish_id: 0,
     place: "",
     responsible: "",
-    // observation: "",
+    observation_scheduled: "",
 
 }
 
@@ -117,21 +118,23 @@ export default function ScheduleForm() {
                     form.reset(defaultValues)
                     setShowNotification(true)
                     console.log('Datos enviados con éxito');
-                    console.log(data);
                 },
                 onError: () => {
                     console.error('Error al enviar los datos');
+                    console.log({...data, ...otherData});
                 }
             }
         )
     }
 
+    console.log(form.getValues("state_id"))
 
     return (
         <>
-        {showNotification && <Notification message="Actividad agendada" />}
+            {showNotification && <Notification message="Actividad agendada" />}
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2 lg:grid-cols-4 lg:gap-4">
+
                     {/* ------Gerencia------- */}
                     <FormField
                         control={form.control}
@@ -187,7 +190,7 @@ export default function ScheduleForm() {
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Actividad</FormLabel>
-                                <Select onValueChange={field.onChange} value={field.value}>
+                                <Select onValueChange={field.onChange} value={field.value} >
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Seleccione" />
@@ -195,9 +198,9 @@ export default function ScheduleForm() {
                                     </FormControl>
                                     <SelectContent>
                                         {activitieOption?.map((activity) => (
-                                            activity.id === 5 || activity.id === 6 || activity.id === 16 
-                                            ? null 
-                                            : <SelectItem key={activity.id} value={String(activity.id)}>{activity.label}</SelectItem>   
+                                            activity.id === 5 || activity.id === 6 || activity.id === 16
+                                                ? null
+                                                : <SelectItem key={activity.id} value={String(activity.id)}>{activity.label}</SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
@@ -220,7 +223,6 @@ export default function ScheduleForm() {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="0">Seleccione</SelectItem>
                                         {state.map((state: { id: number, state: string }) => (
                                             <SelectItem key={state.id} value={String(state.id)}>{state.state}</SelectItem>
                                         ))}
@@ -239,7 +241,7 @@ export default function ScheduleForm() {
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Municipio</FormLabel>
-                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)}>
+                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)} disabled={form.watch("state_id") === 0}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Seleccione" />
@@ -265,7 +267,7 @@ export default function ScheduleForm() {
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Parroquia</FormLabel>
-                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)}>
+                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)} disabled={form.watch("state_id") === 0}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Seleccione" />
@@ -367,6 +369,22 @@ export default function ScheduleForm() {
                             </FormItem>
                         )}
                     />
+    
+                    {/* --------Observación------- */}<FormField
+                        control={form.control}
+                        name="observation_scheduled"
+                        render={({ field }) => (
+                            <FormItem className="col-span-12 md:col-span-3 ">
+                                <FormLabel>Observaciones</FormLabel>
+                                <FormControl>
+                                    <Textarea placeholder="..." {...field} className="h-40" />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+
                     <Button type="submit" disabled={mutation.isLoading} className="col-span-12 md:col-span-4 justify-self-center w-full md:w-2/4 mt-2">Enviar</Button>
 
                 </form>

@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@radix-ui/react-select"
 import { useQuery } from "@tanstack/react-query";
+import { ca } from "date-fns/locale";
 import { ChevronLeft, IdCard } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -34,20 +35,26 @@ export default function AddUserPage() {
     }
 
     const fetchWorker = async (id: string) => {
-        const response = await api.get(`/worker/ic/${id}`)
-        return response.data.data
+        try {
+            const response = await api.get(`/worker/ic/${id}`)
+            return response.data.data
+        } catch (error) {
+            console.error(error)
+            return { error: "No se encontró ningún trabajador con la cédula ingresada" }
+        }
+
     }
 
-    const {data: dataWorker, isLoading} = useQuery({
+    const { data: dataWorker, isError} = useQuery({
         queryKey: ["worker"],
         queryFn: () => fetchWorker(id),
         enabled: shouldFetch
     })
     useEffect(() => {
-        if (dataWorker) {
-          setShouldFetch(false); // Restablece shouldFetch a false después de la búsqueda
+        if (dataWorker || isError) {
+            setShouldFetch(false); // Restablece shouldFetch a false después de la búsqueda
         }
-      }, [dataWorker]);
+    }, [dataWorker, isError ]);
     return (
         <ProtectedRoute requiredRole={1}>
             <div>
@@ -64,13 +71,13 @@ export default function AddUserPage() {
                     <div className="flex flex-col justify-center items-start gap-2">
                         <Label htmlFor="number-id">Cédula:</Label>
                         <div className="relative">
-                            <Input id="number-id" type="number" placeholder="01234567" value={id} onChange={handleIdChange}/>
+                            <Input id="number-id" type="number" placeholder="01234567" value={id} onChange={handleIdChange} />
                             <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 dark:text-dark-foreground">
                                 <IdCard />
                             </div>
                         </div>
                     </div>
-                    <Button className=" self-end" onClick={handleSearchClick}>Buscar</Button>
+                    <Button className=" self-end" disabled={id === ""} onClick={handleSearchClick}>Buscar</Button>
                 </div>
                 <Separator className="border my-4" />
                 {Number(id) === dataWorker?.identity_card && (
@@ -86,7 +93,7 @@ export default function AddUserPage() {
                                         <li>Cargo: {dataWorker?.position}</li>
                                         <li>Tipo de nómina: {dataWorker?.payroll_type}</li>
                                         <li>Estatus: {dataWorker?.status === "true" ? "Trabajador activo" : "Trabajador Inactivo"}</li>
-                                       
+
                                     </ul>
                                 </AccordionContent>
                             </AccordionItem>
@@ -95,7 +102,7 @@ export default function AddUserPage() {
                         <FormAddUser dataWorker={dataWorker} />
                     </div>)
                 }
-                {!dataWorker && (
+                {isError && (
                     <p className="text-center">No se encontró ningún trabajador con la cédula ingresada</p>
                 )}
             </div>

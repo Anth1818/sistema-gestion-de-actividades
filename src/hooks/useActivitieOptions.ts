@@ -17,7 +17,9 @@ const useActivitieOptions = (actions: string) => {
     } else if (actions === "Prevención") {
       setActivitieOption(activities[0]["Prevención"] || []);
     } else if (actions === "Formación") {
-      setActivitieOption(activities[0]["Formación"]|| []);
+      setActivitieOption(activities[0]["Formación"] || []);
+    } else if (actions === "OAC") {
+      setActivitieOption(activities[0]["OAC"] || []);
     } else {
       setActivitieOption([]);
     }

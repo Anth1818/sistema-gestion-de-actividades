@@ -30,6 +30,7 @@ interface ChartData {
 
   }[]
   id?: string
+  year: number
 }
 
 const chartConfig = {
@@ -43,12 +44,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function StatisticsFull({ chartData, id }: ChartData) {
+export function StatisticsFull({ chartData, id, year }: ChartData) {
   return (
     <Card className="w-full" id={id}>
       <CardHeader>
         <CardTitle>Estadística de barra - Logros por meses</CardTitle>
-        <CardDescription>Enero - Diciembre 2024</CardDescription>
+        <CardDescription>Enero - Diciembre {year}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[250px] w-full">
@@ -66,11 +67,11 @@ export function StatisticsFull({ chartData, id }: ChartData) {
               content={<ChartTooltipContent indicator="dashed"
               />}
             />
-            <Bar dataKey="completado" fill="var(--success)" radius={4}>
-              <LabelList dataKey="completado" position="top" />
+            <Bar dataKey="completado" label="Completado" fill="var(--success)" radius={4}>
+              <LabelList dataKey="completado" position="bottom"/>
             </Bar>
             <Bar dataKey="no_completado" fill="var(--warning)" radius={4}>
-              <LabelList dataKey="no_completado" position="top" />
+              <LabelList dataKey="no_completado" position="bottom" />
             </Bar>
             <Legend />
           </BarChart>

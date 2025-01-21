@@ -41,9 +41,9 @@ const Schema = z.object({
     cantMobileUnitsRequired: z.coerce.number().min(1, { message: "Indique cantidad" }),
     cantUltrasoundRequired: z.coerce.number().min(1, { message: "Indique cantidad" }),
     logisticalSupport: z.string().min(1, { message: "Seleccione una actividad." }),
-    state: z.coerce.number().int().min(1, "Seleccione un estado."),
-    municipality: z.coerce.number().int().min(1, "Seleccione un municipio."),
-    parish: z.coerce.number().int().min(1, "Seleccione una parroquia."),
+    state: z.coerce.number(),
+    municipality: z.coerce.number(),
+    parish: z.coerce.number(),
     place: z.string().min(1, { message: "Seleccione un lugar." }),
     responsible: z.string({ required_error: "Por favor indique un responsable." }).min(1, { message: "Este campo no puede estar vacío." }).max(30, "Máximo 30 caracteres."),
     obs: z.string().max(300, "Máximo 300 caracteres."),
@@ -167,8 +167,8 @@ export default function ScheduleMobileUnitsForm() {
                         )}
                     />
 
-                    {/* ------Estado------- */}
-                    <FormField
+                     {/* ------Estado------- */}
+                     <FormField
                         control={form.control}
                         name="state"
                         render={({ field }) => (
@@ -181,7 +181,6 @@ export default function ScheduleMobileUnitsForm() {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="0">Seleccione</SelectItem>
                                         {state.map((state: { id: number, state: string }) => (
                                             <SelectItem key={state.id} value={String(state.id)}>{state.state}</SelectItem>
                                         ))}
@@ -193,13 +192,14 @@ export default function ScheduleMobileUnitsForm() {
                     />
 
                     {/* ------Municipio------- */}
+
                     <FormField
                         control={form.control}
                         name="municipality"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Municipio</FormLabel>
-                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)}>
+                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)} disabled={form.watch("state") === 0}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Seleccione" />
@@ -218,13 +218,14 @@ export default function ScheduleMobileUnitsForm() {
                     />
 
                     {/* ------Parroquia------- */}
+
                     <FormField
                         control={form.control}
                         name="parish"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Parroquia</FormLabel>
-                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)}>
+                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)} disabled={form.watch("state") === 0}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Seleccione" />

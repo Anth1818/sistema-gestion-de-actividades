@@ -78,7 +78,7 @@ const FilaExpandible = ({
     actividad.status_id === 1 || actividad.status_id === 3;
   const cursorPointer = disabled ? "cursor-not-allowed" : "cursor-pointer";
   const { isUpdated, setIsUpdated } = useUpdateActivitie();
-  const completeLabel = achievements ? "Logrado" : (actividad.status_id === 2) ? "Por completar" : ( actividad.status_id === 3) ? "No completado" : "Completado";
+  const completeLabel = achievements ? "Completado" : (actividad.status_id === 2) ? "Por completar" : ( actividad.status_id === 3) ? "No completado" : "Completado";
 
   return (
     <>
@@ -347,7 +347,9 @@ export function TableUI({
                 ))}
               </SelectContent>
             </Select>
+            <p><b>Total de registros encontrados: </b>{`${actividad?.length}`}</p>
           </div>
+         
           <div className="flex items-center space-x-2">
             <Button
               variant="outline"

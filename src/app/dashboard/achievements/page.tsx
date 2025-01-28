@@ -13,13 +13,14 @@ export default function Page() {
   const [actividad, setActividad] = useState<Agenda[]>([]);
   const [initialData, setInitialData] = useState<Agenda[]>([]);
 
-
+// Llamada a la API para obtener los datos de los logros
   const { isLoading, error, data } = useQuery({
     queryKey: ['repoData'],
     queryFn: () =>
       api.get("/archievement").then((res) => res.data.data),
   })
 
+  // Actualizar el estado actividad con los datos de la API
   useEffect(() => {
     if (!data) {
       return 

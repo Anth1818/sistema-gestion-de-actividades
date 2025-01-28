@@ -19,8 +19,6 @@ export default function ContentOfMobileUnit({
         .then((res) => res.data.data),
   });
 
-  console.log(attentionTypes);
-
   return (
     <div className="p-4 bg-muted">
       <h3 className="font-semibold mb-2 text-xl">Información adicional:</h3>

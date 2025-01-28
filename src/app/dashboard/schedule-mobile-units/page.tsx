@@ -15,7 +15,6 @@ export default function ScheduleMobileUnitsPage() {
 
     const user = CookieS.get('user')
     const userLoggin = user ? JSON.parse(user) : null;
-    const userLogged = userLoggin?.role_id === 2;
     const adminLogged = userLoggin?.role_id === 1;
 
     const { data } = useQuery({
@@ -61,7 +60,6 @@ export default function ScheduleMobileUnitsPage() {
     }
     ]
 
-    console.log(mobile_units)
     return (
         <ProtectedRoute>
             <div>

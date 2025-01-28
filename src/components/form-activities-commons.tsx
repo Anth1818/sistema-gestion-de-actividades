@@ -49,9 +49,9 @@ const Schema = z.object({
     state_id: z.coerce.number(),
     municipality_id: z.coerce.number(),
     parish_id: z.coerce.number(),
-    place_id: z.coerce.number().int().min(1, "Seleccione un lugar."),
+    place_id: z.coerce.number(),
     n_womans: z.coerce.number().int().positive("Ingrese una cantidad válida").min(1, "Ingrese una cantidad válida"),
-    n_man: z.coerce.number().int().positive("Ingrese una cantidad válida").min(1, "Ingrese una cantidad válida"),
+    n_man: z.coerce.number(),
     responsible: z.string({ required_error: "Por favor indique un responsable." }).min(1, { message: "Este campo no puede estar vacío." }).max(30, "Máximo 30 caracteres."),
     phone_number: z.string().regex(/^(0414|0424|0416|0426|0412|0212)\d{7}$/, "Por favor ingrese un número de teléfono válido."),
     observation: z.string().max(1000, "Máximo 1000 caracteres."),
@@ -99,7 +99,7 @@ export default function ActivitiesCommonsForm({ gerency, action, activitie }: Ac
 
     function onSubmit(data: z.infer<typeof Schema>) {
         setShowNotification(false)
-        console.log(data);
+
         mutation.mutate(data,
             {
                 onSuccess: () => {

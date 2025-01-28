@@ -5,10 +5,10 @@ import { Button } from "./ui/button"
 import { useEffect, useState } from "react";
 import { Agenda, MobileUnit } from "@/lib/types";
 import handleExportPDF from "@/lib/exportPDF";
+import { handleExportExcelMobile } from "@/lib/exportExcelMobile";
 import { Input } from "./ui/input";
 import { Search } from "lucide-react";
-import { handleExportExcel } from "@/lib/exportExcel";
-import { Label } from "./ui/label";
+import { handleExportExcel } from "@/lib/exportExcelAchievements";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import useLocation from "@/hooks/useLocation";
 
@@ -51,8 +51,6 @@ export default function Filters({ initialData, setActividad, setActividadMobile,
         id: 3,
         state: "No completado"
     }]
-
-    const { state } = useLocation()
 
     const handleResetFilter = () => {
         setDate({
@@ -125,12 +123,16 @@ export default function Filters({ initialData, setActividad, setActividadMobile,
 
 
 
-    const exportPDF = () => {
-        handleExportPDF(date?.from?.toLocaleDateString(), date?.to?.toLocaleDateString(), actividad as Agenda[], data, labelPDF,);
-    }
+    // const exportPDF = () => {
+    //     handleExportPDF(date?.from?.toLocaleDateString(), date?.to?.toLocaleDateString(), actividad as Agenda[], data, labelPDF,);
+    // }
 
     const exportExcel = () => {
         handleExportExcel(date?.from?.toLocaleDateString(), date?.to?.toLocaleDateString(), actividad as Agenda[], data, "Reporte de logros", selectedActivity);
+    }
+
+    const exportExcelMobile = () => {
+        handleExportExcelMobile(actividad as MobileUnit[], "Reporte de unidades móviles");
     }
     return (
         <>
@@ -205,6 +207,7 @@ export default function Filters({ initialData, setActividad, setActividadMobile,
                     <Button className="mb-4 lg:w-[200px]" onClick={handleResetFilter}>Limpiar filtro</Button>
                     {/* {!mobileUnits && <Button className="mb-4 lg:w-[200px]" onClick={exportPDF}>Exportar PDF</Button>} */}
                     {achievements && <Button className="mb-4 lg:w-[200px]" onClick={exportExcel} disabled={selectedActivity === "all"}>Exportar Excel</Button>}
+                    {mobileUnits && <Button className="mb-4 lg:w-[200px]" onClick={exportExcelMobile} disabled={selectedStatus !== "1" }>Exportar Excel</Button>}
 
                 </div>
             </div>

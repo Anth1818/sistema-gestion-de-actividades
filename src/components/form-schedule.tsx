@@ -43,11 +43,11 @@ import { Textarea } from "./ui/textarea"
 const Schema = z.object({
     gerency: z.string().min(1, { message: "Seleccione una gerencia." }),
     action: z.string().min(1, { message: "Seleccione un acción." }),
-    activitie: z.string(),
+    activitie: z.string().min(1, { message: "Seleccione una actividad." }),
     state_id: z.coerce.number(),
     municipality_id: z.coerce.number(),
     parish_id: z.coerce.number(),
-    place: z.string().min(1, { message: "Seleccione un lugar." }),
+    place: z.string(),
     responsible: z.string({ required_error: "Por favor indique un responsable." }).min(1, { message: "Este campo no puede estar vacío." }).max(30, "Máximo 30 caracteres."),
     observation_scheduled: z.string().max(1000, "Máximo 1000 caracteres."),
     date: z.date({
@@ -127,7 +127,6 @@ export default function ScheduleForm() {
         )
     }
 
-    console.log(form.getValues("state_id"))
 
     return (
         <>

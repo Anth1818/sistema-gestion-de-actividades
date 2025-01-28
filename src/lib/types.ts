@@ -196,6 +196,7 @@ export interface MobileUnit {
   dateFinished: string;
   attentionTypes: AttentionTypeData[];
   dateUpdated: string;
+  [key: string]: any;
 }
 
 export type Usuario = {

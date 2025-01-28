@@ -1,13 +1,13 @@
 "use client"
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Button } from "./ui/button"
+import { exportTableGender } from "@/lib/exportExcelDashboard"
 
 interface DataRow {
     month: string
     state: string
-    women: string
-    men: string
-    total: string
+    people: string
 }
 
 interface PropsDataGenderTable {
@@ -19,23 +19,20 @@ interface PropsDataGenderTable {
 export default function GenderDataTable({ data, yearTables }: PropsDataGenderTable) {
 
     const validRecords = data.filter(
-        (row) => row.month !== "SIN REGISTROS" && row.state !== "SIN REGISTROS" && Number.parseInt(row.total) > 0,
+        (row) => row.month !== "SIN REGISTROS" && row.state !== "SIN REGISTROS" && Number.parseInt(row.people) > 0,
     )
-
-    console.log(validRecords)
 
     return (
         <>
          <h2 className="text-xl text-center font-bold text-black dark:text-white">Enero - Diciembre - {yearTables}</h2>
+         <Button onClick={() => exportTableGender(data, yearTables)} className="bg-primary text-white mb-4 ">Exportar a Excel</Button>
             <div className="rounded-md border">
                 <Table>
                     <TableHeader className="bg-primary">
                         <TableRow>
                             <TableHead className="text-white">Mes</TableHead>
                             <TableHead className="text-white">Estado</TableHead>
-                            <TableHead className="text-right text-white">Mujeres</TableHead>
-                            <TableHead className="text-right text-white">Hombres</TableHead>
-                            <TableHead className="text-right text-white">Total</TableHead>
+                            <TableHead className="text-white text-right">Personas</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -48,9 +45,7 @@ export default function GenderDataTable({ data, yearTables }: PropsDataGenderTab
                             <TableRow key={index}>
                                 <TableCell className="font-medium">{row.month}</TableCell>
                                 <TableCell>{row.state}</TableCell>
-                                <TableCell className="text-right">{row.women}</TableCell>
-                                <TableCell className="text-right">{row.men}</TableCell>
-                                <TableCell className="text-right">{row.total}</TableCell>
+                                <TableCell className="text-right">{row.people}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

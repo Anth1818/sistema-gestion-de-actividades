@@ -40,7 +40,7 @@ interface VictimsFormProps {
 const Schema = z.object({
     country_id: z.string().min(1, "Seleccione un país"),
     state_id: z.coerce.number(),
-    municipality_id: z.coerce.number().int().min(1, "Seleccione un municipio."),
+    municipality_id: z.coerce.number(),
     parish_id: z.coerce.number(),
     collection_method: z.string().min(1, "Seleccione un método de captación"),
     received: z.string().min(1, "Seleccione un recibidor"),

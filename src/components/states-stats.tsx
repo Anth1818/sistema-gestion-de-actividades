@@ -1,10 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import { ChevronDown, ChevronUp } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { motion, AnimatePresence } from "framer-motion"
+import {exportTableStates} from "@/lib/exportExcelDashboard"
 
 
 interface PropsExpadableStateTable {
@@ -21,7 +22,7 @@ interface PropsExpadableStateTable {
   yearTables: number
 }
 
-export default function ExpandableStateTable({stateData, yearTables}: PropsExpadableStateTable) {
+export default function ExpandableStateTable({ stateData, yearTables }: PropsExpadableStateTable) {
   const [expandedRows, setExpandedRows] = useState<number[]>([])
 
   const toggleRow = (id: number) => {
@@ -35,6 +36,7 @@ export default function ExpandableStateTable({stateData, yearTables}: PropsExpad
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-xl text-center font-bold text-black dark:text-white">Enero - Diciembre - {yearTables}</h2>
+      <Button onClick={() => exportTableStates(stateData, yearTables)} className="bg-primary text-white mb-4 ">Exportar a Excel</Button>
       <Table>
         <TableHeader>
           <TableRow >

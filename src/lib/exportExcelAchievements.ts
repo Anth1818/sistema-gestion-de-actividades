@@ -10,9 +10,10 @@ function handleExportExcel(
     titleReport: string,
     activity: string
 ) {
-    console.log('filterActividades', filterActividades);
-    const wb = XLSX.utils.book_new();
+    const wb = XLSX.utils.book_new(); // Crear un libro de excel
 
+
+    // Crear las hojas del excel
     const wsDataCommon = [
         ["Título del Reporte", titleReport],
         ["Generado el", new Date().toLocaleString()],
@@ -223,7 +224,8 @@ function handleExportExcel(
     const wsVictim = XLSX.utils.aoa_to_sheet(wsDataVictim);
     const wsAttention0800 = XLSX.utils.aoa_to_sheet(wsDataAttention0800);
 
-    // Ajustar el ancho de las columnas
+
+    // Ajustar el ancho de las columnas de las hojas del excel
     const wscolsCommon = [
         { wch: 15 }, // "Mes" column width
         { wch: 55 }, // "Unidad sustantiva" column width
@@ -288,6 +290,8 @@ function handleExportExcel(
     wsAttention0800['!cols'] = wscolsAttention0800;
 
 
+
+    // Agregar las hojas al excel
     function book_append(){
         if(activity === "Actuación Procesal"){
             return XLSX.utils.book_append_sheet(wb, wsProcesalAndFemicide, "Reporte Actuación Procesal");
@@ -309,12 +313,8 @@ function handleExportExcel(
 
     book_append();
 
-    // XLSX.utils.book_append_sheet(wb, wsCommon, "Reporte Común");
-    // XLSX.utils.book_append_sheet(wb, wsProcesal, "Reporte Procesal");
-    // XLSX.utils.book_append_sheet(wb, wsRepresentation, "Reporte Representación");
-    // XLSX.utils.book_append_sheet(wb, wsVictim, "Reporte Víctima");
-    // XLSX.utils.book_append_sheet(wb, wsAttention0800, "Reporte Atención 0800");
 
+    // Exportar el excel
     XLSX.writeFile(wb, `${titleReport}.xlsx`);
 }
 

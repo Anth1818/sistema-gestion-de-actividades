@@ -87,7 +87,7 @@ export default function CompleteMobileUnitSchedule({
   })
 
   function onSubmit(data: z.infer<typeof Schema>) {
-    console.log({ ...data, ...formData, id });
+
     setShowNotification(false)
     mutation.mutate(data,
       {

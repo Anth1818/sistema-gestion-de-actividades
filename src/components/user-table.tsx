@@ -45,7 +45,7 @@ const FilaExpandible = ({
   return (
     <>
       <TableRow className="cursor-pointer" onClick={onToggle}>
-        <TableCell>{usuario.id}</TableCell>
+        <TableCell>{usuario.identity_card}</TableCell>
         <TableCell>{usuario.username}</TableCell>
         <TableCell>{usuario.full_name}</TableCell>
         <TableCell>{usuario.role}</TableCell>
@@ -92,6 +92,7 @@ export default function TablaUsuarios() {
     queryFn: () => api.get("/user").then((res) => res.data.data),
   });
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  console.log(usuarios);
 
   useEffect(() => {
     if (data) {
@@ -102,8 +103,8 @@ export default function TablaUsuarios() {
 
   const columnas = [
     {
-      label: "ID",
-      campo: "id",
+      label: "Cédula",
+      campo: "identity_card",
     },
     {
       label: "Usuario",

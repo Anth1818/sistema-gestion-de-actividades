@@ -62,9 +62,7 @@ export default function LoginForm({ children }: { children: React.ReactNode }) {
 
     // 2. Define a submit handler.
     function onSubmit(data: z.infer<typeof formLoginSchema>) {
-        console.log(data)
         login(data.username, data.password)
-        // alert("Submitted data: " + JSON.stringify(data, null, 2)
     }
 
     return (

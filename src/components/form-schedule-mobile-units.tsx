@@ -44,7 +44,7 @@ const Schema = z.object({
     state: z.coerce.number(),
     municipality: z.coerce.number(),
     parish: z.coerce.number(),
-    place: z.string().min(1, { message: "Seleccione un lugar." }),
+    place: z.string(),
     responsible: z.string({ required_error: "Por favor indique un responsable." }).min(1, { message: "Este campo no puede estar vacío." }).max(30, "Máximo 30 caracteres."),
     obs: z.string().max(300, "Máximo 300 caracteres."),
     approximate: z.coerce.number().int().min(1, "Ingrese una cantidad aprox."),
@@ -94,7 +94,6 @@ export default function ScheduleMobileUnitsForm() {
                     form.reset(defaultValues)
                     setShowNotification(true)
                     console.log('Datos enviados con éxito');
-                    console.log(data);
                 },
                 onError: () => {
                     console.error('Error al enviar los datos');

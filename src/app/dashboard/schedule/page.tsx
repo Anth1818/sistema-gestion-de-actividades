@@ -12,7 +12,6 @@ import Filters from "@/components/filters";
 export default function SchedulePage() {
   const user = CookieS.get('user')
   const userLoggin = user ? JSON.parse(user) : null;
-  const userLogged = userLoggin.role_id === 2;
   const adminLogged = userLoggin.role_id === 1;
 
   const [actividad, setActividad] = useState<Agenda[]>([]);
@@ -42,7 +41,6 @@ export default function SchedulePage() {
 
   }, [data]);
 
-console.log(actividad)
   const columnas = [
     {
       label: "ID",
@@ -74,27 +72,13 @@ console.log(actividad)
         </h1>
 
         <Filters initialData={initialData} setActividad={setActividad} actividad={actividad} data={data} labelPDF={"Reporte de actividades agendadas"} />
-
-     
             <ScheduleTable
               columnas={columnas}
               viewUser
               setData={(data: Agenda[] | MobileUnit[]) => setActividad(data as Agenda[])}
               data={actividad}
             />
-    
-{/* 
-        {userLogged && (
-          <div className="mt-8">
-            <p>Tabla para usuario</p>
-            <ScheduleTable
-              viewUser
-              columnas={columnas}
-              setData={() => { }}
-              data={actividad}
-            />
-          </div>
-        )} */}
+  
       </div>
     </ProtectedRoute>
   );

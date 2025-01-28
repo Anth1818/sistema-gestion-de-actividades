@@ -44,8 +44,6 @@ const defaultValues = {
 }
 
 export default function CompleteActivitieSchedule({ id }: completeScheduleModalProps) {
-    const { isUpdated, setIsUpdated } = useUpdateActivitie()
-    const disabledBtn = isUpdated
     const [showNotification, setShowNotification] = useState(false)
 
 
@@ -68,7 +66,6 @@ export default function CompleteActivitieSchedule({ id }: completeScheduleModalP
                 onSuccess: () => {
                     form.reset(defaultValues)
                     setShowNotification(true)
-                    setIsUpdated(true)
                     const tempo = setTimeout(() => {
                         window.location.reload();
                         clearTimeout(tempo);
@@ -207,7 +204,7 @@ export default function CompleteActivitieSchedule({ id }: completeScheduleModalP
                         )}
                     />
 
-                    <Button type="submit" className="col-span-12 md:col-span-4 justify-self-center w-full md:w-2/4 mt-2" disabled={disabledBtn}>Enviar</Button>
+                    <Button type="submit" className="col-span-12 md:col-span-4 justify-self-center w-full md:w-2/4 mt-2" disabled={form.watch("n_womans") <= 0}>Enviar</Button>
 
                 </form>
             </Form>

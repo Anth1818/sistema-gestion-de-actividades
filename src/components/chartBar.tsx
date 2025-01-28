@@ -44,12 +44,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function StatisticsFull({ chartData, id, year }: ChartData) {
+export function StatisticsBar({ chartData, id, year }: ChartData) {
   return (
     <Card className="w-full" id={id}>
       <CardHeader>
         <CardTitle>Estadística de barra - Logros por meses</CardTitle>
-        <CardDescription>Enero - Diciembre {year}</CardDescription>
+        <CardDescription>Enero - {chartData?.at(-1)?.month} {year}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[250px] w-full">
@@ -74,39 +74,6 @@ export function StatisticsFull({ chartData, id, year }: ChartData) {
               <LabelList dataKey="no_completado" position="bottom" />
             </Bar>
             <Legend />
-          </BarChart>
-        </ChartContainer>
-      </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-      </CardFooter>
-    </Card>
-  )
-}
-
-export function Statistics({ chartData }: ChartData) {
-  return (
-    <Card className="w-full md:w-[350px] ">
-      <CardHeader>
-        <CardTitle>Bar Chart - Multiple</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="dashed" />}
-            />
-            <Bar dataKey="completado" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="no_completado" fill="var(--color-mobile)" radius={4} />
           </BarChart>
         </ChartContainer>
       </CardContent>

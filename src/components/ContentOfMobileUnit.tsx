@@ -1,6 +1,7 @@
 import api from "@/api/api_regiones";
 import { MobileUnit, AttentionType } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
+import { useAttentionTypeDetails } from "@/hooks/useAttentionTypeDetail";
 
 interface ContentOfMobileUnitProps {
   actividad: MobileUnit;
@@ -11,13 +12,8 @@ export default function ContentOfMobileUnit({
   actividad,
   achievements,
 }: ContentOfMobileUnitProps) {
-  const { data: attentionTypes } = useQuery<AttentionType>({
-    queryKey: ["attentionTypes"],
-    queryFn: () =>
-      api
-        .get(`/mobile_units/details/${actividad.id}`)
-        .then((res) => res.data.data),
-  });
+
+  const { attentionTypes } = useAttentionTypeDetails(actividad.id.toString());
 
   return (
     <div className="p-4 bg-muted">
@@ -70,42 +66,46 @@ export default function ContentOfMobileUnit({
       <div className="mt-4">
         <h4 className="font-semibold mb-2">Tipos de Atención:</h4>
         {attentionTypes && (
-          <div className="flex flex-col md:flex-row gap-4 flex-wrap">
-            <h5 className="font-semibold">Servicios:</h5>
-            {attentionTypes.service?.map((service, index) => (
-              <div key={index} className="mb-4">
-                <p>
-                  <b>Tipo:</b> {service.service_type}
-                </p>
-                <p>
-                  <b>Rango de Edad:</b> {service.age_range}
-                </p>
-              </div>
-            ))}
-
-            <h5 className="font-semibold">Discapacidades:</h5>
-            {attentionTypes.disability?.map((disability, index) => (
-              <div key={index} className="mb-4">
-                <p>
-                  <b>Tipo:</b> {disability.disability}
-                </p>
-                <p>
-                  <b>Rango de Edad:</b> {disability.age_range}
-                </p>
-              </div>
-            ))}
-
-            <h5 className="font-semibold">Etnias:</h5>
-            {attentionTypes.ethnicity?.map((ethnicity, index) => (
-              <div key={index} className="mb-4">
-                <p>
-                  <b>Tipo:</b> {ethnicity.ethnicity}
-                </p>
-                <p>
-                  <b>Rango de Edad:</b> {ethnicity.age_range}
-                </p>
-              </div>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div>
+              <h5 className="font-semibold">Servicios:</h5>
+              {attentionTypes.service?.map((service, index) => (
+                <div key={index} className="mb-4">
+                  <p>
+                    <b>Tipo:</b> {service.service_type}
+                  </p>
+                  <p>
+                    <b>Rango de Edad:</b> {service.age_range}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div>
+              <h5 className="font-semibold">Discapacidades:</h5>
+              {attentionTypes.disability?.map((disability, index) => (
+                <div key={index} className="mb-4">
+                  <p>
+                    <b>Tipo:</b> {disability.disability}
+                  </p>
+                  <p>
+                    <b>Rango de Edad:</b> {disability.age_range}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div>
+              <h5 className="font-semibold">Etnias:</h5>
+              {attentionTypes.ethnicity?.map((ethnicity, index) => (
+                <div key={index} className="mb-4">
+                  <p>
+                    <b>Tipo:</b> {ethnicity.ethnicity}
+                  </p>
+                  <p>
+                    <b>Rango de Edad:</b> {ethnicity.age_range}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

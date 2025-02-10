@@ -70,7 +70,7 @@ export default function CompleteMobileUnitSchedule({
  
     if(formData.attentionTypes.some((attentionType) => attentionType.type === 0 || attentionType.ageRanges.length === 0 || attentionType.ageRanges.some((ageRange) => ageRange.range === 0 || ageRange.women === 0 && ageRange.men === 0))) return true;
 
-    if(formData.attentionTypes.some((attentionType) => attentionType.disabilities.length === 0 || attentionType.disabilities.some((disability) => disability.ageRanges.length === 0 || disability.ageRanges.some((ageRange) => ageRange.range === 0 || ageRange.women === 0 && ageRange.men === 0)))) return true;
+    // if(formData.attentionTypes.some((attentionType) => attentionType.disabilities.length === 0 || attentionType.disabilities.some((disability) => disability.ageRanges.length === 0 || disability.ageRanges.some((ageRange) => ageRange.range === 0 || ageRange.women === 0 && ageRange.men === 0)))) return true;
 
     if(formData.attentionTypes.some((attentionType) => attentionType.ethnicities.length === 0 || attentionType.ethnicities.some((ethnicitie) => ethnicitie.ageRanges.length === 0 || ethnicitie.ageRanges.some((ageRange) => ageRange.range === 0 || ageRange.women === 0 && ageRange.men === 0)))) return true;
 
@@ -139,52 +139,7 @@ export default function CompleteMobileUnitSchedule({
               </FormItem>
             )}
           />
-
-          {/* -------Fecha------- */}
-          {/* <FormField
-          control={form.control}
-          name="dateFinished"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-4 ">
-              <FormLabel>Fecha de ejecución</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-full pl-3 text-left font-normal",
-                        !field.value &&
-                        "text-black dark:text-dark-foreground dark:border-dark-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "dd/MM/yyyy")
-                      ) : (
-                        <span>Seleccion una fecha</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    disabled={(date) => {
-                      const today = new Date();
-                      const endOfYear = new Date(today.getFullYear(), 11, 31); // 31 de diciembre del año actual
-                      return date < today || date > endOfYear;
-                    }}
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
-
+          
           {form.watch("status") === "Completada" && (<div className="col-span-12 md:col-span-4">
             <DynamicForm formData={formData} setFormData={setFormData}></DynamicForm>
           </div>)}

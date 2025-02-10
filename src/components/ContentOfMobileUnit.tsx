@@ -1,6 +1,4 @@
-import api from "@/api/api_regiones";
-import { MobileUnit, AttentionType } from "@/lib/types";
-import { useQuery } from "@tanstack/react-query";
+import { MobileUnit} from "@/lib/types";
 import { useAttentionTypeDetails } from "@/hooks/useAttentionTypeDetail";
 
 interface ContentOfMobileUnitProps {
@@ -75,7 +73,7 @@ export default function ContentOfMobileUnit({
                     <b>Tipo:</b> {service.service_type}
                   </p>
                   <p>
-                    <b>Rango de Edad:</b> {service.age_range}
+                    <b>Rango de Edad:</b> {service.age_range} 
                   </p>
                 </div>
               ))}

@@ -1,6 +1,6 @@
 "use client"
-import FormActivities from "@/components/form-activities";
-import ProtectedRoute from "@/components/protected-route";
+import FormActivities from "@/components/FormActivities";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function Page() {
 

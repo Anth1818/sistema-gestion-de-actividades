@@ -3,9 +3,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Cintillo } from "@/components/cintillo";
-import Footer from "@/components/footer";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { Cintillo } from "@/components/Cintillo";
+import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from "@/context/auth-context";
 import { UpdateActivitieProvider } from "@/context/updateActivitie";

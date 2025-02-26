@@ -1,12 +1,12 @@
 "use client";
 import api from "@/api/api_regiones";
-import ProtectedRoute from "@/components/protected-route";
-import { TableUI as ScheduleTable } from "@/components/schedule-table";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { TableUI as ScheduleTable } from "@/components/ScheduleTable";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import CookieS from 'js-cookie';
 import { Agenda, MobileUnit } from "@/lib/types";
-import Filters from "@/components/filters";
+import Filters from "@/components/Filters";
 
 
 export default function SchedulePage() {

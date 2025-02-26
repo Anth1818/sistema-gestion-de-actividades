@@ -16,7 +16,7 @@ import {
 
 import { Textarea } from "@/components/ui/textarea";
 import { useUpdateActivitie } from "@/context/updateActivitie";
-import DynamicForm from "./dynamic-form-mobile-unit";
+import DynamicForm from "./DynamicFormMobileUnit";
 import {
   Select,
   SelectContent,
@@ -28,7 +28,7 @@ import type { FormData } from "@/lib/types";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import api from "@/api/api_regiones";
-import { Notification } from "./notification";
+import { Notification } from "./Notification";
 
 interface completeScheduleModalProps {
   id: number;

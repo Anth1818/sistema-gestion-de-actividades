@@ -1,7 +1,7 @@
 "use client"
-import ProtectedRoute from "@/components/protected-route";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import { Button } from "@/components/ui/button";
-import TablaUsuarios from "@/components/user-table";
+import TablaUsuarios from "@/components/UserTable";
 import { Plus } from "lucide-react"
 import { useRouter } from "next/navigation"
 

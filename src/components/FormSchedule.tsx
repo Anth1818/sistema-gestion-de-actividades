@@ -27,27 +27,29 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
-import { Textarea } from "./ui/textarea"
-import useLocation from "@/hooks/useLocation"
-import { useState } from "react"
-import Cookies from "js-cookie"
+import { gerency as gerencyOptions, actionsOptions, activities as activitiesOptions } from "@/lib/utils"
 import { places } from "@/lib/utils"
+import useActivitieOptions from "@/hooks/useActivitieOptions"
+import Cookies from "js-cookie"
+import useLocation from "@/hooks/useLocation"
 import { useMutation } from "@tanstack/react-query"
 import api from "@/api/api_regiones"
-import { Notification } from "./notification"
+import { useState } from "react"
+import { Notification } from "./Notification"
+import { Textarea } from "./ui/textarea"
+
 
 // Esquema base
 const Schema = z.object({
-    cantMobileUnitsRequired: z.coerce.number().min(1, { message: "Indique cantidad" }),
-    cantUltrasoundRequired: z.coerce.number().min(1, { message: "Indique cantidad" }),
-    logisticalSupport: z.string().min(1, { message: "Seleccione una actividad." }),
-    state: z.coerce.number(),
-    municipality: z.coerce.number(),
-    parish: z.coerce.number(),
+    gerency: z.string().min(1, { message: "Seleccione una gerencia." }),
+    action: z.string().min(1, { message: "Seleccione un acción." }),
+    activitie: z.string().min(1, { message: "Seleccione una actividad." }),
+    state_id: z.coerce.number(),
+    municipality_id: z.coerce.number(),
+    parish_id: z.coerce.number(),
     place: z.string(),
     responsible: z.string({ required_error: "Por favor indique un responsable." }).min(1, { message: "Este campo no puede estar vacío." }).max(30, "Máximo 30 caracteres."),
-    obs: z.string().max(300, "Máximo 300 caracteres."),
-    approximate: z.coerce.number().int().min(1, "Ingrese una cantidad aprox."),
+    observation_scheduled: z.string().max(1000, "Máximo 1000 caracteres."),
     date: z.date({
         required_error: "Ingrese una fecha para agendar.",
     }),
@@ -55,38 +57,60 @@ const Schema = z.object({
 
 
 const defaultValues = {
-    cantMobileUnitsRequired: 0,
-    cantUltrasoundRequired: 0,
-    logisticalSupport: "",
-    state: 0,
-    municipality: 0,
-    parish: 0,
+    gerency: "",
+    action: "",
+    activitie: "",
+    state_id: 0,
+    municipality_id: 0,
+    parish_id: 0,
     place: "",
     responsible: "",
-    obs: "",
+    observation_scheduled: "",
 
 }
 
-export default function ScheduleMobileUnitsForm() {
+export default function ScheduleForm() {
+
     const [showNotification, setShowNotification] = useState(false)
-    const user = Cookies.get('user')
-    const userLoggin = user ? JSON.parse(user) : null;
 
     const form = useForm<z.infer<typeof Schema>>({
         resolver: zodResolver(Schema),
         defaultValues
     })
 
-    const { state, municipality, parish } = useLocation(form.watch('state'), form.watch('municipality'));
+    const { state, municipality, parish } = useLocation(form.watch('state_id'), form.watch('municipality_id'));
+    const user = Cookies.get('user')
+    const userLoggin = user ? JSON.parse(user) : null;
+    const gerencyOption = gerencyOptions.find((option) => option.label === form.watch("gerency"));
+    const management_unit_id = gerencyOption ? gerencyOption.id : null;
+    const actionOption = actionsOptions.find((option) => option.label === form.watch("action"));
+    const action_id = actionOption ? actionOption.id : null;
+
+    const otherData = {
+        created_by: userLoggin.id,
+        status_id: 2,
+        n_womans: 0,
+        n_man: 0,
+        action_id,
+        management_unit_id,
+        activity_id: Number(form.getValues("activitie")),
+        hour: format(new Date(), "HH:mm:ss"),
+        place_id: Number(form.getValues("place")),
+        previously_scheduled: true,
+    }
+
+
+    const { activitieOption } = useActivitieOptions(form.watch('action'))
 
     const mutation = useMutation({
         mutationFn: async (data: z.infer<typeof Schema>) => {
-            const response = await api.post('/mobile_units/', { ...data, id: userLoggin.id, });
+            const response = await api.post('/archievement', { ...data, ...otherData });
             return response.data;
         },
     })
 
     function onSubmit(data: z.infer<typeof Schema>) {
+        // form.reset(defaultValues)
         setShowNotification(false)
         mutation.mutate(data,
             {
@@ -97,55 +121,26 @@ export default function ScheduleMobileUnitsForm() {
                 },
                 onError: () => {
                     console.error('Error al enviar los datos');
+                    console.log({...data, ...otherData});
                 }
             }
         )
-
     }
 
 
     return (
-        <> 
-            {showNotification && <Notification message="Unidad movil registrada con éxito" />}
+        <>
+            {showNotification && <Notification message="Actividad agendada" />}
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2 lg:grid-cols-4 lg:gap-4">
 
-                    {/* ------Unidades moviles solicitadas------ */}
+                    {/* ------Gerencia------- */}
                     <FormField
                         control={form.control}
-                        name="cantMobileUnitsRequired"
+                        name="gerency"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
-                                <FormLabel>N° de unidades móviles solicitadas</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="..." type="number" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    {/* ------Cantidad ecografos solicitados------- */}
-                    <FormField
-                        control={form.control}
-                        name="cantUltrasoundRequired"
-                        render={({ field }) => (
-                            <FormItem className="col-span-12 md:col-span-1 ">
-                                <FormLabel>N° de ecografos solicitados</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="..." type="number" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* ------Apoyo logistico------- */}
-                    <FormField
-                        control={form.control}
-                        name="logisticalSupport"
-                        render={({ field }) => (
-                            <FormItem className="col-span-12 md:col-span-1 ">
-                                <FormLabel>Apoyo logistico estado/municipio</FormLabel>
+                                <FormLabel>Gerencia</FormLabel>
                                 <Select onValueChange={field.onChange} value={field.value}>
                                     <FormControl>
                                         <SelectTrigger>
@@ -153,12 +148,9 @@ export default function ScheduleMobileUnitsForm() {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="Viáticos">Viáticos</SelectItem>
-                                        <SelectItem value="Combustible">Combustible</SelectItem>
-                                        <SelectItem value="Hospedaje">Hospedaje</SelectItem>
-                                        <SelectItem value="Alimentación del chofer asignado">Alimentación del chofer asignado</SelectItem>
-                                        <SelectItem value="Traslado de la unidad">Traslado de la unidad</SelectItem>
-                                        <SelectItem value="Todas las anteriores">Todas las anteriores</SelectItem>
+                                        {gerencyOptions.map((gerencia) => (
+                                            <SelectItem key={gerencia.id} value={gerencia.label}>{gerencia.label}</SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -166,10 +158,60 @@ export default function ScheduleMobileUnitsForm() {
                         )}
                     />
 
-                     {/* ------Estado------- */}
-                     <FormField
+                    {/* ------Acción------- */}
+                    <FormField
                         control={form.control}
-                        name="state"
+                        name="action"
+                        render={({ field }) => (
+                            <FormItem className="col-span-12 md:col-span-1 ">
+                                <FormLabel>Acción</FormLabel>
+                                <Select onValueChange={field.onChange} value={field.value}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Seleccione" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {actionsOptions.map((action) => (
+                                            <SelectItem key={action.id} value={action.label}>{action.label}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* ------Actividad------- */}
+                    <FormField
+                        control={form.control}
+                        name="activitie"
+                        render={({ field }) => (
+                            <FormItem className="col-span-12 md:col-span-1 ">
+                                <FormLabel>Actividad</FormLabel>
+                                <Select onValueChange={field.onChange} value={field.value} >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Seleccione" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {activitieOption?.map((activity) => (
+                                            activity.id === 5 || activity.id === 6 || activity.id === 16
+                                                ? null
+                                                : <SelectItem key={activity.id} value={String(activity.id)}>{activity.label}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* ------Estado------- */}
+                    <FormField
+                        control={form.control}
+                        name="state_id"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Estado</FormLabel>
@@ -194,11 +236,11 @@ export default function ScheduleMobileUnitsForm() {
 
                     <FormField
                         control={form.control}
-                        name="municipality"
+                        name="municipality_id"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Municipio</FormLabel>
-                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)} disabled={form.watch("state") === 0}>
+                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)} disabled={form.watch("state_id") === 0}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Seleccione" />
@@ -220,11 +262,11 @@ export default function ScheduleMobileUnitsForm() {
 
                     <FormField
                         control={form.control}
-                        name="parish"
+                        name="parish_id"
                         render={({ field }) => (
                             <FormItem className="col-span-12 md:col-span-1 ">
                                 <FormLabel>Parroquia</FormLabel>
-                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)} disabled={form.watch("state") === 0}>
+                                <Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)} disabled={form.watch("state_id") === 0}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Seleccione" />
@@ -257,7 +299,7 @@ export default function ScheduleMobileUnitsForm() {
                                     </FormControl>
                                     <SelectContent>
                                         {places.map((place) => (
-                                            <SelectItem key={place.id} value={String(place.label)}>{place.label}</SelectItem>
+                                            <SelectItem key={place.id} value={String(place.id)}>{place.label}</SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
@@ -275,20 +317,6 @@ export default function ScheduleMobileUnitsForm() {
                                 <FormLabel>Responsable</FormLabel>
                                 <FormControl>
                                     <Input placeholder="..." {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="approximate"
-                        render={({ field }) => (
-                            <FormItem className="col-span-12 md:col-span-1 ">
-                                <FormLabel>Población atendida aprox</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="..." type="number" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -340,13 +368,12 @@ export default function ScheduleMobileUnitsForm() {
                             </FormItem>
                         )}
                     />
-
-                    {/* --------Observaciones------- */}
-                    <FormField
+    
+                    {/* --------Observación------- */}<FormField
                         control={form.control}
-                        name="obs"
+                        name="observation_scheduled"
                         render={({ field }) => (
-                            <FormItem className="col-span-12 md:col-span-2 ">
+                            <FormItem className="col-span-12 md:col-span-3 ">
                                 <FormLabel>Observaciones</FormLabel>
                                 <FormControl>
                                     <Textarea placeholder="..." {...field} className="h-40" />
@@ -355,6 +382,7 @@ export default function ScheduleMobileUnitsForm() {
                             </FormItem>
                         )}
                     />
+
 
                     <Button type="submit" disabled={mutation.isLoading} className="col-span-12 md:col-span-4 justify-self-center w-full md:w-2/4 mt-2">Enviar</Button>
 

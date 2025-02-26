@@ -8,7 +8,7 @@ import {
     DrawerTitle,
     DrawerTrigger,
 } from "@/components/ui/drawer"
-import Navigation from "./navigation"
+import Navigation from "./Navigation"
 import Cookies from 'js-cookie';
 import { useState } from "react";
 

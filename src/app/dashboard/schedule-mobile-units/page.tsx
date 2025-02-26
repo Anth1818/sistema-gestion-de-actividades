@@ -1,8 +1,8 @@
 "use client"
 import api from "@/api/api_regiones";
-import Filters from "@/components/filters";
-import ProtectedRoute from "@/components/protected-route";
-import { TableUI as UnitMobileTable } from "@/components/schedule-table";
+import Filters from "@/components/Filters";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { TableUI as UnitMobileTable } from "@/components/ScheduleTable";
 import { Agenda, MobileUnit } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import CookieS from 'js-cookie';

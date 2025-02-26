@@ -1,7 +1,7 @@
 "use client"
 
-import ScheduleMobileUnitsForm from "@/components/form-schedule-mobile-units";
-import ProtectedRoute from "@/components/protected-route";
+import ScheduleMobileUnitsForm from "@/components/FormScheduleMobileUnits";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function SchedulePage() {
 

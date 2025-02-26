@@ -1,7 +1,7 @@
 "use client"
 
-import ScheduleForm from "@/components/form-schedule";
-import ProtectedRoute from "@/components/protected-route";
+import ScheduleForm from "@/components/FormSchedule";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function SchedulePage() {
 

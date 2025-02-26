@@ -15,7 +15,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import { AlertDestructive } from "./alert"
+import { AlertDestructive } from "./Alert"
 
 import React from "react";
 

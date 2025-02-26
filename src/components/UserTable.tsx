@@ -27,7 +27,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/api/api_regiones";
-import { Notification } from "./notification";
+import { Notification } from "./Notification";
 import { Usuario, OrdenColumnaUser } from "@/lib/types";
 
 

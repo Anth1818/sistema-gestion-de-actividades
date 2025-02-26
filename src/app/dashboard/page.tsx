@@ -1,12 +1,12 @@
 "use client"
-import { StatisticsBar } from "@/components/chartBar";
-import { ChartDataPie } from "@/components/chartPie";
-import CardDashboard from "@/components/card-dashboard";
+import { StatisticsBar } from "@/components/ChartBar";
+import { ChartDataPie } from "@/components/ChartPie";
+import CardDashboard from "@/components/CardDashboard";
 import { Award, CalendarCheck, Ambulance } from "lucide-react"
-import ProtectedRoute from '../../components/protected-route';
-import ActivitiesStatsTable from "@/components/activities-stats";
-import MonthlyStatisticsTable from "@/components/monthly-stats";
-import ExpandableStateTable from "@/components/states-stats";
+import ProtectedRoute from '../../components/ProtectedRoute';
+import ActivitiesStatsTable from "@/components/ActivitiesStats";
+import MonthlyStatisticsTable from "@/components/MonthlyStats";
+import ExpandableStateTable from "@/components/StatesStats";
 import {
   Accordion,
   AccordionContent,

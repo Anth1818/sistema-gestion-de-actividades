@@ -1,40 +1,97 @@
-<<<<<<< HEAD
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Sistema de Gestión de Actividades
 
-## Getting Started
+Este proyecto es un sistema de gestión de actividades que permite a los usuarios agendar, ver y registrar actividades, así como ver métricas y logros.
 
-First, run the development server:
+## Tecnologías Utilizadas
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Next.js**: Framework de React para aplicaciones web.
+- **React**: Biblioteca de JavaScript para construir interfaces de usuario.
+- **Tailwind CSS**: Framework de CSS para diseño rápido.
+- **Radix UI**: Componentes accesibles y sin estilo para React.
+- **TanStack React Query**: Librería para el manejo de datos en React.
+- **Axios**: Cliente HTTP basado en promesas.
+- **Framer Motion**: Librería para animaciones en React.
+- **Lucide React**: Iconos para React.
+- **HTML2Canvas**: Captura de pantallas en el navegador.
+- **jsPDF**: Generación de archivos PDF.
+- **Zod**: Validación de esquemas.
+- **Sharp**: Procesamiento de imágenes.
+- **XLSX**: Manipulación de archivos Excel.
+- **ESLint**: Herramienta de análisis estático para encontrar problemas en el código JavaScript.
+- **TypeScript**: Superset de JavaScript que añade tipos estáticos.
+
+## Estructura del Proyecto
+
+```plaintext
+src/
+├── app/
+│   ├── globals.css
+│   ├── denied/
+│   │   └── page.tsx
+│   └── ...
+├── components/
+│   ├── Navigation.tsx
+│   ├── ScheduleTable.tsx
+│   ├── ThemeProvider.tsx
+│   └── ui/
+│       ├── alert-dialog.tsx
+│       ├── button.tsx
+│       ├── chart.tsx
+│       ├── drawer.tsx
+│       ├── select.tsx
+│       ├── table.tsx
+│       ├── textarea.tsx
+│       └── toast.tsx
+├── context/
+│   └── updateActivitie.ts
+├── lib/
+│   └── utils.ts
+└── ...
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Instalación
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Para instalar y ejecutar este proyecto en tu máquina local, sigue estos pasos:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Prerrequisitos
 
-## Learn More
+- Node.js (versión 18 o superior)
+- pnpm (versión 8 o superior)
 
-To learn more about Next.js, take a look at the following resources:
+### Clonar el Repositorio
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+git clone <URL_DEL_REPOSITORIO>
+cd sistema-de-gestion-actividades
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Instalar Dependencias y ejecutar el proyecto en local
 
-## Deploy on Vercel
+```bash
+pnpm install
+pnpm run dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Scripts Disponibles
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-=======
-# sistema-gestion-de-actividades
->>>>>>> 379f684c08da64c8f8703dae087290bc57b85272
+```bash
+Inicia la aplicación en modo de desarrollo.
+pnpm run dev
+
+Ejecuta las pruebas unitarias utilizando Jest.
+pnpm test
+
+Construye la aplicación para producción
+pnpm run build
+
+Iniciar el servidor
+pnpm start
+```
+
+## Agregar nuevas features al proyecto:
+
+1. Haz un fork(clonar) del proyecto.
+2. Crea una nueva rama (git checkout -b feature/nueva-funcionalidad).
+3. Realiza tus cambios y haz commit (git commit -am 'Añadir nueva funcionalidad').
+4. Haz push a la rama (git push origin feature/nueva-funcionalidad).
+5. Abre un Pull Request.

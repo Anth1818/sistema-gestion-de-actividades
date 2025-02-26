@@ -1,11 +1,11 @@
 "use client";
 
-import { ToggleDarkMode } from "@/components/toggle-dark-mode";
-import { AvatarOptions } from "@/components/avatar-options";
-import Navigation from "@/components/navigation";
-import ProtectedRoute from "@/components/protected-route";
+import { ToggleDarkMode } from "@/components/ToggleDarkMode";
+import { AvatarOptions } from "@/components/AvatarOptions";
+import Navigation from "@/components/Navigation";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import Cookies from 'js-cookie';
-import MobileNavigation from "@/components/mobileNavigation";
+import MobileNavigation from "@/components/MobileNavigation";
 
 
 export default function DashboardLayout({

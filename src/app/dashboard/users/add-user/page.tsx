@@ -1,8 +1,8 @@
 "use client"
 
 import api from "@/api/api_regiones";
-import FormAddUser from "@/components/form-add-user";
-import ProtectedRoute from "@/components/protected-route";
+import FormAddUser from "@/components/FormAddUser";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

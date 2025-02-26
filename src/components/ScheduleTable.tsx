@@ -25,8 +25,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
-import CompleteActivitieSchedule from "./complete-activitie-schedule";
-import CompleteMobileUnitSchedule from "./complete-mobile-unit-schedule";
+import CompleteActivitieSchedule from "./CompleteActivitieSchedule";
+import CompleteMobileUnitSchedule from "./CompleteMobileUnitSchedule";
 import ContentOfActivities from "./ContentOfActivities";
 import ContentOfMobileUnit from "./ContentOfMobileUnit";
 

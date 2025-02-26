@@ -26,7 +26,7 @@ import { EyeIcon, EyeOff, User2 } from "lucide-react"
 import { useState } from "react"
 import { useMutation } from "@tanstack/react-query"
 import api from "@/api/api_regiones"
-import { Notification } from "./notification"
+import { Notification } from "./Notification"
 
 interface formAddUserProps {
     dataWorker: Worker

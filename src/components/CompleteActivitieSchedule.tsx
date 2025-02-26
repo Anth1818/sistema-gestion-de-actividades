@@ -21,7 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { useMutation } from "@tanstack/react-query"
 import api from "@/api/api_regiones"
 import { useState } from "react"
-import { Notification } from "./notification"
+import { Notification } from "./Notification"
 
 interface completeScheduleModalProps {
     id: number;

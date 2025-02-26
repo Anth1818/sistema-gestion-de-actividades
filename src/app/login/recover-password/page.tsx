@@ -1,4 +1,4 @@
-import { RecoverPasswordForm } from "@/components/recorver-password-form";
+import { RecoverPasswordForm } from "@/components/RecorverPasswordForm";
 
 export default function RecoverPassword() {
     return (
